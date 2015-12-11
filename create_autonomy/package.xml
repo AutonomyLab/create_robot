@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package>
+  <name>create_autonomy</name>
+  <version>0.0.1</version>
+  <description>create_autonomy is a ROS driver for iRobot's Create, based on the libcreate C++ library</description>
+
+  <maintainer email="jperron@sfu.ca">Jacob Perron</maintainer>
+  <license>BSD</license>
+
+  <!--<url type="website">http://wiki.ros.org/create_autonomy</url> -->
+  <url type="repository">http://github.com/AutonomyLab/create_autonomy</url>
+
+  <author email="jperron@sfu.ca">Jacob Perron</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>create_driver</run_depend>
+  <!--<run_depend>create_tools</run_depend>-->
+
+  <export>
+    <metapackage/>
+  </export>
+</package>

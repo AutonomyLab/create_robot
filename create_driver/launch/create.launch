@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>
+  <node name="create_driver" pkg="create_driver" type="create_driver" output="screen">
+    <param name="~loop_hz" value="50" />
+  </node>
+</launch>
