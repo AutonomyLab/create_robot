@@ -2,5 +2,7 @@
 <launch>
   <node name="create_driver" pkg="create_driver" type="create_driver" output="screen">
     <param name="~loop_hz" value="50" />
+    <param name="~dev" value="/dev/ttyUSB0" />
+    <param name="~baud" value="115200" /> <!-- 57600 for Create 1 -->
   </node>
 </launch>
