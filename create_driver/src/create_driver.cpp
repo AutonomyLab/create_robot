@@ -6,10 +6,6 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_) {
   nh.param<std::string>("dev", dev, "/dev/ttyUSB0");
   nh.param<int>("baud", baud, 115200);
 
-  // TODO get these from Create class
-  //maxVelX = 0.5;
-  //maxAngularVel = 4.25;
- 
   robot = new create::Create();
 
   if (!robot->connect(dev, baud)) {
@@ -42,7 +38,7 @@ CreateDriver::~CreateDriver() {
 }
 
 void CreateDriver::cmdVelCallback(const geometry_msgs::TwistConstPtr& msg) {
-  robot->drive(msg->linear.x * maxVelX, msg->angular.z * maxAngularVel);
+  robot->drive(msg->linear.x, msg->angular.z);
 }
 
 bool CreateDriver::update() {

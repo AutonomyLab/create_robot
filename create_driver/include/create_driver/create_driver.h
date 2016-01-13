@@ -13,8 +13,6 @@ class CreateDriver {
     double loopHz;
     std::string dev;
     int baud;
-    static const double maxVelX = 0.5;
-    static const double maxAngularVel = 4.25;
 
     void cmdVelCallback(const geometry_msgs::TwistConstPtr& msg);
     bool update();
