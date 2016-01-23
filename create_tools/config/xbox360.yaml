@@ -1,0 +1,18 @@
+# XBox 360 wired controller
+teleop:
+  piloting:
+    type: topic
+    message_type: "geometry_msgs/Twist"
+    topic_name: cmd_vel
+    deadman_buttons: [] 
+    axis_mappings:
+      -
+        axis: 4  # Right thumb (up/down) 
+        target: linear.x
+        scale: 0.25
+        offset: 0.0
+      -
+        axis: 3 # Right thumb stick (left/right)
+        target: angular.z
+        scale: 1.0
+        offset: 0.0

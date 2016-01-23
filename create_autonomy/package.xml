@@ -15,7 +15,7 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <run_depend>create_driver</run_depend>
-  <!--<run_depend>create_tools</run_depend>-->
+  <run_depend>create_tools</run_depend>
 
   <export>
     <metapackage/>
