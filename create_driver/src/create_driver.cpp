@@ -2,9 +2,9 @@
 #include "create_driver/create_driver.h"
 
 CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_) {
-  nh.param<double>("loop_hz", loopHz, 10);
-  nh.param<std::string>("dev", dev, "/dev/ttyUSB0");
-  nh.param<int>("baud", baud, 115200);
+  priv_nh.param<double>("loop_hz", loopHz, 10);
+  priv_nh.param<std::string>("dev", dev, "/dev/ttyUSB0");
+  priv_nh.param<int>("baud", baud, 115200);
 
   robot = new create::Create();
 
@@ -79,7 +79,7 @@ void CreateDriver::spin() {
 
 int main(int argc, char** argv) {
   ros::init(argc, argv, "create_driver");
-  ros::NodeHandle nh("~");
+  ros::NodeHandle nh;
 
   CreateDriver createDriver(nh);
 
