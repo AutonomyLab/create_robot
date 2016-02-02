@@ -5,6 +5,7 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_) {
   priv_nh.param<double>("loop_hz", loopHz, 10);
   priv_nh.param<std::string>("dev", dev, "/dev/ttyUSB0");
   priv_nh.param<int>("baud", baud, 115200);
+  priv_nh.param<double>("latch_cmd_duration", latchDuration, 0.5);
 
   robot = new create::Create();
 
@@ -39,10 +40,17 @@ CreateDriver::~CreateDriver() {
 
 void CreateDriver::cmdVelCallback(const geometry_msgs::TwistConstPtr& msg) {
   robot->drive(msg->linear.x, msg->angular.z);
+  lastCmdVelTime = ros::Time::now();
 }
 
 bool CreateDriver::update() {
   publishOdom();
+
+  // If last velocity command was sent longer than latch duration, stop robot
+  if (ros::Time::now() - lastCmdVelTime >= ros::Duration(latchDuration)) {
+    robot->drive(0, 0);
+  }
+
   return true;
 }
 

@@ -10,9 +10,11 @@ class CreateDriver {
   private:
     create::Create* robot;
     nav_msgs::Odometry odom;
+    ros::Time lastCmdVelTime;
     double loopHz;
     std::string dev;
     int baud;
+    double latchDuration;
 
     void cmdVelCallback(const geometry_msgs::TwistConstPtr& msg);
     bool update();
