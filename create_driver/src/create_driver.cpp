@@ -56,17 +56,22 @@ bool CreateDriver::update() {
 
 void CreateDriver::publishOdom() {
   create::Pose pose = robot->getPose();
+  create::Vel vel = robot->getVel();
+
+  // Populate position info
   odom.pose.pose.position.x = pose.x;
   odom.pose.pose.position.y = pose.y;
   odom.pose.pose.orientation = tf::createQuaternionMsgFromRollPitchYaw(0, 0, pose.yaw);
 
-  // TODO: populate pose covariance
+  // Populate velocity info
+  odom.twist.twist.linear.x = vel.x;
+  odom.twist.twist.linear.y = vel.y;
+  odom.twist.twist.angular.z = vel.yaw;
+  
+  // TODO: Populate covariances
   //odom.pose.covariance = ?
-
-  // TODO: populate twist data
-  //odom.twist.twist.linear.x = ?
-  //odom.twist.twist.angular.z = ?
   //odom.twist.covariance = ?
+  
   odomPub.publish(odom);
 }
 
