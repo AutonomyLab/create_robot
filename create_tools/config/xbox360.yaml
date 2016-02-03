@@ -9,10 +9,10 @@ teleop:
       -
         axis: 4  # Right thumb (up/down) 
         target: linear.x
-        scale: 0.25
+        scale: 0.5
         offset: 0.0
       -
         axis: 3 # Right thumb stick (left/right)
         target: angular.z
-        scale: 1.0
+        scale: 4.25
         offset: 0.0
