@@ -6,3 +6,6 @@
 * ROS wiki page: http://wiki.ros.org/create_autonomy
 * Code API: TODO 
 * Author: [Jacob Perron](http://jacobperron.ca) ([Autonomy Lab](http://autonomylab.org), [Simon Fraser University](http://www.sfu.ca))
+
+## Build Status
+![Build Status](https://api.travis-ci.org/AutonomyLab/create_autonomy.svg?branch=master)
