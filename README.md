@@ -8,4 +8,4 @@
 * Author: [Jacob Perron](http://jacobperron.ca) ([Autonomy Lab](http://autonomylab.org), [Simon Fraser University](http://www.sfu.ca))
 
 ## Build Status
-![Build Status](https://api.travis-ci.org/AutonomyLab/create_autonomy.svg?branch=master)
+* TravisCI (Ubuntu _Trusty_, ROS _Indigo_ and _Jade_) ![Build Status](https://api.travis-ci.org/AutonomyLab/create_autonomy.svg?branch=master)
