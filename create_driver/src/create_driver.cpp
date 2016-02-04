@@ -1,12 +1,13 @@
 #include <tf/transform_datatypes.h>
 #include "create_driver/create_driver.h"
 
-CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_) {
-  priv_nh.param<double>("loop_hz", loopHz, 10);
-  priv_nh.param<std::string>("dev", dev, "/dev/ttyUSB0");
-  priv_nh.param<int>("baud", baud, 115200);
-  priv_nh.param<double>("latch_cmd_duration", latchDuration, 0.5);
+CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
+  privNh.param<double>("loop_hz", loopHz, 10);
+  privNh.param<std::string>("dev", dev, "/dev/ttyUSB0");
+  privNh.param<int>("baud", baud, 115200);
+  privNh.param<double>("latch_cmd_duration", latchDuration, 0.5);
 
+  ROS_INFO("[CREATE] loop hz: %.2f", loopHz);
   robot = new create::Create();
 
   if (!robot->connect(dev, baud)) {
@@ -64,6 +65,7 @@ void CreateDriver::publishOdom() {
   odom.pose.pose.position.x = pose.x;
   odom.pose.pose.position.y = pose.y;
   odom.pose.pose.orientation = quat;
+  tfOdom.header.stamp = ros::Time::now();
   tfOdom.transform.translation.x = pose.x;
   tfOdom.transform.translation.y = pose.y;
   tfOdom.transform.rotation = quat;

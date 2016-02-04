@@ -29,7 +29,7 @@ class CreateDriver {
     
   protected:
     ros::NodeHandle nh;
-    ros::NodeHandle priv_nh;
+    ros::NodeHandle privNh;
     ros::Subscriber cmdVelSub;
     ros::Publisher odomPub;
 
