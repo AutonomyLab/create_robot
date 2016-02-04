@@ -23,9 +23,10 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_) {
   // Show robot's battery level
   ROS_INFO("[CREATE] Battery level %.2f %%", (robot->getBatteryCharge() / (float)robot->getBatteryCapacity()) * 100.0);
 
-  // Not sure if these are correct
-  odom.header.frame_id = "base_link";
-  odom.child_frame_id = "odom";
+  tfOdom.header.frame_id = "odom";
+  tfOdom.child_frame_id = "base_footprint";
+  odom.header.frame_id = "odom";
+  odom.child_frame_id = "base_footprint";
 
   cmdVelSub = nh.subscribe(std::string("cmd_vel"), 1, &CreateDriver::cmdVelCallback, this);
 
@@ -59,9 +60,13 @@ void CreateDriver::publishOdom() {
   create::Vel vel = robot->getVel();
 
   // Populate position info
+  geometry_msgs::Quaternion quat = tf::createQuaternionMsgFromRollPitchYaw(0, 0, pose.yaw);
   odom.pose.pose.position.x = pose.x;
   odom.pose.pose.position.y = pose.y;
-  odom.pose.pose.orientation = tf::createQuaternionMsgFromRollPitchYaw(0, 0, pose.yaw);
+  odom.pose.pose.orientation = quat;
+  tfOdom.transform.translation.x = pose.x;
+  tfOdom.transform.translation.y = pose.y;
+  tfOdom.transform.rotation = quat;
 
   // Populate velocity info
   odom.twist.twist.linear.x = vel.x;
@@ -72,6 +77,7 @@ void CreateDriver::publishOdom() {
   //odom.pose.covariance = ?
   //odom.twist.covariance = ?
   
+  tfBroadcaster.sendTransform(tfOdom);
   odomPub.publish(odom);
 }
 
