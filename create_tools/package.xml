@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>create_tools</name>
-  <version>0.2.0</version>
+  <version>0.1.0</version>
   <description>The create_tools package</description>
 
   <maintainer email="jperron@sfu.ca">Jacob Perron</maintainer>

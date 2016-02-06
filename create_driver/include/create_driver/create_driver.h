@@ -3,14 +3,21 @@
 
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
+#include <geometry_msgs/TransformStamped.h>
 #include <nav_msgs/Odometry.h>
+#include <tf/transform_broadcaster.h>
+
 #include "create/create.h"
 
 class CreateDriver {
   private:
     create::Create* robot;
     nav_msgs::Odometry odom;
+    tf::TransformBroadcaster tfBroadcaster;
+    geometry_msgs::TransformStamped tfOdom;
     ros::Time lastCmdVelTime;
+
+    // ROS params
     double loopHz;
     std::string dev;
     int baud;
@@ -22,7 +29,7 @@ class CreateDriver {
     
   protected:
     ros::NodeHandle nh;
-    ros::NodeHandle priv_nh;
+    ros::NodeHandle privNh;
     ros::Subscriber cmdVelSub;
     ros::Publisher odomPub;
 
@@ -31,6 +38,7 @@ class CreateDriver {
     ~CreateDriver();
     virtual void spin();
     virtual void spinOnce();
+
 }; // class CreateDriver
 
 #endif // CREATE_AUTONOMY_CREATE_DRIVER_H

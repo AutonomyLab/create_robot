@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>create_autonomy</name>
-  <version>1.0.0</version>
+  <version>0.1.0</version>
   <description>create_autonomy is a ROS driver for iRobot's Create, based on the libcreate C++ library</description>
 
   <maintainer email="jperron@sfu.ca">Jacob Perron</maintainer>
