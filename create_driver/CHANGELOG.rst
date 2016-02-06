@@ -2,8 +2,8 @@
 Changelog for package create_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.0 (2016-02-05)
+------------------
 * Fixed bugs: Private nodehandle now gets params, added missing timestamp to tf messages
 * Added tf broadcaster for odom frame
 * Added CI (travis)
