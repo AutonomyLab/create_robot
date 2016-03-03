@@ -4,7 +4,7 @@
 #include <ros/ros.h>
 #include <std_msgs/Empty.h>
 #include <std_msgs/Bool.h>
-#include <std_msgs/ByteMultiArray.h>
+#include <std_msgs/UInt8MultiArray.h>
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/TransformStamped.h>
 #include <nav_msgs/Odometry.h>
@@ -32,7 +32,8 @@ class CreateDriver {
     void spotLEDCallback(const std_msgs::BoolConstPtr& msg);
     void dockLEDCallback(const std_msgs::BoolConstPtr& msg);
     void checkLEDCallback(const std_msgs::BoolConstPtr& msg);
-    void powerLEDCallback(const std_msgs::ByteMultiArrayConstPtr& msg);
+    void powerLEDCallback(const std_msgs::UInt8MultiArrayConstPtr& msg);
+    void setASCIICallback(const std_msgs::UInt8MultiArrayConstPtr& msg);
 
     bool update();
     void publishOdom();
@@ -47,6 +48,7 @@ class CreateDriver {
     ros::Subscriber dockLEDSub;
     ros::Subscriber checkLEDSub;
     ros::Subscriber powerLEDSub;
+    ros::Subscriber setASCIISub;
     ros::Publisher odomPub;
     ros::Publisher cleanBtnPub;
     ros::Publisher dayBtnPub;

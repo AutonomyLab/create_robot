@@ -34,6 +34,7 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
   dockLEDSub = nh.subscribe("dock_led", 10, &CreateDriver::dockLEDCallback, this);
   checkLEDSub = nh.subscribe("check_led", 10, &CreateDriver::checkLEDCallback, this);
   powerLEDSub = nh.subscribe("power_led", 10, &CreateDriver::powerLEDCallback, this);
+  setASCIISub = nh.subscribe("set_ascii", 10, &CreateDriver::setASCIICallback, this);
 
   odomPub = nh.advertise<nav_msgs::Odometry>("odom", 10);
   cleanBtnPub = nh.advertise<std_msgs::Empty>("clean_button", 10);
@@ -71,7 +72,7 @@ void CreateDriver::checkLEDCallback(const std_msgs::BoolConstPtr& msg) {
   robot->enableCheckRobotLED(msg->data);
 }
 
-void CreateDriver::powerLEDCallback(const std_msgs::ByteMultiArrayConstPtr& msg) {
+void CreateDriver::powerLEDCallback(const std_msgs::UInt8MultiArrayConstPtr& msg) {
   if (msg->data.size() < 1) {
     ROS_ERROR("[CREATE] No values provided to set power LED");
   }
@@ -82,6 +83,29 @@ void CreateDriver::powerLEDCallback(const std_msgs::ByteMultiArrayConstPtr& msg)
     else {
       robot->setPowerLED(msg->data[0], msg->data[1]);
     }
+  }
+}
+
+void CreateDriver::setASCIICallback(const std_msgs::UInt8MultiArrayConstPtr& msg) {
+  bool result;
+  if (msg->data.size() < 1) {
+    ROS_ERROR("[CREATE] No ASCII digits provided");
+  }
+  else if (msg->data.size() < 2) {
+    result = robot->setDigitsASCII(msg->data[0], ' ', ' ', ' ');
+  }
+  else if (msg->data.size() < 3) {
+    result = robot->setDigitsASCII(msg->data[0], msg->data[1], ' ', ' ');
+  }
+  else if (msg->data.size() < 4) {
+    result = robot->setDigitsASCII(msg->data[0], msg->data[1], msg->data[2], ' ');
+  }
+  else {
+    result = robot->setDigitsASCII(msg->data[0], msg->data[1], msg->data[2], msg->data[3]);
+  }
+
+  if (!result) {
+    ROS_ERROR("[CREATE] ASCII character out of range [32, 126]");
   }
 }
 
