@@ -2,8 +2,8 @@
 Changelog for package create_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.0 (2016-03-03)
+------------------
 * Add covariances to odometry messages
 * Add set 7Seg display with ASCII
 * Add LED support
