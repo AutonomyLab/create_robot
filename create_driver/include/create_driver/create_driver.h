@@ -2,6 +2,7 @@
 #define CREATE_AUTONOMY_CREATE_DRIVER_H
 
 #include <ros/ros.h>
+#include <std_msgs/Empty.h>
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/TransformStamped.h>
 #include <nav_msgs/Odometry.h>
@@ -16,6 +17,7 @@ class CreateDriver {
     tf::TransformBroadcaster tfBroadcaster;
     geometry_msgs::TransformStamped tfOdom;
     ros::Time lastCmdVelTime;
+    std_msgs::Empty emptyMsg;
 
     // ROS params
     double loopHz;
@@ -26,12 +28,19 @@ class CreateDriver {
     void cmdVelCallback(const geometry_msgs::TwistConstPtr& msg);
     bool update();
     void publishOdom();
+    void publishButtonPresses();
     
   protected:
     ros::NodeHandle nh;
     ros::NodeHandle privNh;
     ros::Subscriber cmdVelSub;
     ros::Publisher odomPub;
+    ros::Publisher cleanBtnPub;
+    ros::Publisher dayBtnPub;
+    ros::Publisher hourBtnPub;
+    ros::Publisher minBtnPub;
+    ros::Publisher dockBtnPub;
+    ros::Publisher spotBtnPub;
 
   public:
     CreateDriver(ros::NodeHandle& nh_);

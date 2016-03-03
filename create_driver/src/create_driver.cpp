@@ -7,7 +7,6 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
   privNh.param<int>("baud", baud, 115200);
   privNh.param<double>("latch_cmd_duration", latchDuration, 0.5);
 
-  ROS_INFO("[CREATE] loop hz: %.2f", loopHz);
   robot = new create::Create();
 
   if (!robot->connect(dev, baud)) {
@@ -29,9 +28,15 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
   odom.header.frame_id = "odom";
   odom.child_frame_id = "base_footprint";
 
-  cmdVelSub = nh.subscribe(std::string("cmd_vel"), 1, &CreateDriver::cmdVelCallback, this);
+  cmdVelSub = nh.subscribe("cmd_vel", 1, &CreateDriver::cmdVelCallback, this);
 
-  odomPub = nh.advertise<nav_msgs::Odometry>(std::string("odom"), 10);
+  odomPub = nh.advertise<nav_msgs::Odometry>("odom", 10);
+  cleanBtnPub = nh.advertise<std_msgs::Empty>("clean_button", 10);
+  dayBtnPub = nh.advertise<std_msgs::Empty>("day_button", 10);
+  hourBtnPub = nh.advertise<std_msgs::Empty>("hour_button", 10);
+  minBtnPub = nh.advertise<std_msgs::Empty>("minute_button", 10);
+  dockBtnPub = nh.advertise<std_msgs::Empty>("dock_button", 10);
+  spotBtnPub = nh.advertise<std_msgs::Empty>("spot_button", 10);
 }
 
 CreateDriver::~CreateDriver() { 
@@ -47,7 +52,7 @@ void CreateDriver::cmdVelCallback(const geometry_msgs::TwistConstPtr& msg) {
 
 bool CreateDriver::update() {
   publishOdom();
-
+  publishButtonPresses();
   // If last velocity command was sent longer than latch duration, stop robot
   if (ros::Time::now() - lastCmdVelTime >= ros::Duration(latchDuration)) {
     robot->drive(0, 0);
@@ -81,6 +86,27 @@ void CreateDriver::publishOdom() {
   
   tfBroadcaster.sendTransform(tfOdom);
   odomPub.publish(odom);
+}
+
+void CreateDriver::publishButtonPresses() {
+  if (robot->isCleanButtonPressed()) {
+    cleanBtnPub.publish(emptyMsg);
+  }
+  if (robot->isDayButtonPressed()) {
+    dayBtnPub.publish(emptyMsg);
+  }
+  if (robot->isHourButtonPressed()) {
+    hourBtnPub.publish(emptyMsg);
+  }
+  if (robot->isMinButtonPressed()) {
+    minBtnPub.publish(emptyMsg);
+  }
+  if (robot->isDockButtonPressed()) {
+    dockBtnPub.publish(emptyMsg);
+  }
+  if (robot->isSpotButtonPressed()) {
+    spotBtnPub.publish(emptyMsg);
+  }
 }
 
 void CreateDriver::spinOnce() {
