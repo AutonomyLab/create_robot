@@ -2,6 +2,14 @@
 Changelog for package create_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add covariances to odometry messages
+* Add set 7Seg display with ASCII
+* Add LED support
+* Add publishers for button presses
+* Contributors: Jacob Perron
+
 0.1.0 (2016-02-05)
 ------------------
 * Fixed bugs: Private nodehandle now gets params, added missing timestamp to tf messages
