@@ -7,16 +7,15 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
   privNh.param<int>("baud", baud, 115200);
   privNh.param<double>("latch_cmd_duration", latchDuration, 0.5);
 
-  ROS_INFO("[CREATE] loop hz: %.2f", loopHz);
   robot = new create::Create();
 
   if (!robot->connect(dev, baud)) {
     ROS_FATAL("[CREATE] Failed to establish serial connection with Create.");
     ros::shutdown();
   }
- 
+
   ROS_INFO("[CREATE] Connection established.");
-  
+
   // Put into full control mode
   //TODO: Make option to run in safe mode as parameter
   robot->setMode(create::MODE_FULL);
@@ -29,12 +28,24 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
   odom.header.frame_id = "odom";
   odom.child_frame_id = "base_footprint";
 
-  cmdVelSub = nh.subscribe(std::string("cmd_vel"), 1, &CreateDriver::cmdVelCallback, this);
+  cmdVelSub = nh.subscribe("cmd_vel", 1, &CreateDriver::cmdVelCallback, this);
+  debrisLEDSub = nh.subscribe("debris_led", 10, &CreateDriver::debrisLEDCallback, this);
+  spotLEDSub = nh.subscribe("spot_led", 10, &CreateDriver::spotLEDCallback, this);
+  dockLEDSub = nh.subscribe("dock_led", 10, &CreateDriver::dockLEDCallback, this);
+  checkLEDSub = nh.subscribe("check_led", 10, &CreateDriver::checkLEDCallback, this);
+  powerLEDSub = nh.subscribe("power_led", 10, &CreateDriver::powerLEDCallback, this);
+  setASCIISub = nh.subscribe("set_ascii", 10, &CreateDriver::setASCIICallback, this);
 
-  odomPub = nh.advertise<nav_msgs::Odometry>(std::string("odom"), 10);
+  odomPub = nh.advertise<nav_msgs::Odometry>("odom", 10);
+  cleanBtnPub = nh.advertise<std_msgs::Empty>("clean_button", 10);
+  dayBtnPub = nh.advertise<std_msgs::Empty>("day_button", 10);
+  hourBtnPub = nh.advertise<std_msgs::Empty>("hour_button", 10);
+  minBtnPub = nh.advertise<std_msgs::Empty>("minute_button", 10);
+  dockBtnPub = nh.advertise<std_msgs::Empty>("dock_button", 10);
+  spotBtnPub = nh.advertise<std_msgs::Empty>("spot_button", 10);
 }
 
-CreateDriver::~CreateDriver() { 
+CreateDriver::~CreateDriver() {
   ROS_INFO("[CREATE] Destruct sequence initiated.");
   robot->disconnect();
   delete robot;
@@ -45,9 +56,62 @@ void CreateDriver::cmdVelCallback(const geometry_msgs::TwistConstPtr& msg) {
   lastCmdVelTime = ros::Time::now();
 }
 
+void CreateDriver::debrisLEDCallback(const std_msgs::BoolConstPtr& msg) {
+  robot->enableDebrisLED(msg->data);
+}
+
+void CreateDriver::spotLEDCallback(const std_msgs::BoolConstPtr& msg) {
+  robot->enableSpotLED(msg->data);
+}
+
+void CreateDriver::dockLEDCallback(const std_msgs::BoolConstPtr& msg) {
+  robot->enableDockLED(msg->data);
+}
+
+void CreateDriver::checkLEDCallback(const std_msgs::BoolConstPtr& msg) {
+  robot->enableCheckRobotLED(msg->data);
+}
+
+void CreateDriver::powerLEDCallback(const std_msgs::UInt8MultiArrayConstPtr& msg) {
+  if (msg->data.size() < 1) {
+    ROS_ERROR("[CREATE] No values provided to set power LED");
+  }
+  else {
+    if (msg->data.size() < 2) {
+      robot->setPowerLED(msg->data[0]);
+    }
+    else {
+      robot->setPowerLED(msg->data[0], msg->data[1]);
+    }
+  }
+}
+
+void CreateDriver::setASCIICallback(const std_msgs::UInt8MultiArrayConstPtr& msg) {
+  bool result;
+  if (msg->data.size() < 1) {
+    ROS_ERROR("[CREATE] No ASCII digits provided");
+  }
+  else if (msg->data.size() < 2) {
+    result = robot->setDigitsASCII(msg->data[0], ' ', ' ', ' ');
+  }
+  else if (msg->data.size() < 3) {
+    result = robot->setDigitsASCII(msg->data[0], msg->data[1], ' ', ' ');
+  }
+  else if (msg->data.size() < 4) {
+    result = robot->setDigitsASCII(msg->data[0], msg->data[1], msg->data[2], ' ');
+  }
+  else {
+    result = robot->setDigitsASCII(msg->data[0], msg->data[1], msg->data[2], msg->data[3]);
+  }
+
+  if (!result) {
+    ROS_ERROR("[CREATE] ASCII character out of range [32, 126]");
+  }
+}
+
 bool CreateDriver::update() {
   publishOdom();
-
+  publishButtonPresses();
   // If last velocity command was sent longer than latch duration, stop robot
   if (ros::Time::now() - lastCmdVelTime >= ros::Duration(latchDuration)) {
     robot->drive(0, 0);
@@ -74,13 +138,34 @@ void CreateDriver::publishOdom() {
   odom.twist.twist.linear.x = vel.x;
   odom.twist.twist.linear.y = vel.y;
   odom.twist.twist.angular.z = vel.yaw;
-  
+
   // TODO: Populate covariances
   //odom.pose.covariance = ?
   //odom.twist.covariance = ?
-  
+
   tfBroadcaster.sendTransform(tfOdom);
   odomPub.publish(odom);
+}
+
+void CreateDriver::publishButtonPresses() const {
+  if (robot->isCleanButtonPressed()) {
+    cleanBtnPub.publish(emptyMsg);
+  }
+  if (robot->isDayButtonPressed()) {
+    dayBtnPub.publish(emptyMsg);
+  }
+  if (robot->isHourButtonPressed()) {
+    hourBtnPub.publish(emptyMsg);
+  }
+  if (robot->isMinButtonPressed()) {
+    minBtnPub.publish(emptyMsg);
+  }
+  if (robot->isDockButtonPressed()) {
+    dockBtnPub.publish(emptyMsg);
+  }
+  if (robot->isSpotButtonPressed()) {
+    spotBtnPub.publish(emptyMsg);
+  }
 }
 
 void CreateDriver::spinOnce() {

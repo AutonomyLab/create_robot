@@ -2,10 +2,10 @@ cmake_minimum_required(VERSION 2.8.3)
 project(create_driver)
 
 find_package(catkin REQUIRED COMPONENTS
-  geometry_msgs
-  nav_msgs
   roscpp
   std_msgs
+  geometry_msgs
+  nav_msgs
   tf
 )
 
@@ -14,7 +14,7 @@ find_package(Boost REQUIRED system thread)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES libcreate create_driver
-  CATKIN_DEPENDS geometry_msgs nav_msgs roscpp std_msgs tf
+  CATKIN_DEPENDS roscpp std_msgs geometry_msgs nav_msgs tf
   DEPENDS system_lib
 )
 
