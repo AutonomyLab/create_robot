@@ -13,9 +13,9 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
     ROS_FATAL("[CREATE] Failed to establish serial connection with Create.");
     ros::shutdown();
   }
- 
+
   ROS_INFO("[CREATE] Connection established.");
-  
+
   // Put into full control mode
   //TODO: Make option to run in safe mode as parameter
   robot->setMode(create::MODE_FULL);
@@ -29,6 +29,11 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
   odom.child_frame_id = "base_footprint";
 
   cmdVelSub = nh.subscribe("cmd_vel", 1, &CreateDriver::cmdVelCallback, this);
+  debrisLEDSub = nh.subscribe("debris_led", 10, &CreateDriver::debrisLEDCallback, this);
+  spotLEDSub = nh.subscribe("spot_led", 10, &CreateDriver::spotLEDCallback, this);
+  dockLEDSub = nh.subscribe("dock_led", 10, &CreateDriver::dockLEDCallback, this);
+  checkLEDSub = nh.subscribe("check_led", 10, &CreateDriver::checkLEDCallback, this);
+  powerLEDSub = nh.subscribe("power_led", 10, &CreateDriver::powerLEDCallback, this);
 
   odomPub = nh.advertise<nav_msgs::Odometry>("odom", 10);
   cleanBtnPub = nh.advertise<std_msgs::Empty>("clean_button", 10);
@@ -39,7 +44,7 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
   spotBtnPub = nh.advertise<std_msgs::Empty>("spot_button", 10);
 }
 
-CreateDriver::~CreateDriver() { 
+CreateDriver::~CreateDriver() {
   ROS_INFO("[CREATE] Destruct sequence initiated.");
   robot->disconnect();
   delete robot;
@@ -48,6 +53,36 @@ CreateDriver::~CreateDriver() {
 void CreateDriver::cmdVelCallback(const geometry_msgs::TwistConstPtr& msg) {
   robot->drive(msg->linear.x, msg->angular.z);
   lastCmdVelTime = ros::Time::now();
+}
+
+void CreateDriver::debrisLEDCallback(const std_msgs::BoolConstPtr& msg) {
+  robot->enableDebrisLED(msg->data);
+}
+
+void CreateDriver::spotLEDCallback(const std_msgs::BoolConstPtr& msg) {
+  robot->enableSpotLED(msg->data);
+}
+
+void CreateDriver::dockLEDCallback(const std_msgs::BoolConstPtr& msg) {
+  robot->enableDockLED(msg->data);
+}
+
+void CreateDriver::checkLEDCallback(const std_msgs::BoolConstPtr& msg) {
+  robot->enableCheckRobotLED(msg->data);
+}
+
+void CreateDriver::powerLEDCallback(const std_msgs::ByteMultiArrayConstPtr& msg) {
+  if (msg->data.size() < 1) {
+    ROS_ERROR("[CREATE] No values provided to set power LED");
+  }
+  else {
+    if (msg->data.size() < 2) {
+      robot->setPowerLED(msg->data[0]);
+    }
+    else {
+      robot->setPowerLED(msg->data[0], msg->data[1]);
+    }
+  }
 }
 
 bool CreateDriver::update() {
@@ -79,16 +114,16 @@ void CreateDriver::publishOdom() {
   odom.twist.twist.linear.x = vel.x;
   odom.twist.twist.linear.y = vel.y;
   odom.twist.twist.angular.z = vel.yaw;
-  
+
   // TODO: Populate covariances
   //odom.pose.covariance = ?
   //odom.twist.covariance = ?
-  
+
   tfBroadcaster.sendTransform(tfOdom);
   odomPub.publish(odom);
 }
 
-void CreateDriver::publishButtonPresses() {
+void CreateDriver::publishButtonPresses() const {
   if (robot->isCleanButtonPressed()) {
     cleanBtnPub.publish(emptyMsg);
   }

@@ -3,6 +3,8 @@
 
 #include <ros/ros.h>
 #include <std_msgs/Empty.h>
+#include <std_msgs/Bool.h>
+#include <std_msgs/ByteMultiArray.h>
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/TransformStamped.h>
 #include <nav_msgs/Odometry.h>
@@ -26,14 +28,25 @@ class CreateDriver {
     double latchDuration;
 
     void cmdVelCallback(const geometry_msgs::TwistConstPtr& msg);
+    void debrisLEDCallback(const std_msgs::BoolConstPtr& msg);
+    void spotLEDCallback(const std_msgs::BoolConstPtr& msg);
+    void dockLEDCallback(const std_msgs::BoolConstPtr& msg);
+    void checkLEDCallback(const std_msgs::BoolConstPtr& msg);
+    void powerLEDCallback(const std_msgs::ByteMultiArrayConstPtr& msg);
+
     bool update();
     void publishOdom();
-    void publishButtonPresses();
-    
+    void publishButtonPresses() const;
+
   protected:
     ros::NodeHandle nh;
     ros::NodeHandle privNh;
     ros::Subscriber cmdVelSub;
+    ros::Subscriber debrisLEDSub;
+    ros::Subscriber spotLEDSub;
+    ros::Subscriber dockLEDSub;
+    ros::Subscriber checkLEDSub;
+    ros::Subscriber powerLEDSub;
     ros::Publisher odomPub;
     ros::Publisher cleanBtnPub;
     ros::Publisher dayBtnPub;
