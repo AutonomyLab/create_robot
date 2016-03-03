@@ -12,6 +12,14 @@
 
 #include "create/create.h"
 
+    
+static const double COVARIANCE[36] = {1e-3, 0.0, 0.0, 0.0, 0.0, 0.0, 
+                                      0.0, 1e-3, 0.0, 0.0, 0.0, 0.0,
+                                      0.0, 0.0, 1e6, 0.0, 0.0, 0.0,
+                                      0.0, 0.0, 0.0, 1e6, 0.0, 0.0,
+                                      0.0, 0.0, 0.0, 0.0, 1e6, 0.0,
+                                      0.0, 0.0, 0.0, 0.0, 0.0, 1e3};
+
 class CreateDriver {
   private:
     create::Create* robot;

@@ -28,6 +28,12 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
   odom.header.frame_id = "odom";
   odom.child_frame_id = "base_footprint";
 
+  // Populate covariances  
+  for (int i = 0; i < 36; i++) {
+    odom.pose.covariance[i] = COVARIANCE[i];
+    odom.twist.covariance[i] = COVARIANCE[i];
+  }
+
   cmdVelSub = nh.subscribe("cmd_vel", 1, &CreateDriver::cmdVelCallback, this);
   debrisLEDSub = nh.subscribe("debris_led", 10, &CreateDriver::debrisLEDCallback, this);
   spotLEDSub = nh.subscribe("spot_led", 10, &CreateDriver::spotLEDCallback, this);
@@ -139,9 +145,23 @@ void CreateDriver::publishOdom() {
   odom.twist.twist.linear.y = vel.y;
   odom.twist.twist.angular.z = vel.yaw;
 
-  // TODO: Populate covariances
-  //odom.pose.covariance = ?
-  //odom.twist.covariance = ?
+  // Update covariances
+  if (fabs(vel.x) < 0.01 && fabs(vel.yaw) < 0.01) {
+    odom.pose.covariance[0] = 1e-9;
+    odom.pose.covariance[8] = 1e-9;
+    odom.pose.covariance[35] = 1e-9;
+    odom.twist.covariance[0] = 1e-9;
+    odom.twist.covariance[8] = 1e-9;
+    odom.twist.covariance[35] = 1e-9;
+  }
+  else {
+    odom.pose.covariance[0] = 1e-3;
+    odom.pose.covariance[8] = 0.0;
+    odom.pose.covariance[35] = 1e3;
+    odom.twist.covariance[0] = 1e-3;
+    odom.twist.covariance[8] = 0.0;
+    odom.twist.covariance[35] = 1e3;
+  }
 
   tfBroadcaster.sendTransform(tfOdom);
   odomPub.publish(odom);
