@@ -2,12 +2,24 @@
 #include "create_driver/create_driver.h"
 
 CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
+  bool createOne;
   privNh.param<double>("loop_hz", loopHz, 10);
   privNh.param<std::string>("dev", dev, "/dev/ttyUSB0");
-  privNh.param<int>("baud", baud, 115200);
+  privNh.param<bool>("create_1", createOne, false);
   privNh.param<double>("latch_cmd_duration", latchDuration, 0.5);
 
-  robot = new create::Create();
+  if (createOne) {
+    model = create::CREATE_1;
+    privNh.param<int>("baud", baud, 57600);
+    std::cout << "Create 1!" << std::endl;
+  }
+  else {
+    model = create::CREATE_2;
+    privNh.param<int>("baud", baud, 115200);
+    std::cout << "Create 2!" << std::endl;
+  }
+
+  robot = new create::Create(model);
 
   if (!robot->connect(dev, baud)) {
     ROS_FATAL("[CREATE] Failed to establish serial connection with Create.");

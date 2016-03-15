@@ -23,6 +23,7 @@ static const double COVARIANCE[36] = {1e-3, 0.0, 0.0, 0.0, 0.0, 0.0,
 class CreateDriver {
   private:
     create::Create* robot;
+    create::RobotModel model;
     nav_msgs::Odometry odom;
     tf::TransformBroadcaster tfBroadcaster;
     geometry_msgs::TransformStamped tfOdom;
