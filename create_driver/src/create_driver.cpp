@@ -122,6 +122,7 @@ void CreateDriver::setASCIICallback(const std_msgs::UInt8MultiArrayConstPtr& msg
 
 bool CreateDriver::update() {
   publishOdom();
+  publishBatteryInfo();
   publishButtonPresses();
   // If last velocity command was sent longer than latch duration, stop robot
   if (ros::Time::now() - lastCmdVelTime >= ros::Duration(latchDuration)) {
