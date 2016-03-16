@@ -11,12 +11,12 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
   if (createOne) {
     model = create::CREATE_1;
     privNh.param<int>("baud", baud, 57600);
-    std::cout << "Create 1!" << std::endl;
+    ROS_INFO("[CREATE] Create 1 model selected");
   }
   else {
     model = create::CREATE_2;
     privNh.param<int>("baud", baud, 115200);
-    std::cout << "Create 2!" << std::endl;
+    ROS_INFO("[CREATE] Create 2 model selected");
   }
 
   robot = new create::Create(model);
@@ -69,6 +69,7 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
   capacityPub = nh.advertise<std_msgs::UInt16>("battery/capacity", 30);
   temperaturePub = nh.advertise<std_msgs::UInt16>("battery/temperature", 30);
   omniCharPub = nh.advertise<std_msgs::UInt16>("ir_omni", 30);
+  ROS_INFO("[CREATE] Ready.");
 }
 
 CreateDriver::~CreateDriver() {
