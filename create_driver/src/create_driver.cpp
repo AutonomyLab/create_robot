@@ -28,7 +28,7 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
   odom.header.frame_id = "odom";
   odom.child_frame_id = "base_footprint";
 
-  // Populate covariances  
+  // Populate covariances
   for (int i = 0; i < 36; i++) {
     odom.pose.covariance[i] = COVARIANCE[i];
     odom.twist.covariance[i] = COVARIANCE[i];
@@ -42,13 +42,18 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
   powerLEDSub = nh.subscribe("power_led", 10, &CreateDriver::powerLEDCallback, this);
   setASCIISub = nh.subscribe("set_ascii", 10, &CreateDriver::setASCIICallback, this);
 
-  odomPub = nh.advertise<nav_msgs::Odometry>("odom", 10);
-  cleanBtnPub = nh.advertise<std_msgs::Empty>("clean_button", 10);
-  dayBtnPub = nh.advertise<std_msgs::Empty>("day_button", 10);
-  hourBtnPub = nh.advertise<std_msgs::Empty>("hour_button", 10);
-  minBtnPub = nh.advertise<std_msgs::Empty>("minute_button", 10);
-  dockBtnPub = nh.advertise<std_msgs::Empty>("dock_button", 10);
-  spotBtnPub = nh.advertise<std_msgs::Empty>("spot_button", 10);
+  odomPub = nh.advertise<nav_msgs::Odometry>("odom", 30);
+  cleanBtnPub = nh.advertise<std_msgs::Empty>("clean_button", 30);
+  dayBtnPub = nh.advertise<std_msgs::Empty>("day_button", 30);
+  hourBtnPub = nh.advertise<std_msgs::Empty>("hour_button", 30);
+  minBtnPub = nh.advertise<std_msgs::Empty>("minute_button",30);
+  dockBtnPub = nh.advertise<std_msgs::Empty>("dock_button", 30);
+  spotBtnPub = nh.advertise<std_msgs::Empty>("spot_button", 30);
+  voltagePub = nh.advertise<std_msgs::UInt16>("battery/voltage", 30);
+  currentPub = nh.advertise<std_msgs::UInt16>("battery/current", 30);
+  chargePub = nh.advertise<std_msgs::UInt16>("battery/charge", 30);
+  capacityPub = nh.advertise<std_msgs::UInt16>("battery/capacity", 30);
+  temperaturePub = nh.advertise<std_msgs::UInt16>("battery/temperature", 30);
 }
 
 CreateDriver::~CreateDriver() {
@@ -165,6 +170,19 @@ void CreateDriver::publishOdom() {
 
   tfBroadcaster.sendTransform(tfOdom);
   odomPub.publish(odom);
+}
+
+void CreateDriver::publishBatteryInfo() {
+  uint16Msg.data = robot->getVoltage();
+  voltagePub.publish(uint16Msg);
+  uint16Msg.data = robot->getCurrent();
+  currentPub.publish(uint16Msg);
+  uint16Msg.data = robot->getBatteryCharge();
+  chargePub.publish(uint16Msg);
+  uint16Msg.data = robot->getBatteryCapacity();
+  capacityPub.publish(uint16Msg);
+  uint16Msg.data = robot->getTemperature();
+  temperaturePub.publish(uint16Msg);
 }
 
 void CreateDriver::publishButtonPresses() const {
