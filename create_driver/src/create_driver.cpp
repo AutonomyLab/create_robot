@@ -41,6 +41,8 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
   checkLEDSub = nh.subscribe("check_led", 10, &CreateDriver::checkLEDCallback, this);
   powerLEDSub = nh.subscribe("power_led", 10, &CreateDriver::powerLEDCallback, this);
   setASCIISub = nh.subscribe("set_ascii", 10, &CreateDriver::setASCIICallback, this);
+  dockSub = nh.subscribe("dock", 10, &CreateDriver::dockCallback, this);
+  undockSub = nh.subscribe("undock", 10, &CreateDriver::undockCallback, this);
 
   odomPub = nh.advertise<nav_msgs::Odometry>("odom", 30);
   cleanBtnPub = nh.advertise<std_msgs::Empty>("clean_button", 30);
@@ -54,6 +56,7 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
   chargePub = nh.advertise<std_msgs::UInt16>("battery/charge", 30);
   capacityPub = nh.advertise<std_msgs::UInt16>("battery/capacity", 30);
   temperaturePub = nh.advertise<std_msgs::UInt16>("battery/temperature", 30);
+  omniCharPub = nh.advertise<std_msgs::UInt16>("ir_omni", 30);
 }
 
 CreateDriver::~CreateDriver() {
@@ -120,10 +123,22 @@ void CreateDriver::setASCIICallback(const std_msgs::UInt8MultiArrayConstPtr& msg
   }
 }
 
+void CreateDriver::dockCallback(const std_msgs::EmptyConstPtr& msg) {
+  // Call docking behaviour
+  robot->dock();
+}
+
+void CreateDriver::undockCallback(const std_msgs::EmptyConstPtr& msg) {
+  // Switch robot back to FULL mode
+  robot->setMode(create::MODE_FULL);
+}
+
 bool CreateDriver::update() {
   publishOdom();
   publishBatteryInfo();
   publishButtonPresses();
+  publishOmniChar();
+
   // If last velocity command was sent longer than latch duration, stop robot
   if (ros::Time::now() - lastCmdVelTime >= ros::Duration(latchDuration)) {
     robot->drive(0, 0);
@@ -205,6 +220,13 @@ void CreateDriver::publishButtonPresses() const {
   if (robot->isSpotButtonPressed()) {
     spotBtnPub.publish(emptyMsg);
   }
+}
+
+void CreateDriver::publishOmniChar() {
+  uint8_t irChar = robot->getIROmni();
+  uint16Msg.data = irChar;
+  omniCharPub.publish(uint16Msg);
+  // TODO: Publish info based on character, such as dock in sight
 }
 
 void CreateDriver::spinOnce() {
