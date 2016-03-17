@@ -29,6 +29,7 @@ class CreateDriver {
     ros::Time lastCmdVelTime;
     std_msgs::Empty emptyMsg;
     std_msgs::UInt16 uint16Msg;
+    std_msgs::Bool boolMsg;
 
     // ROS params
     double loopHz;
@@ -43,11 +44,14 @@ class CreateDriver {
     void checkLEDCallback(const std_msgs::BoolConstPtr& msg);
     void powerLEDCallback(const std_msgs::UInt8MultiArrayConstPtr& msg);
     void setASCIICallback(const std_msgs::UInt8MultiArrayConstPtr& msg);
+    void dockCallback(const std_msgs::EmptyConstPtr& msg);
+    void undockCallback(const std_msgs::EmptyConstPtr& msg);
 
     bool update();
     void publishOdom();
     void publishBatteryInfo();
     void publishButtonPresses() const;
+    void publishOmniChar();
 
   protected:
     ros::NodeHandle nh;
@@ -59,6 +63,8 @@ class CreateDriver {
     ros::Subscriber checkLEDSub;
     ros::Subscriber powerLEDSub;
     ros::Subscriber setASCIISub;
+    ros::Subscriber dockSub;
+    ros::Subscriber undockSub;
     ros::Publisher odomPub;
     ros::Publisher cleanBtnPub;
     ros::Publisher dayBtnPub;
@@ -71,6 +77,7 @@ class CreateDriver {
     ros::Publisher chargePub;
     ros::Publisher capacityPub;
     ros::Publisher temperaturePub;
+    ros::Publisher omniCharPub;
 
   public:
     CreateDriver(ros::NodeHandle& nh_);
