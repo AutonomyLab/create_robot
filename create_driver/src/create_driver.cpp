@@ -6,7 +6,7 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
   privNh.param<double>("loop_hz", loopHz, 10);
   privNh.param<std::string>("dev", dev, "/dev/ttyUSB0");
   privNh.param<bool>("create_1", createOne, false);
-  privNh.param<double>("latch_cmd_duration", latchDuration, 0.5);
+  privNh.param<double>("latch_cmd_duration", latchDuration, 0.2);
 
   if (createOne) {
     model = create::CREATE_1;
