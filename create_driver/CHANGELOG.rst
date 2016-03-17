@@ -2,8 +2,8 @@
 Changelog for package create_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.3.0 (2016-03-17)
+------------------
 * Add dock / undock support
 * Publish characters received by omni directional IR sensor
 * Add battery info support
