@@ -2,6 +2,13 @@
 Changelog for package create_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add dock / undock support
+* Publish characters received by omni directional IR sensor
+* Add battery info support
+* Contributors: Jacob Perron
+
 0.2.0 (2016-03-03)
 ------------------
 * Add covariances to odometry messages
