@@ -137,6 +137,9 @@ void CreateDriver::setASCIICallback(const std_msgs::UInt8MultiArrayConstPtr& msg
 }
 
 void CreateDriver::dockCallback(const std_msgs::EmptyConstPtr& msg) {
+  robot->setMode(create::MODE_PASSIVE);
+  usleep(1000000); // For create 1
+
   // Call docking behaviour
   robot->dock();
 }
