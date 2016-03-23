@@ -8,7 +8,7 @@
 * Author: [Jacob Perron](http://jacobperron.ca) ([Autonomy Lab](http://autonomylab.org), [Simon Fraser University](http://www.sfu.ca))
 
 ## Build Status
-* TravisCI (Ubuntu _Trusty_, ROS _Indigo_ and _Jade_) _   _ ![Build Status](https://api.travis-ci.org/AutonomyLab/create_autonomy.svg?branch=master)
+* TravisCI (Ubuntu _Trusty_, ROS _Indigo_ and _Jade_) ![Build Status](https://api.travis-ci.org/AutonomyLab/create_autonomy.svg?branch=master)
 
 ## Features
 
@@ -23,9 +23,9 @@
 |  Brush motors | Planned       |
 |  LEDs         | Available     |
 |  Digit LEDs   | Available     |
-|  Sound        | Planned #5      |
-|  Wheeldrop    | Planned #6      |
-|  Bumpers      | Planned #6      |
+|  Sound        | Planned [#5](https://github.com/AutonomyLab/create_autonomy/issues/5)      |
+|  Wheeldrop    | Planned [#6](https://github.com/AutonomyLab/create_autonomy/issues/6)      |
+|  Bumpers      | Planned [#6](https://github.com/AutonomyLab/create_autonomy/issues/6)    |
 |  Cliff sensor | Planned       |
 |  Dirt detect  | N/A       |    
 |Omni IR sensor | Available     |
@@ -33,7 +33,7 @@
 |Right IR sensor| N/A       |    
 |  Battery info | Available     |
 |  Light sensors| Planned       |
-|Create 1 support| Developing #1   |
+|Create 1 support| Developing [#1](https://github.com/AutonomyLab/create_autonomy/issues/1)   |
 | **_Diagnostics_** |           |
 |Corrupt Packets| Planned       |
 | Phyiscal tests| Planned       |
