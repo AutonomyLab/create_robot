@@ -11,6 +11,22 @@ This package wraps the C++ library [libcreate][libcreate], which uses iRobot's [
 ## Build Status
 * TravisCI (Ubuntu _Trusty_, ROS _Indigo_ and _Jade_) ![Build Status](https://api.travis-ci.org/AutonomyLab/create_autonomy.svg?branch=master)
 
+## Supported Robots
+
+| Model     | Support    |
+|-----------|------------|
+| Create 1  |  Yes       |
+| Create 2  |  Yes       |
+| Roomba Original Series | No *     |
+| Roomba 400 Series |  Yes * |
+| Roomba 500 Series |  No *  |
+| Roomba 600 Series |  Yes * |
+| Roomba 700 Series |  No *  |
+| Roomba 800 Series |  No * |
+| Roomba 900 Series |  No *  |
+
+_* Not verified. Anyone who is able to verify that this driver works or not is encouraged to contact [Jacob](https://jacobperron.ca) with their findings or open an issue._
+
 ## Features
 
 |  Feature      |  Status       |
@@ -99,7 +115,7 @@ $ roslaunch create_driver create_driver create.launch [create_1:=false]
 ------------|--------------|----------
 `loop_hz`   |  Frequency of internal update loop |  `10.0`
 `dev`       |  Serial port |  `/dev/ttyUSB0`
-`create_1`  |  Is robot is Create 1?  | `false`
+`create_1`  |  Is robot model Create 1 (Roomba 400 series)?  | `false`
 `latch_cmd_duration` | If this many seconds passes without receiving a velocity command the robot stops | `0.2`
 
 
