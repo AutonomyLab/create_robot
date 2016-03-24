@@ -2,10 +2,10 @@
 #include "create_driver/create_driver.h"
 
 CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
-  privNh.param<double>("loop_hz", loopHz, 10);
+  privNh.param<double>("loop_hz", loopHz, 10.0);
   privNh.param<std::string>("dev", dev, "/dev/ttyUSB0");
   privNh.param<int>("baud", baud, 115200);
-  privNh.param<double>("latch_cmd_duration", latchDuration, 0.5);
+  privNh.param<double>("latch_cmd_duration", latchDuration, 0.2);
 
   robot = new create::Create();
 
@@ -54,6 +54,7 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
   voltagePub = nh.advertise<std_msgs::UInt16>("battery/voltage", 30);
   currentPub = nh.advertise<std_msgs::UInt16>("battery/current", 30);
   chargePub = nh.advertise<std_msgs::UInt16>("battery/charge", 30);
+  chargeRatioPub = nh.advertise<std_msgs::Float32>("battery/charge_ratio", 30);
   capacityPub = nh.advertise<std_msgs::UInt16>("battery/capacity", 30);
   temperaturePub = nh.advertise<std_msgs::UInt16>("battery/temperature", 30);
   omniCharPub = nh.advertise<std_msgs::UInt16>("ir_omni", 30);
@@ -199,6 +200,8 @@ void CreateDriver::publishBatteryInfo() {
   capacityPub.publish(uint16Msg);
   uint16Msg.data = robot->getTemperature();
   temperaturePub.publish(uint16Msg);
+  float32Msg.data = (float) robot->getBatteryCharge() / (float) robot->getBatteryCapacity();
+  chargePub.publish(float32Msg);
 }
 
 void CreateDriver::publishButtonPresses() const {

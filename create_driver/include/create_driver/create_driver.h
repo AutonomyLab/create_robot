@@ -4,6 +4,7 @@
 #include <ros/ros.h>
 #include <std_msgs/Empty.h>
 #include <std_msgs/Bool.h>
+#include <std_msgs/Float32.h>
 #include <std_msgs/UInt16.h>
 #include <std_msgs/UInt8MultiArray.h>
 #include <geometry_msgs/Twist.h>
@@ -28,6 +29,7 @@ class CreateDriver {
     geometry_msgs::TransformStamped tfOdom;
     ros::Time lastCmdVelTime;
     std_msgs::Empty emptyMsg;
+    std_msgs::Float32 float32Msg;
     std_msgs::UInt16 uint16Msg;
     std_msgs::Bool boolMsg;
 
@@ -75,6 +77,7 @@ class CreateDriver {
     ros::Publisher voltagePub;
     ros::Publisher currentPub;
     ros::Publisher chargePub;
+    ros::Publisher chargeRatioPub;
     ros::Publisher capacityPub;
     ros::Publisher temperaturePub;
     ros::Publisher omniCharPub;
