@@ -1,10 +1,11 @@
 # create_autonomy
 
-[ROS](http://ros.org) driver for iRobot's [Create 1 & 2](http://www.irobot.com/About-iRobot/STEM/Create-2.aspx).
+[ROS](http://ros.org) driver for iRobot's [Create 1 & 2](http://www.irobot.com/About-iRobot/STEM/Create-2.aspx).  
+This package wraps the C++ library [libcreate][libcreate], which uses iRobot's [Open Interface Specification][oi_spec].
 
-* Documentation: TODO
+[](* Documentation: TODO)
 * ROS wiki page: TODO [](http://wiki.ros.org/create_autonomy)
-* Code API: TODO 
+[](* Code API: TODO)
 * Author: [Jacob Perron](http://jacobperron.ca) ([Autonomy Lab](http://autonomylab.org), [Simon Fraser University](http://www.sfu.ca))
 
 ## Build Status
@@ -18,7 +19,7 @@
 |  Safe mode    | Planned       |
 |  Clean demo   | N/A       |    
 |  Dock demo    | Available     |
-|  Drive wheels | Available     |
+|  Drive wheels | N/A       |
 |  Drive (v,w)  | Available     |
 |  Brush motors | Planned       |
 |  LEDs         | Available     |
@@ -93,11 +94,52 @@ $ roslaunch create_driver create_driver create.launch [create_1:=false]
 ```
 
 ### Parameters
-TODO
+
+ Name       |  Description |  Default 
+------------|--------------|----------
+`loop_hz`   |  Frequency of internal update loop |  `10.0`
+`dev`       |  Serial port |  `/dev/ttyUSB0`
+`create_1`  |  Is robot is Create 1?  | `false`
+`latch_cmd_duration` | If this many seconds passes without receiving a velocity command the robot stops | `0.2`
+
 
 ### Publishers
-TODO
+
+ Topic       | Description  | Type 
+-------------|--------------|------
+ `odom`      |  Robot odometry according to wheel encoders | [nav_msgs/Odometry][odometry]
+ `clean_button` | 'clean' button is pressed ('play' button for Create 1) | [std_msgs/Empty][empty]
+ `day_button` |  'day' button is pressed | [std_msgs/Empty][empty]
+ `hour_button` | 'hour' button is pressed | [std_msgs/Empty][empty]
+ `minute_button` | 'minute' button is pressed | [std_msgs/Empty][empty]
+ `dock_button` | 'dock' button is pressed ('advance' button for Create 1) | [std_msgs/Empty][empty]
+ `spot_button` | 'spot' button is pressed | [std_msgs/Empty][empty]
+ `battery/voltage` | Voltage of the robot's battery (mV) | [std_msgs/UInt16][uint16]
+ `battery/current` | Current flowing through the robot's battery (mA). Positive current implies charging | [std_msgs/UInt16][uint16]
+ `battery/charge` | The current charge of the robot's battery (mAh) | [std_msgs/UInt16][uint16]
+ `battery/capacity` | The estimated charge capacity of the robot's battery (mAh) | [std_msgs/UInt16][uint16]
+ `battery/temperature` | The temperature of the robot's battery (degrees Celsius) | [std_msgs/UInt16][uint16]
+ `ir_omni` | The IR character currently being read by the omnidirectional receiver. Value 0 means no character is being received | [std_msgs/UInt16][uint16]
 
 ### Subscribers
-TODO
 
+Topic       | Description   | Type
+------------|---------------|------
+`cmd_vel` | Drives the robot's wheels according to a forward and angular velocity | [geometry_msgs/Twist][twist]
+`debris_led` | Enable / disable the blue 'debris' LED | [std_msgs/Bool][bool]
+`spot_led`   | Enable / disable the 'spot' LED | [std_msgs/Bool][bool]
+`dock_led`   | Enable / disable the 'dock' LED | [std_msgs/Bool][bool]
+`check_led`  | Enable / disable the 'check robot` LED | [std_msgs/Bool][bool]
+`power_led`  | Set the 'power' LED color and intensity. Accepts 1 or 2 bytes, the first represents the color between green (0) and red (255) and the second (optional) represents the intensity with brightest setting as default (255) | [std_msgs/UInt8MultiArray][uint8multiarray]
+`set_ascii` | Sets the 4 digit LEDs. Accepts 1 to 4 bytes, each representing an ASCII character to be displayed from left to right | [std_msgs/UInt8MultiArray][uint8multiarray]
+`dock` | Activates the demo docking behaviour. Robot enters _Passive_ mode meaning the user loses control (See [OI Spec][oi_spec]) | [std_msgs/Empty][empty]
+`undock` | Switches robot to _Full_ mode giving control back to the user | [std_msgs/Empty][empty]
+
+[libcreate]:  https://github.com/AutonomyLab/libcreate
+[oi_spec]:  https://www.adafruit.com/datasheets/create_2_Open_Interface_Spec.pdf
+[odometry]:  http://docs.ros.org/api/nav_msgs/html/msg/Odometry.html
+[empty]:  http://docs.ros.org/api/std_msgs/html/msg/Empty.html
+[uint16]:  http://docs.ros.org/api/std_msgs/html/msg/UInt16.html
+[twist]:  http://docs.ros.org/api/geometry_msgs/html/msg/Twist.html
+[bool]:  http://docs.ros.org/api/std_msgs/html/msg/Bool.html
+[uint8multiarray]:  http://docs.ros.org/api/std_msgs/html/msg/UInt8MultiArray.html
