@@ -29,4 +29,4 @@ teleop:
     message_type: "std_msgs/Empty"
     topic_name: undock
     deadman_buttons: [1, 7]  # RT + A
-    axis_mapping: []
+    axis_mappings: []
