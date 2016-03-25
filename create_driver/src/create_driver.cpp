@@ -139,7 +139,9 @@ void CreateDriver::setASCIICallback(const std_msgs::UInt8MultiArrayConstPtr& msg
 
 void CreateDriver::dockCallback(const std_msgs::EmptyConstPtr& msg) {
   robot->setMode(create::MODE_PASSIVE);
-  usleep(1000000); // For create 1
+  
+  if (model == create::CREATE_1)
+    usleep(1000000); // Create 1 requires a delay (1 sec)
 
   // Call docking behaviour
   robot->dock();
