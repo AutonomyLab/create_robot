@@ -201,7 +201,7 @@ void CreateDriver::publishBatteryInfo() {
   uint16Msg.data = robot->getTemperature();
   temperaturePub.publish(uint16Msg);
   float32Msg.data = (float) robot->getBatteryCharge() / (float) robot->getBatteryCapacity();
-  chargePub.publish(float32Msg);
+  chargeRatioPub.publish(float32Msg);
 }
 
 void CreateDriver::publishButtonPresses() const {
