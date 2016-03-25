@@ -9,14 +9,15 @@ This package wraps the C++ library [libcreate][libcreate], which uses iRobot's [
 * Author: [Jacob Perron](http://jacobperron.ca) ([Autonomy Lab](http://autonomylab.org), [Simon Fraser University](http://www.sfu.ca))
 
 ## Build Status
-* TravisCI (Ubuntu _Trusty_, ROS _Indigo_ and _Jade_) ![Build Status](https://api.travis-ci.org/AutonomyLab/create_autonomy.svg?branch=master)
+
+TravisCI (Ubuntu _Trusty_, ROS _Indigo_ and _Jade_) ![Build Status](https://api.travis-ci.org/AutonomyLab/create_autonomy.svg?branch=master)
 
 ## Supported Robots
 
 | Model     | Support    |
 |-----------|------------|
 | Create 1  |  Yes       |
-| Create 2  |  Yes       |
+| Create 2  _(firmware >= 3.2.6)_ |  Yes       |
 | Roomba Original Series | No *     |
 | Roomba 400 Series |  Yes * |
 | Roomba 500 Series |  No *  |
@@ -54,8 +55,6 @@ _* Not verified. Anyone who is able to verify that this driver works or not is e
 | **_Diagnostics_** |           |
 |Corrupt Packets| Planned       |
 | Phyiscal tests| Planned       |
-
-
 
 ## Install
 
@@ -134,6 +133,7 @@ $ roslaunch create_driver create_driver create.launch [create_1:=false]
  `battery/current` | Current flowing through the robot's battery (mA). Positive current implies charging | [std_msgs/UInt16][uint16]
  `battery/charge` | The current charge of the robot's battery (mAh) | [std_msgs/UInt16][uint16]
  `battery/capacity` | The estimated charge capacity of the robot's battery (mAh) | [std_msgs/UInt16][uint16]
+ `battery/charge_ratio` | Charge / capacity | [std_msgs/Float32][float32]
  `battery/temperature` | The temperature of the robot's battery (degrees Celsius) | [std_msgs/UInt16][uint16]
  `ir_omni` | The IR character currently being read by the omnidirectional receiver. Value 0 means no character is being received | [std_msgs/UInt16][uint16]
 
@@ -151,6 +151,28 @@ Topic       | Description   | Type
 `dock` | Activates the demo docking behaviour. Robot enters _Passive_ mode meaning the user loses control (See [OI Spec][oi_spec]) | [std_msgs/Empty][empty]
 `undock` | Switches robot to _Full_ mode giving control back to the user | [std_msgs/Empty][empty]
 
+## Commanding your Create
+
+You can move the robot around by sending [geometry_msgs/Twist][twist] messages to the topic `cmd_vel`:
+
+```
+linear.x  (+)     Move forward (m/s)
+          (-)     Move backward (m/s)
+angular.z (+)     Rotate counter-clockwise (rad/s)
+          (-)     Rotate clockwise (rad/s)
+```
+` -0.5 <= linear.x <= 0.5` and `-4.25 <= angular.z <= 4.25`
+
+### Teleoperation
+
+`create_tools` comes with a launch file for teleoperating Create with a joystick.
+
+```bash
+$ roslaunch create_tools joy_teleop.launch [joy_config:=xbox360]
+```
+
+There exists configuration files for the [Xbox 360 wired controller](https://www.amazon.ca/Microsoft-Xbox-360-Wired-Controller/dp/B003ZSN600) and the [Logitech F710 controller](http://gaming.logitech.com/en-ca/product/f710-wireless-gamepad). You can adapt these files for your preferred joystick configuration.
+
 [libcreate]:  https://github.com/AutonomyLab/libcreate
 [oi_spec]:  https://www.adafruit.com/datasheets/create_2_Open_Interface_Spec.pdf
 [odometry]:  http://docs.ros.org/api/nav_msgs/html/msg/Odometry.html
@@ -159,3 +181,4 @@ Topic       | Description   | Type
 [twist]:  http://docs.ros.org/api/geometry_msgs/html/msg/Twist.html
 [bool]:  http://docs.ros.org/api/std_msgs/html/msg/Bool.html
 [uint8multiarray]:  http://docs.ros.org/api/std_msgs/html/msg/UInt8MultiArray.html
+[float32]:  http://docs.ros.org/api/std_msgs/html/msg/Bool.html
