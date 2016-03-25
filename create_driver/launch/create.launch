@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 <launch>
+  <arg name="create_1" default="false"/>
   <node name="create_driver" pkg="create_driver" type="create_driver" output="screen">
     <param name="~loop_hz" value="30" />
     <param name="~dev" value="/dev/ttyUSB0" />
-    <param name="~baud" value="115200" /> <!-- 57600 for Create 1 -->
+    <param name="~create_1" value="$(arg create_1)" />
   </node>
 </launch>

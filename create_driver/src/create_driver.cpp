@@ -2,12 +2,24 @@
 #include "create_driver/create_driver.h"
 
 CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
+  bool createOne;
   privNh.param<double>("loop_hz", loopHz, 10.0);
   privNh.param<std::string>("dev", dev, "/dev/ttyUSB0");
-  privNh.param<int>("baud", baud, 115200);
+  privNh.param<bool>("create_1", createOne, false);
   privNh.param<double>("latch_cmd_duration", latchDuration, 0.2);
 
-  robot = new create::Create();
+  if (createOne) {
+    model = create::CREATE_1;
+    privNh.param<int>("baud", baud, 57600);
+    ROS_INFO("[CREATE] Create 1 model selected");
+  }
+  else {
+    model = create::CREATE_2;
+    privNh.param<int>("baud", baud, 115200);
+    ROS_INFO("[CREATE] Create 2 model selected");
+  }
+
+  robot = new create::Create(model);
 
   if (!robot->connect(dev, baud)) {
     ROS_FATAL("[CREATE] Failed to establish serial connection with Create.");
@@ -58,6 +70,7 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
   capacityPub = nh.advertise<std_msgs::UInt16>("battery/capacity", 30);
   temperaturePub = nh.advertise<std_msgs::UInt16>("battery/temperature", 30);
   omniCharPub = nh.advertise<std_msgs::UInt16>("ir_omni", 30);
+  ROS_INFO("[CREATE] Ready.");
 }
 
 CreateDriver::~CreateDriver() {
@@ -125,6 +138,11 @@ void CreateDriver::setASCIICallback(const std_msgs::UInt8MultiArrayConstPtr& msg
 }
 
 void CreateDriver::dockCallback(const std_msgs::EmptyConstPtr& msg) {
+  robot->setMode(create::MODE_PASSIVE);
+  
+  if (model == create::CREATE_1)
+    usleep(1000000); // Create 1 requires a delay (1 sec)
+
   // Call docking behaviour
   robot->dock();
 }
