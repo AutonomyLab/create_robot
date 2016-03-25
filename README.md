@@ -51,7 +51,7 @@ _* Not verified. Anyone who is able to verify that this driver works or not is e
 |Right IR sensor| N/A       |    
 |  Battery info | Available     |
 |  Light sensors| Planned       |
-|Create 1 support| Developing [#1](https://github.com/AutonomyLab/create_autonomy/issues/1)   |
+|Create 1 support| Available    |
 | **_Diagnostics_** |           |
 |Corrupt Packets| Planned       |
 | Phyiscal tests| Planned       |
