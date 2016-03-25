@@ -130,11 +130,11 @@ $ roslaunch create_driver create_driver create.launch [create_1:=false]
  `dock_button` | 'dock' button is pressed ('advance' button for Create 1) | [std_msgs/Empty][empty]
  `spot_button` | 'spot' button is pressed | [std_msgs/Empty][empty]
  `battery/voltage` | Voltage of the robot's battery (mV) | [std_msgs/UInt16][uint16]
- `battery/current` | Current flowing through the robot's battery (mA). Positive current implies charging | [std_msgs/UInt16][uint16]
+ `battery/current` | Current flowing through the robot's battery (mA). Positive current implies charging | [std_msgs/Int16][int16]
  `battery/charge` | The current charge of the robot's battery (mAh) | [std_msgs/UInt16][uint16]
  `battery/capacity` | The estimated charge capacity of the robot's battery (mAh) | [std_msgs/UInt16][uint16]
  `battery/charge_ratio` | Charge / capacity | [std_msgs/Float32][float32]
- `battery/temperature` | The temperature of the robot's battery (degrees Celsius) | [std_msgs/UInt16][uint16]
+ `battery/temperature` | The temperature of the robot's battery (degrees Celsius) | [std_msgs/Int16][int16]
  `ir_omni` | The IR character currently being read by the omnidirectional receiver. Value 0 means no character is being received | [std_msgs/UInt16][uint16]
 
 ### Subscribers
@@ -178,6 +178,7 @@ There exists configuration files for the [Xbox 360 wired controller](https://www
 [odometry]:  http://docs.ros.org/api/nav_msgs/html/msg/Odometry.html
 [empty]:  http://docs.ros.org/api/std_msgs/html/msg/Empty.html
 [uint16]:  http://docs.ros.org/api/std_msgs/html/msg/UInt16.html
+[int16]:  http://docs.ros.org/api/std_msgs/html/msg/Int16.html
 [twist]:  http://docs.ros.org/api/geometry_msgs/html/msg/Twist.html
 [bool]:  http://docs.ros.org/api/std_msgs/html/msg/Bool.html
 [uint8multiarray]:  http://docs.ros.org/api/std_msgs/html/msg/UInt8MultiArray.html

@@ -6,6 +6,7 @@
 #include <std_msgs/Bool.h>
 #include <std_msgs/Float32.h>
 #include <std_msgs/UInt16.h>
+#include <std_msgs/Int16.h>
 #include <std_msgs/UInt8MultiArray.h>
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/TransformStamped.h>
@@ -32,6 +33,7 @@ class CreateDriver {
     std_msgs::Empty emptyMsg;
     std_msgs::Float32 float32Msg;
     std_msgs::UInt16 uint16Msg;
+    std_msgs::Int16 int16Msg;
     std_msgs::Bool boolMsg;
 
     // ROS params

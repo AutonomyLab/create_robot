@@ -64,11 +64,11 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
   dockBtnPub = nh.advertise<std_msgs::Empty>("dock_button", 30);
   spotBtnPub = nh.advertise<std_msgs::Empty>("spot_button", 30);
   voltagePub = nh.advertise<std_msgs::UInt16>("battery/voltage", 30);
-  currentPub = nh.advertise<std_msgs::UInt16>("battery/current", 30);
+  currentPub = nh.advertise<std_msgs::Int16>("battery/current", 30);
   chargePub = nh.advertise<std_msgs::UInt16>("battery/charge", 30);
   chargeRatioPub = nh.advertise<std_msgs::Float32>("battery/charge_ratio", 30);
   capacityPub = nh.advertise<std_msgs::UInt16>("battery/capacity", 30);
-  temperaturePub = nh.advertise<std_msgs::UInt16>("battery/temperature", 30);
+  temperaturePub = nh.advertise<std_msgs::Int16>("battery/temperature", 30);
   omniCharPub = nh.advertise<std_msgs::UInt16>("ir_omni", 30);
   ROS_INFO("[CREATE] Ready.");
 }
@@ -210,14 +210,14 @@ void CreateDriver::publishOdom() {
 void CreateDriver::publishBatteryInfo() {
   uint16Msg.data = robot->getVoltage();
   voltagePub.publish(uint16Msg);
-  uint16Msg.data = robot->getCurrent();
-  currentPub.publish(uint16Msg);
+  int16Msg.data = robot->getCurrent();
+  currentPub.publish(int16Msg);
   uint16Msg.data = robot->getBatteryCharge();
   chargePub.publish(uint16Msg);
   uint16Msg.data = robot->getBatteryCapacity();
   capacityPub.publish(uint16Msg);
-  uint16Msg.data = robot->getTemperature();
-  temperaturePub.publish(uint16Msg);
+  int16Msg.data = robot->getTemperature();
+  temperaturePub.publish(int16Msg);
   float32Msg.data = (float) robot->getBatteryCharge() / (float) robot->getBatteryCapacity();
   chargeRatioPub.publish(float32Msg);
 }
