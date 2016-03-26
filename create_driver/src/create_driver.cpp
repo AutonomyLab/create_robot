@@ -172,6 +172,7 @@ void CreateDriver::publishOdom() {
 
   // Populate position info
   geometry_msgs::Quaternion quat = tf::createQuaternionMsgFromRollPitchYaw(0, 0, pose.yaw);
+  odom.header.stamp = ros::Time::now();
   odom.pose.pose.position.x = pose.x;
   odom.pose.pose.position.y = pose.y;
   odom.pose.pose.orientation = quat;
