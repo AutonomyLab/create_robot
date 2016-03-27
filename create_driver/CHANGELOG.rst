@@ -2,6 +2,18 @@
 Changelog for package create_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add timestamp to odometry message
+* Update libcreate tag (with odometry fix)
+* Fix sign error for battery current and temperature
+* Update tag for libcreate
+* Add delay before starting dock demo in case of Create 1
+* Compute and publish battery charge ratio
+* Add README.md for create_driver
+* Add support for Create 1
+* Contributors: Jacob Perron
+
 0.3.0 (2016-03-17)
 ------------------
 * Add dock / undock support
