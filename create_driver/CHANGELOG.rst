@@ -2,8 +2,8 @@
 Changelog for package create_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.0 (2016-03-26)
+------------------
 * Add timestamp to odometry message
 * Update libcreate tag (with odometry fix)
 * Fix sign error for battery current and temperature

@@ -2,8 +2,8 @@
 Changelog for package create_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.4.0 (2016-03-26)
+------------------
 * Update teleop configurations files
 * Add configuration file for Logitech F710 controller
 * Contributors: Jacob Perron
