@@ -1,8 +1,12 @@
 # ca_driver
 
-## Node
+ROS driver for iRobot's Create 1 and 2.
 
-### ca_driver
+#### Launch file
+
+``` bash
+$ roslaunch ca_driver create.launch [create_1:=true]
+```
 
 #### Parameters
 
@@ -13,9 +17,4 @@
 | `latch_cmd_duration` | Time to latch velocity commands before sending zeros                                        | `0.2`          |
 | `create_1`           | Boolean flag that should be "true" if using the first generation Create (Roomba 400 series) | `false`        |
 
-#### Launch file
-
-``` bash
-$ roslaunch ca_driver create.launch [create_1:=true]
-```
 
