@@ -7,6 +7,7 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   nav_msgs
   tf
+  ca_msgs
 )
 
 find_package(Boost REQUIRED system thread)
@@ -21,7 +22,7 @@ catkin_package(
 include(ExternalProject)
 ExternalProject_Add(libcreate
   GIT_REPOSITORY https://github.com/AutonomyLab/libcreate.git
-  GIT_TAG 0.1.1 
+  GIT_TAG refactor 
   PREFIX ${CATKIN_DEVEL_PREFIX}
   CONFIGURE_COMMAND cmake . 
   BUILD_COMMAND make

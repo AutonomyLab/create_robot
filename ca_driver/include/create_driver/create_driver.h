@@ -14,6 +14,8 @@
 #include <tf/transform_broadcaster.h>
 
 #include "create/create.h"
+#include "ca_msgs/ChargingState.h"
+#include "ca_msgs/Mode.h"
 
 static const double COVARIANCE[36] = {1e-3, 0.0, 0.0, 0.0, 0.0, 0.0,
                                       0.0, 1e-3, 0.0, 0.0, 0.0, 0.0,
@@ -26,6 +28,8 @@ class CreateDriver {
   private:
     create::Create* robot;
     create::RobotModel model;
+    ca_msgs::Mode modeMsg;
+    ca_msgs::ChargingState chargingStateMsg;
     nav_msgs::Odometry odom;
     tf::TransformBroadcaster tfBroadcaster;
     geometry_msgs::TransformStamped tfOdom;
@@ -57,6 +61,7 @@ class CreateDriver {
     void publishBatteryInfo();
     void publishButtonPresses() const;
     void publishOmniChar();
+    void publishState();
 
   protected:
     ros::NodeHandle nh;
@@ -83,7 +88,9 @@ class CreateDriver {
     ros::Publisher chargeRatioPub;
     ros::Publisher capacityPub;
     ros::Publisher temperaturePub;
+    ros::Publisher chargingStatePub;
     ros::Publisher omniCharPub;
+    ros::Publisher modePub;
 
   public:
     CreateDriver(ros::NodeHandle& nh_);

@@ -69,7 +69,9 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
   chargeRatioPub = nh.advertise<std_msgs::Float32>("battery/charge_ratio", 30);
   capacityPub = nh.advertise<std_msgs::UInt16>("battery/capacity", 30);
   temperaturePub = nh.advertise<std_msgs::Int16>("battery/temperature", 30);
+  chargingStatePub = nh.advertise<ca_msgs::ChargingState>("battery/charging_state", 30);
   omniCharPub = nh.advertise<std_msgs::UInt16>("ir_omni", 30);
+  modePub = nh.advertise<ca_msgs::Mode>("mode", 30);
   ROS_INFO("[CREATE] Ready.");
 }
 
@@ -157,6 +159,7 @@ bool CreateDriver::update() {
   publishBatteryInfo();
   publishButtonPresses();
   publishOmniChar();
+  publishState();
 
   // If last velocity command was sent longer than latch duration, stop robot
   if (ros::Time::now() - lastCmdVelTime >= ros::Duration(latchDuration)) {
@@ -249,6 +252,52 @@ void CreateDriver::publishOmniChar() {
   uint16Msg.data = irChar;
   omniCharPub.publish(uint16Msg);
   // TODO: Publish info based on character, such as dock in sight
+}
+
+void CreateDriver::publishState() {
+  const create::CreateMode mode = robot->getMode();
+  switch (mode) {
+    case create::MODE_OFF:
+      modeMsg.mode = modeMsg.MODE_OFF;
+      break;
+    case create::MODE_PASSIVE:
+      modeMsg.mode = modeMsg.MODE_PASSIVE;
+      break;
+    case create::MODE_SAFE:
+      modeMsg.mode = modeMsg.MODE_SAFE;
+      break;
+    case create::MODE_FULL:
+      modeMsg.mode = modeMsg.MODE_FULL;
+      break;
+  }
+  modePub.publish(modeMsg);
+
+  const create::ChargingState chargingState = robot->getChargingState();
+  switch(chargingState) {
+    case create::CHARGE_NONE:
+      chargingStateMsg.state = chargingStateMsg.CHARGE_NONE;
+      break;
+    case create::CHARGE_RECONDITION:
+      chargingStateMsg.state = chargingStateMsg.CHARGE_RECONDITION;
+      break;
+
+    case create::CHARGE_FULL:
+      chargingStateMsg.state = chargingStateMsg.CHARGE_FULL;
+      break;
+
+    case create::CHARGE_TRICKLE:
+      chargingStateMsg.state = chargingStateMsg.CHARGE_TRICKLE;
+      break;
+
+    case create::CHARGE_WAITING:
+      chargingStateMsg.state = chargingStateMsg.CHARGE_WAITING;
+      break;
+
+    case create::CHARGE_FAULT:
+      chargingStateMsg.state = chargingStateMsg.CHARGE_FAULT;
+      break;
+  }
+  chargingStatePub.publish(chargingStateMsg);
 }
 
 void CreateDriver::spinOnce() {
