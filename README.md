@@ -105,7 +105,7 @@ Connect computer to Create's 7-pin serial port
 ### Launch file
 
 ```bash
-$ roslaunch create_driver create_driver create.launch [create_1:=false]
+$ roslaunch create_driver create.launch [create_1:=false]
 ```
 
 ### Parameters
