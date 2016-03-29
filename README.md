@@ -136,7 +136,7 @@ $ roslaunch ca_driver create.launch [create_1:=false]
  `dock_button` | 'dock' button is pressed ('advance' button for Create 1) | [std_msgs/Empty][empty]
  `spot_button` | 'spot' button is pressed | [std_msgs/Empty][empty]
  `ir_omni` | The IR character currently being read by the omnidirectional receiver. Value 0 means no character is being received | [std_msgs/UInt16][uint16]
- `mode` | The current mode of the robot | [ca_msgs/Mode][ca_msgs]
+ `mode` | The current mode of the robot (See [OI Spec][oi_spec] for details)| [ca_msgs/Mode][ca_msgs]
  `odom` |  Robot odometry according to wheel encoders | [nav_msgs/Odometry][odometry]
 
 ### Subscribers
