@@ -267,7 +267,7 @@ void CreateDriver::spin() {
 }
 
 int main(int argc, char** argv) {
-  ros::init(argc, argv, "create_driver");
+  ros::init(argc, argv, "ca_driver");
   ros::NodeHandle nh;
 
   CreateDriver createDriver(nh);

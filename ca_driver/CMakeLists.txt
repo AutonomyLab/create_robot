@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(create_driver)
+project(ca_driver)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
@@ -13,7 +13,7 @@ find_package(Boost REQUIRED system thread)
 
 catkin_package(
   INCLUDE_DIRS include
-  LIBRARIES libcreate create_driver
+  LIBRARIES libcreate
   CATKIN_DEPENDS roscpp std_msgs geometry_msgs nav_msgs tf
   DEPENDS system_lib
 )
@@ -41,13 +41,13 @@ include_directories(
 
 link_directories(${libcreate_PATH})
 
-add_executable(create_driver src/create_driver.cpp)
+add_executable(ca_driver src/create_driver.cpp)
 
-target_link_libraries(create_driver
+target_link_libraries(ca_driver
   ${catkin_LIBRARIES}
   ${Boost_LIBRARIES}
-  -lboost_system # Why need these two lines?
+  -lboost_system
   -lboost_thread
   create
 )
-add_dependencies(create_driver libcreate)
+add_dependencies(ca_driver libcreate)

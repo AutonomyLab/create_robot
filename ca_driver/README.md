@@ -1,8 +1,8 @@
-# create_driver
+# ca_driver
 
 ## Node
 
-### create_driver
+### ca_driver
 
 #### Parameters
 
@@ -16,6 +16,6 @@
 #### Launch file
 
 ``` bash
-$ roslaunch create_driver create.launch [create_1:=true]
+$ roslaunch ca_driver create.launch [create_1:=true]
 ```
 

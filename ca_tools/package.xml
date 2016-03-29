@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <package>
-  <name>create_tools</name>
+  <name>ca_tools</name>
   <version>0.4.0</version>
-  <description>The create_tools package</description>
+  <description>Miscellaneous tools for create_autonomy metapackage</description>
 
   <maintainer email="jperron@sfu.ca">Jacob Perron</maintainer>
 
   <license>BSD</license>
 
-  <!-- <url type="website">http://wiki.ros.org/create_tools</url> -->
+  <url type="website">http://wiki.ros.org/ca_tools</url>
 
   <author email="jperron@sfu.ca">Jacob Perron</author>
 

@@ -95,7 +95,7 @@ $ sudo usermod -a -G dialout $USER
 ```
 6. Logout and login for permission to take effect
 
-## Running create_driver
+## Running the driver
 
 ### Setup
 
@@ -105,7 +105,7 @@ Connect computer to Create's 7-pin serial port
 ### Launch file
 
 ```bash
-$ roslaunch create_driver create.launch [create_1:=false]
+$ roslaunch ca_driver create.launch [create_1:=false]
 ```
 
 ### Parameters
@@ -165,10 +165,10 @@ angular.z (+)     Rotate counter-clockwise (rad/s)
 
 ### Teleoperation
 
-`create_tools` comes with a launch file for teleoperating Create with a joystick.
+`ca_tools` comes with a launch file for teleoperating Create with a joystick.
 
 ```bash
-$ roslaunch create_tools joy_teleop.launch [joy_config:=xbox360]
+$ roslaunch ca_tools joy_teleop.launch [joy_config:=xbox360]
 ```
 
 There exists configuration files for the [Xbox 360 wired controller](https://www.amazon.ca/Microsoft-Xbox-360-Wired-Controller/dp/B003ZSN600) and the [Logitech F710 controller](http://gaming.logitech.com/en-ca/product/f710-wireless-gamepad). You can adapt these files for your preferred joystick configuration.
