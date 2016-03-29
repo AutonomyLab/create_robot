@@ -1,6 +1,6 @@
 # create_autonomy
 
-[ROS](http://ros.org) driver for iRobot's [Create 1 & 2](http://www.irobot.com/About-iRobot/STEM/Create-2.aspx).  
+[ROS](http://ros.org) driver for iRobot's [Create 1 & 2](http://www.irobot.com/About-iRobot/STEM/Create-2.aspx).
 This package wraps the C++ library [libcreate][libcreate], which uses iRobot's [Open Interface Specification][oi_spec].
 
 [](* Documentation: TODO)
@@ -30,40 +30,40 @@ _* Not verified. Anyone who is able to verify that this driver works or not is e
 
 ## Features
 
-|  Feature      |  Status       |
-|---------------|---------------|
-|  Odometry     | Available     |
-|  Safe mode    | Planned       |
-|  Clean demo   | N/A       |    
-|  Dock demo    | Available     |
-|  Drive wheels | N/A       |
-|  Drive (v,w)  | Available     |
-|  Brush motors | Planned       |
-|  LEDs         | Available     |
-|  Digit LEDs   | Available     |
-|  Sound        | Planned [#5](https://github.com/AutonomyLab/create_autonomy/issues/5)      |
-|  Wheeldrop    | Planned [#6](https://github.com/AutonomyLab/create_autonomy/issues/6)      |
-|  Bumpers      | Planned [#6](https://github.com/AutonomyLab/create_autonomy/issues/6)    |
-|  Cliff sensor | Planned       |
-|  Dirt detect  | N/A       |    
-|Omni IR sensor | Available     |
-| Left IR sensor| N/A       |    
-|Right IR sensor| N/A       |    
-|  Battery info | Available     |
-|  Light sensors| Planned       |
-|Create 1 support| Available    |
-| **_Diagnostics_** |           |
-|Corrupt Packets| Planned       |
-| Phyiscal tests| Planned       |
+|  Feature          |  Status       |
+|-------------------|---------------|
+|  Odometry         | Available     |
+|  Safe mode        | Planned       |
+|  Clean demo       | N/A           |
+|  Dock demo        | Available     |
+|  Drive wheels     | N/A           |
+|  Drive (v,w)      | Available     |
+|  Brush motors     | Planned       |
+|  LEDs             | Available     |
+|  Digit LEDs       | Available     |
+|  Sound            | Planned [#5](https://github.com/AutonomyLab/create_autonomy/issues/5) |
+|  Wheeldrop        | Planned [#6](https://github.com/AutonomyLab/create_autonomy/issues/6) |
+|  Bumpers          | Planned [#6](https://github.com/AutonomyLab/create_autonomy/issues/6) |
+|  Cliff sensor     | Planned       |
+|  Dirt detect      | N/A           |
+|  Omni IR sensor   | Available     |
+|  Left IR sensor   | N/A           |
+|  Right IR sensor  | N/A           |
+|  Battery info     | Available     |
+|  Light sensors    | Planned       |
+|  Create 1 support | Available     |
+| **_Diagnostics_** |               |
+|  Corrupt Packets  | Planned       |
+|  Phyiscal tests   | Planned       |
 
 ## Install
 
-#### Prerequisites 
+#### Prerequisites
 
 * [ROS](http://wiki.ros.org/ROS/Installation) _Indigo_ or _Jade_
 * Ubuntu packages: `python-rosdep`, `python-catkin-tools`
 
-```bash
+``` bash
 $ sudo apt-get install python-rosdep python-catkin-tools`
 ```
 
@@ -76,21 +76,21 @@ $ cd create_ws
 $ catkin init
 ```
 2. Clone this repo
-```bash
+``` bash
 $ git clone https://github.com/AutonomyLab/create_autonomy.git
 ```
 3. Install dependencies
-```bash
+``` bash
 $ rosdep update
 $ rosdep install --from-paths src -i
 ```
 4. Build
-```bash
+``` bash
 $ catkin build
 ```
 #### USB Permissions
 5. In order to connect to Create over USB, ensure your user is in the dialout group
-```bash
+``` bash
 $ sudo usermod -a -G dialout $USER
 ```
 6. Logout and login for permission to take effect
@@ -104,13 +104,13 @@ Connect computer to Create's 7-pin serial port
 
 ### Launch file
 
-```bash
+``` bash
 $ roslaunch ca_driver create.launch [create_1:=false]
 ```
 
 ### Parameters
 
- Name       |  Description |  Default 
+ Name       |  Description |  Default
 ------------|--------------|----------
 `loop_hz`   |  Frequency of internal update loop |  `10.0`
 `dev`       |  Serial port |  `/dev/ttyUSB0`
@@ -120,22 +120,24 @@ $ roslaunch ca_driver create.launch [create_1:=false]
 
 ### Publishers
 
- Topic       | Description  | Type 
+ Topic       | Description  | Type
 -------------|--------------|------
- `odom`      |  Robot odometry according to wheel encoders | [nav_msgs/Odometry][odometry]
+ `battery/capacity` | The estimated charge capacity of the robot's battery (mAh) | [std_msgs/UInt16][uint16]
+ `battery/charge` | The current charge of the robot's battery (mAh) | [std_msgs/UInt16][uint16]
+ `battery/charge_ratio` | Charge / capacity | [std_msgs/Float32][float32]
+ `battery/charging_state` | The chargins state of the battery | [ca_msgs/ChargingState][ca_msgs]
+ `battery/current` | Current flowing through the robot's battery (mA). Positive current implies charging | [std_msgs/Int16][int16]
+ `battery/temperature` | The temperature of the robot's battery (degrees Celsius) | [std_msgs/Int16][int16]
+ `battery/voltage` | Voltage of the robot's battery (mV) | [std_msgs/UInt16][uint16]
  `clean_button` | 'clean' button is pressed ('play' button for Create 1) | [std_msgs/Empty][empty]
  `day_button` |  'day' button is pressed | [std_msgs/Empty][empty]
  `hour_button` | 'hour' button is pressed | [std_msgs/Empty][empty]
  `minute_button` | 'minute' button is pressed | [std_msgs/Empty][empty]
  `dock_button` | 'dock' button is pressed ('advance' button for Create 1) | [std_msgs/Empty][empty]
  `spot_button` | 'spot' button is pressed | [std_msgs/Empty][empty]
- `battery/voltage` | Voltage of the robot's battery (mV) | [std_msgs/UInt16][uint16]
- `battery/current` | Current flowing through the robot's battery (mA). Positive current implies charging | [std_msgs/Int16][int16]
- `battery/charge` | The current charge of the robot's battery (mAh) | [std_msgs/UInt16][uint16]
- `battery/capacity` | The estimated charge capacity of the robot's battery (mAh) | [std_msgs/UInt16][uint16]
- `battery/charge_ratio` | Charge / capacity | [std_msgs/Float32][float32]
- `battery/temperature` | The temperature of the robot's battery (degrees Celsius) | [std_msgs/Int16][int16]
  `ir_omni` | The IR character currently being read by the omnidirectional receiver. Value 0 means no character is being received | [std_msgs/UInt16][uint16]
+ `mode` | The current mode of the robot | [ca_msgs/Mode][ca_msgs]
+ `odom` |  Robot odometry according to wheel encoders | [nav_msgs/Odometry][odometry]
 
 ### Subscribers
 
@@ -167,7 +169,7 @@ angular.z (+)     Rotate counter-clockwise (rad/s)
 
 `ca_tools` comes with a launch file for teleoperating Create with a joystick.
 
-```bash
+``` bash
 $ roslaunch ca_tools joy_teleop.launch [joy_config:=xbox360]
 ```
 
@@ -183,3 +185,4 @@ There exists configuration files for the [Xbox 360 wired controller](https://www
 [bool]:  http://docs.ros.org/api/std_msgs/html/msg/Bool.html
 [uint8multiarray]:  http://docs.ros.org/api/std_msgs/html/msg/UInt8MultiArray.html
 [float32]:  http://docs.ros.org/api/std_msgs/html/msg/Bool.html
+[ca_msgs]:  http://github.com/AutonomyLab/create_autonomy/tree/indigo-devel
