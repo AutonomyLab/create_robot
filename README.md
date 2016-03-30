@@ -122,13 +122,13 @@ $ roslaunch ca_driver create.launch [create_1:=false]
 
  Topic       | Description  | Type
 -------------|--------------|------
- `battery/capacity` | The estimated charge capacity of the robot's battery (mAh) | [std_msgs/UInt16][uint16]
- `battery/charge` | The current charge of the robot's battery (mAh) | [std_msgs/UInt16][uint16]
+ `battery/capacity` | The estimated charge capacity of the robot's battery (Ah) | [std_msgs/UInt16][uint16]
+ `battery/charge` | The current charge of the robot's battery (Ah) | [std_msgs/UInt16][uint16]
  `battery/charge_ratio` | Charge / capacity | [std_msgs/Float32][float32]
  `battery/charging_state` | The chargins state of the battery | [ca_msgs/ChargingState][ca_msgs]
- `battery/current` | Current flowing through the robot's battery (mA). Positive current implies charging | [std_msgs/Int16][int16]
+ `battery/current` | Current flowing through the robot's battery (A). Positive current implies charging | [std_msgs/Int16][int16]
  `battery/temperature` | The temperature of the robot's battery (degrees Celsius) | [std_msgs/Int16][int16]
- `battery/voltage` | Voltage of the robot's battery (mV) | [std_msgs/UInt16][uint16]
+ `battery/voltage` | Voltage of the robot's battery (V) | [std_msgs/UInt16][uint16]
  `clean_button` | 'clean' button is pressed ('play' button for Create 1) | [std_msgs/Empty][empty]
  `day_button` |  'day' button is pressed | [std_msgs/Empty][empty]
  `hour_button` | 'hour' button is pressed | [std_msgs/Empty][empty]
