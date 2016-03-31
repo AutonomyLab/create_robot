@@ -17,7 +17,7 @@
   <run_depend>ca_driver</run_depend>
   <run_depend>ca_tools</run_depend>
   <run_depend>ca_msgs</run_depend>
-  <!--run_depend>ca_description</run_depend-->
+  <run_depend>ca_description</run_depend>
 
   <export>
     <metapackage/>
