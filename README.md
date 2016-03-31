@@ -104,8 +104,14 @@ Connect computer to Create's 7-pin serial port
 
 ### Launch file
 
+For Create 2 (Roomba 600 series):
 ``` bash
-$ roslaunch ca_driver create.launch [create_1:=false]
+$ roslaunch ca_driver create_2.launch
+```
+
+For Create 1 (Roomba 400 series):
+``` bash
+$ roslaunch ca_driver create_1.launch
 ```
 
 ### Parameters

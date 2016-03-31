@@ -15,7 +15,7 @@ find_package(Boost REQUIRED system thread)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES libcreate
-  CATKIN_DEPENDS roscpp std_msgs geometry_msgs nav_msgs tf
+  CATKIN_DEPENDS roscpp std_msgs geometry_msgs nav_msgs tf ca_msgs ca_description
   DEPENDS system_lib
 )
 
