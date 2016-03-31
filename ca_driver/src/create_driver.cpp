@@ -67,7 +67,7 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
   currentPub = nh.advertise<std_msgs::Float32>("battery/current", 30);
   chargePub = nh.advertise<std_msgs::Float32>("battery/charge", 30);
   chargeRatioPub = nh.advertise<std_msgs::Float32>("battery/charge_ratio", 30);
-  capacityPub = nh.advertise<std_msgs::UInt16>("battery/capacity", 30);
+  capacityPub = nh.advertise<std_msgs::Float32>("battery/capacity", 30);
   temperaturePub = nh.advertise<std_msgs::Int16>("battery/temperature", 30);
   chargingStatePub = nh.advertise<ca_msgs::ChargingState>("battery/charging_state", 30);
   omniCharPub = nh.advertise<std_msgs::UInt16>("ir_omni", 30);
