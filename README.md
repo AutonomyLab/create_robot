@@ -1,16 +1,17 @@
 # create_autonomy
 
-[ROS](http://ros.org) driver for iRobot's [Create 1 & 2](http://www.irobot.com/About-iRobot/STEM/Create-2.aspx).
+[ROS](http://ros.org) driver for iRobot [Create 1 and 2](http://www.irobot.com/About-iRobot/STEM/Create-2.aspx).
 This package wraps the C++ library [libcreate][libcreate], which uses iRobot's [Open Interface Specification][oi_spec].
 
 [](* Documentation: TODO)
-* ROS wiki page: TODO [](http://wiki.ros.org/create_autonomy)
-[](* Code API: TODO)
+* ROS wiki page: http://wiki.ros.org/create_autonomy
+* Support: [ROS Answers (tag: create_autonomy)](http://answers.ros.org/questions/scope:all/sort:activity-desc/tags:create_autonomy/page:1/)
 * Author: [Jacob Perron](http://jacobperron.ca) ([Autonomy Lab](http://autonomylab.org), [Simon Fraser University](http://www.sfu.ca))
 
 ## Build Status
 
-TravisCI (Ubuntu _Trusty_, ROS _Indigo_ and _Jade_) ![Build Status](https://api.travis-ci.org/AutonomyLab/create_autonomy.svg?branch=indigo-devel)
+TravisCI (Ubuntu _Trusty_, ROS _Indigo_ and _Jade_)  
+![Build Status](https://api.travis-ci.org/AutonomyLab/create_autonomy.svg?branch=indigo-devel)
 
 ## Supported Robots
 
@@ -128,13 +129,13 @@ $ roslaunch ca_driver create_1.launch
 
  Topic       | Description  | Type
 -------------|--------------|------
- `battery/capacity` | The estimated charge capacity of the robot's battery (Ah) | [std_msgs/UInt16][uint16]
- `battery/charge` | The current charge of the robot's battery (Ah) | [std_msgs/UInt16][uint16]
+ `battery/capacity` | The estimated charge capacity of the robot's battery (Ah) | [std_msgs/Float32][float32]
+ `battery/charge` | The current charge of the robot's battery (Ah) | [std_msgs/Float32][float32]
  `battery/charge_ratio` | Charge / capacity | [std_msgs/Float32][float32]
  `battery/charging_state` | The chargins state of the battery | [ca_msgs/ChargingState][ca_msgs]
- `battery/current` | Current flowing through the robot's battery (A). Positive current implies charging | [std_msgs/Int16][int16]
+ `battery/current` | Current flowing through the robot's battery (A). Positive current implies charging | [std_msgs/Float32][float32]
  `battery/temperature` | The temperature of the robot's battery (degrees Celsius) | [std_msgs/Int16][int16]
- `battery/voltage` | Voltage of the robot's battery (V) | [std_msgs/UInt16][uint16]
+ `battery/voltage` | Voltage of the robot's battery (V) | [std_msgs/Float32][float32]
  `clean_button` | 'clean' button is pressed ('play' button for Create 1) | [std_msgs/Empty][empty]
  `day_button` |  'day' button is pressed | [std_msgs/Empty][empty]
  `hour_button` | 'hour' button is pressed | [std_msgs/Empty][empty]
@@ -190,5 +191,5 @@ There exists configuration files for the [Xbox 360 wired controller](https://www
 [twist]:  http://docs.ros.org/api/geometry_msgs/html/msg/Twist.html
 [bool]:  http://docs.ros.org/api/std_msgs/html/msg/Bool.html
 [uint8multiarray]:  http://docs.ros.org/api/std_msgs/html/msg/UInt8MultiArray.html
-[float32]:  http://docs.ros.org/api/std_msgs/html/msg/Bool.html
+[float32]:  http://docs.ros.org/api/std_msgs/html/msg/Float32.html
 [ca_msgs]:  http://github.com/AutonomyLab/create_autonomy/tree/indigo-devel
