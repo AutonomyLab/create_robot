@@ -2,7 +2,7 @@
 <launch>
   <arg name="joy_dev" default="/dev/input/js0" />
   <arg name="joy_config" default="xbox360" />
-  <arg name="teleop_config" default="$(find create_tools)/config/$(arg joy_config).yaml" />
+  <arg name="teleop_config" default="$(find ca_tools)/config/$(arg joy_config).yaml" />
 
   <rosparam file="$(arg teleop_config)" command="load" />
 
