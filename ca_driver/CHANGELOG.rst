@@ -2,8 +2,8 @@
 Changelog for package create_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.0 (2016-04-01)
+------------------
 * Update libcreate git tag
 * Rename variables according to ROS cpp style guide
 * Run clang-format

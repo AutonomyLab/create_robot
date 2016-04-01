@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>ca_tools</name>
-  <version>0.4.0</version>
+  <version>1.0.0</version>
   <description>Miscellaneous tools for create_autonomy metapackage</description>
 
   <maintainer email="jperron@sfu.ca">Jacob Perron</maintainer>
