@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="create_autonomy : ROS driver for iRobot&#39;s Create 1 and 2">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>create_autonomy</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/AutonomyLab/create_autonomy">View on GitHub</a>
+
+          <h1 id="project_title">create_autonomy</h1>
+          <h2 id="project_tagline">ROS driver for iRobot&#39;s Create 1 and 2</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/AutonomyLab/create_autonomy/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/AutonomyLab/create_autonomy/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a id="create_autonomy" class="anchor" href="#create_autonomy" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>create_autonomy</h1>
+
+<p><a href="http://ros.org">ROS</a> driver for iRobot's <a href="http://www.irobot.com/About-iRobot/STEM/Create-2.aspx">Create 1 &amp; 2</a>.
+This package wraps the C++ library <a href="https://github.com/AutonomyLab/libcreate">libcreate</a>, which uses iRobot's <a href="https://www.adafruit.com/datasheets/create_2_Open_Interface_Spec.pdf">Open Interface Specification</a>.</p>
+
+<p></p>
+
+<ul>
+<li>ROS wiki page: <a href="http://wiki.ros.org/create_autonomy">http://wiki.ros.org/create_autonomy</a>
+</li>
+<li>Support: <a href="http://answers.ros.org/questions/scope:all/sort:activity-desc/tags:create_autonomy/page:1/">ROS Answers (tag: create_autonomy)</a>
+</li>
+<li>Author: <a href="http://jacobperron.ca">Jacob Perron</a> (<a href="http://autonomylab.org">Autonomy Lab</a>, <a href="http://www.sfu.ca">Simon Fraser University</a>)</li>
+</ul>
+
+<h2>
+<a id="supported-robots" class="anchor" href="#supported-robots" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Supported Robots</h2>
+
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Support</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create 1</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Create 2  <em>(firmware &gt;= 3.2.6)</em>
+</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Roomba Original Series</td>
+<td>No *</td>
+</tr>
+<tr>
+<td>Roomba 400 Series</td>
+<td>Yes *</td>
+</tr>
+<tr>
+<td>Roomba 500 Series</td>
+<td>No *</td>
+</tr>
+<tr>
+<td>Roomba 600 Series</td>
+<td>Yes *</td>
+</tr>
+<tr>
+<td>Roomba 700 Series</td>
+<td>No *</td>
+</tr>
+<tr>
+<td>Roomba 800 Series</td>
+<td>No *</td>
+</tr>
+<tr>
+<td>Roomba 900 Series</td>
+<td>No *</td>
+</tr>
+</tbody>
+</table>
+
+<p><em>* Not verified. Anyone who is able to verify that this driver works or not is encouraged to contact <a href="https://jacobperron.ca">Jacob</a> with their findings or open an issue.</em></p>
+
+<h2>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Features</h2>
+
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Odometry</td>
+<td>Available</td>
+</tr>
+<tr>
+<td>Safe mode</td>
+<td>Planned</td>
+</tr>
+<tr>
+<td>Clean demo</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Dock demo</td>
+<td>Available</td>
+</tr>
+<tr>
+<td>Drive wheels</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Drive (v,w)</td>
+<td>Available</td>
+</tr>
+<tr>
+<td>Brush motors</td>
+<td>Planned</td>
+</tr>
+<tr>
+<td>LEDs</td>
+<td>Available</td>
+</tr>
+<tr>
+<td>Digit LEDs</td>
+<td>Available</td>
+</tr>
+<tr>
+<td>Sound</td>
+<td>Planned <a href="https://github.com/AutonomyLab/create_autonomy/issues/5">#5</a>
+</td>
+</tr>
+<tr>
+<td>Wheeldrop</td>
+<td>Planned <a href="https://github.com/AutonomyLab/create_autonomy/issues/6">#6</a>
+</td>
+</tr>
+<tr>
+<td>Bumpers</td>
+<td>Planned <a href="https://github.com/AutonomyLab/create_autonomy/issues/6">#6</a>
+</td>
+</tr>
+<tr>
+<td>Cliff sensor</td>
+<td>Planned</td>
+</tr>
+<tr>
+<td>Dirt detect</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Omni IR sensor</td>
+<td>Available</td>
+</tr>
+<tr>
+<td>Left IR sensor</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Right IR sensor</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>Battery info</td>
+<td>Available</td>
+</tr>
+<tr>
+<td>Light sensors</td>
+<td>Planned</td>
+</tr>
+<tr>
+<td>Create 1 support</td>
+<td>Available</td>
+</tr>
+<tr>
+<td><strong><em>Diagnostics</em></strong></td>
+<td></td>
+</tr>
+<tr>
+<td>Corrupt Packets</td>
+<td>Planned</td>
+</tr>
+<tr>
+<td>Phyiscal tests</td>
+<td>Planned</td>
+</tr>
+</tbody>
+</table>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">create_autonomy maintained by <a href="https://github.com/AutonomyLab">AutonomyLab</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
