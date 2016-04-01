@@ -17,87 +17,85 @@
 #include "ca_msgs/ChargingState.h"
 #include "ca_msgs/Mode.h"
 
-static const double COVARIANCE[36] = {1e-3, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                      0.0, 1e-3, 0.0, 0.0, 0.0, 0.0,
-                                      0.0, 0.0, 1e6, 0.0, 0.0, 0.0,
-                                      0.0, 0.0, 0.0, 1e6, 0.0, 0.0,
-                                      0.0, 0.0, 0.0, 0.0, 1e6, 0.0,
-                                      0.0, 0.0, 0.0, 0.0, 0.0, 1e3};
+static const double COVARIANCE[36] = {1e-3, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1e-3, 0.0, 0.0, 0.0, 0.0,
+                                      0.0,  0.0, 1e6, 0.0, 0.0, 0.0, 0.0, 0.0,  0.0, 1e6, 0.0, 0.0,
+                                      0.0,  0.0, 0.0, 0.0, 1e6, 0.0, 0.0, 0.0,  0.0, 0.0, 0.0, 1e3};
 
-class CreateDriver {
-  private:
-    create::Create* robot;
-    create::RobotModel model;
-    ca_msgs::Mode modeMsg;
-    ca_msgs::ChargingState chargingStateMsg;
-    nav_msgs::Odometry odom;
-    tf::TransformBroadcaster tfBroadcaster;
-    geometry_msgs::TransformStamped tfOdom;
-    ros::Time lastCmdVelTime;
-    std_msgs::Empty emptyMsg;
-    std_msgs::Float32 float32Msg;
-    std_msgs::UInt16 uint16Msg;
-    std_msgs::Int16 int16Msg;
-    std_msgs::Bool boolMsg;
+class CreateDriver
+{
+private:
+  create::Create* robot;
+  create::RobotModel model;
+  ca_msgs::Mode modeMsg;
+  ca_msgs::ChargingState chargingStateMsg;
+  nav_msgs::Odometry odom;
+  tf::TransformBroadcaster tfBroadcaster;
+  geometry_msgs::TransformStamped tfOdom;
+  ros::Time lastCmdVelTime;
+  std_msgs::Empty emptyMsg;
+  std_msgs::Float32 float32Msg;
+  std_msgs::UInt16 uint16Msg;
+  std_msgs::Int16 int16Msg;
+  std_msgs::Bool boolMsg;
 
-    // ROS params
-    double loopHz;
-    std::string dev;
-    int baud;
-    double latchDuration;
+  // ROS params
+  double loopHz;
+  std::string dev;
+  int baud;
+  double latchDuration;
 
-    void cmdVelCallback(const geometry_msgs::TwistConstPtr& msg);
-    void debrisLEDCallback(const std_msgs::BoolConstPtr& msg);
-    void spotLEDCallback(const std_msgs::BoolConstPtr& msg);
-    void dockLEDCallback(const std_msgs::BoolConstPtr& msg);
-    void checkLEDCallback(const std_msgs::BoolConstPtr& msg);
-    void powerLEDCallback(const std_msgs::UInt8MultiArrayConstPtr& msg);
-    void setASCIICallback(const std_msgs::UInt8MultiArrayConstPtr& msg);
-    void dockCallback(const std_msgs::EmptyConstPtr& msg);
-    void undockCallback(const std_msgs::EmptyConstPtr& msg);
+  void cmdVelCallback(const geometry_msgs::TwistConstPtr& msg);
+  void debrisLEDCallback(const std_msgs::BoolConstPtr& msg);
+  void spotLEDCallback(const std_msgs::BoolConstPtr& msg);
+  void dockLEDCallback(const std_msgs::BoolConstPtr& msg);
+  void checkLEDCallback(const std_msgs::BoolConstPtr& msg);
+  void powerLEDCallback(const std_msgs::UInt8MultiArrayConstPtr& msg);
+  void setASCIICallback(const std_msgs::UInt8MultiArrayConstPtr& msg);
+  void dockCallback(const std_msgs::EmptyConstPtr& msg);
+  void undockCallback(const std_msgs::EmptyConstPtr& msg);
 
-    bool update();
-    void publishOdom();
-    void publishBatteryInfo();
-    void publishButtonPresses() const;
-    void publishOmniChar();
-    void publishState();
+  bool update();
+  void publishOdom();
+  void publishBatteryInfo();
+  void publishButtonPresses() const;
+  void publishOmniChar();
+  void publishState();
 
-  protected:
-    ros::NodeHandle nh;
-    ros::NodeHandle privNh;
-    ros::Subscriber cmdVelSub;
-    ros::Subscriber debrisLEDSub;
-    ros::Subscriber spotLEDSub;
-    ros::Subscriber dockLEDSub;
-    ros::Subscriber checkLEDSub;
-    ros::Subscriber powerLEDSub;
-    ros::Subscriber setASCIISub;
-    ros::Subscriber dockSub;
-    ros::Subscriber undockSub;
-    ros::Publisher odomPub;
-    ros::Publisher cleanBtnPub;
-    ros::Publisher dayBtnPub;
-    ros::Publisher hourBtnPub;
-    ros::Publisher minBtnPub;
-    ros::Publisher dockBtnPub;
-    ros::Publisher spotBtnPub;
-    ros::Publisher voltagePub;
-    ros::Publisher currentPub;
-    ros::Publisher chargePub;
-    ros::Publisher chargeRatioPub;
-    ros::Publisher capacityPub;
-    ros::Publisher temperaturePub;
-    ros::Publisher chargingStatePub;
-    ros::Publisher omniCharPub;
-    ros::Publisher modePub;
+protected:
+  ros::NodeHandle nh;
+  ros::NodeHandle privNh;
+  ros::Subscriber cmdVelSub;
+  ros::Subscriber debrisLEDSub;
+  ros::Subscriber spotLEDSub;
+  ros::Subscriber dockLEDSub;
+  ros::Subscriber checkLEDSub;
+  ros::Subscriber powerLEDSub;
+  ros::Subscriber setASCIISub;
+  ros::Subscriber dockSub;
+  ros::Subscriber undockSub;
+  ros::Publisher odomPub;
+  ros::Publisher cleanBtnPub;
+  ros::Publisher dayBtnPub;
+  ros::Publisher hourBtnPub;
+  ros::Publisher minBtnPub;
+  ros::Publisher dockBtnPub;
+  ros::Publisher spotBtnPub;
+  ros::Publisher voltagePub;
+  ros::Publisher currentPub;
+  ros::Publisher chargePub;
+  ros::Publisher chargeRatioPub;
+  ros::Publisher capacityPub;
+  ros::Publisher temperaturePub;
+  ros::Publisher chargingStatePub;
+  ros::Publisher omniCharPub;
+  ros::Publisher modePub;
 
-  public:
-    CreateDriver(ros::NodeHandle& nh_);
-    ~CreateDriver();
-    virtual void spin();
-    virtual void spinOnce();
+public:
+  CreateDriver(ros::NodeHandle& nh_);
+  ~CreateDriver();
+  virtual void spin();
+  virtual void spinOnce();
 
-}; // class CreateDriver
+};  // class CreateDriver
 
-#endif // CREATE_AUTONOMY_CREATE_DRIVER_H
+#endif  // CREATE_AUTONOMY_CREATE_DRIVER_H

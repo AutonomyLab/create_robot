@@ -1,19 +1,22 @@
 #include <tf/transform_datatypes.h>
 #include "create_driver/create_driver.h"
 
-CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
+CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~")
+{
   bool createOne;
   privNh.param<double>("loop_hz", loopHz, 10.0);
   privNh.param<std::string>("dev", dev, "/dev/ttyUSB0");
   privNh.param<bool>("create_1", createOne, false);
   privNh.param<double>("latch_cmd_duration", latchDuration, 0.2);
 
-  if (createOne) {
+  if (createOne)
+  {
     model = create::CREATE_1;
     privNh.param<int>("baud", baud, 57600);
     ROS_INFO("[CREATE] Create 1 model selected");
   }
-  else {
+  else
+  {
     model = create::CREATE_2;
     privNh.param<int>("baud", baud, 115200);
     ROS_INFO("[CREATE] Create 2 model selected");
@@ -21,7 +24,8 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
 
   robot = new create::Create(model);
 
-  if (!robot->connect(dev, baud)) {
+  if (!robot->connect(dev, baud))
+  {
     ROS_FATAL("[CREATE] Failed to establish serial connection with Create.");
     ros::shutdown();
   }
@@ -29,7 +33,7 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
   ROS_INFO("[CREATE] Connection established.");
 
   // Put into full control mode
-  //TODO: Make option to run in safe mode as parameter
+  // TODO: Make option to run in safe mode as parameter
   robot->setMode(create::MODE_FULL);
 
   // Show robot's battery level
@@ -41,7 +45,8 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
   odom.child_frame_id = "base_footprint";
 
   // Populate covariances
-  for (int i = 0; i < 36; i++) {
+  for (int i = 0; i < 36; i++)
+  {
     odom.pose.covariance[i] = COVARIANCE[i];
     odom.twist.covariance[i] = COVARIANCE[i];
   }
@@ -60,7 +65,7 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
   cleanBtnPub = nh.advertise<std_msgs::Empty>("clean_button", 30);
   dayBtnPub = nh.advertise<std_msgs::Empty>("day_button", 30);
   hourBtnPub = nh.advertise<std_msgs::Empty>("hour_button", 30);
-  minBtnPub = nh.advertise<std_msgs::Empty>("minute_button",30);
+  minBtnPub = nh.advertise<std_msgs::Empty>("minute_button", 30);
   dockBtnPub = nh.advertise<std_msgs::Empty>("dock_button", 30);
   spotBtnPub = nh.advertise<std_msgs::Empty>("spot_button", 30);
   voltagePub = nh.advertise<std_msgs::Float32>("battery/voltage", 30);
@@ -75,86 +80,107 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~") {
   ROS_INFO("[CREATE] Ready.");
 }
 
-CreateDriver::~CreateDriver() {
+CreateDriver::~CreateDriver()
+{
   ROS_INFO("[CREATE] Destruct sequence initiated.");
   robot->disconnect();
   delete robot;
 }
 
-void CreateDriver::cmdVelCallback(const geometry_msgs::TwistConstPtr& msg) {
+void CreateDriver::cmdVelCallback(const geometry_msgs::TwistConstPtr& msg)
+{
   robot->drive(msg->linear.x, msg->angular.z);
   lastCmdVelTime = ros::Time::now();
 }
 
-void CreateDriver::debrisLEDCallback(const std_msgs::BoolConstPtr& msg) {
+void CreateDriver::debrisLEDCallback(const std_msgs::BoolConstPtr& msg)
+{
   robot->enableDebrisLED(msg->data);
 }
 
-void CreateDriver::spotLEDCallback(const std_msgs::BoolConstPtr& msg) {
+void CreateDriver::spotLEDCallback(const std_msgs::BoolConstPtr& msg)
+{
   robot->enableSpotLED(msg->data);
 }
 
-void CreateDriver::dockLEDCallback(const std_msgs::BoolConstPtr& msg) {
+void CreateDriver::dockLEDCallback(const std_msgs::BoolConstPtr& msg)
+{
   robot->enableDockLED(msg->data);
 }
 
-void CreateDriver::checkLEDCallback(const std_msgs::BoolConstPtr& msg) {
+void CreateDriver::checkLEDCallback(const std_msgs::BoolConstPtr& msg)
+{
   robot->enableCheckRobotLED(msg->data);
 }
 
-void CreateDriver::powerLEDCallback(const std_msgs::UInt8MultiArrayConstPtr& msg) {
-  if (msg->data.size() < 1) {
+void CreateDriver::powerLEDCallback(const std_msgs::UInt8MultiArrayConstPtr& msg)
+{
+  if (msg->data.size() < 1)
+  {
     ROS_ERROR("[CREATE] No values provided to set power LED");
   }
-  else {
-    if (msg->data.size() < 2) {
+  else
+  {
+    if (msg->data.size() < 2)
+    {
       robot->setPowerLED(msg->data[0]);
     }
-    else {
+    else
+    {
       robot->setPowerLED(msg->data[0], msg->data[1]);
     }
   }
 }
 
-void CreateDriver::setASCIICallback(const std_msgs::UInt8MultiArrayConstPtr& msg) {
+void CreateDriver::setASCIICallback(const std_msgs::UInt8MultiArrayConstPtr& msg)
+{
   bool result;
-  if (msg->data.size() < 1) {
+  if (msg->data.size() < 1)
+  {
     ROS_ERROR("[CREATE] No ASCII digits provided");
   }
-  else if (msg->data.size() < 2) {
+  else if (msg->data.size() < 2)
+  {
     result = robot->setDigitsASCII(msg->data[0], ' ', ' ', ' ');
   }
-  else if (msg->data.size() < 3) {
+  else if (msg->data.size() < 3)
+  {
     result = robot->setDigitsASCII(msg->data[0], msg->data[1], ' ', ' ');
   }
-  else if (msg->data.size() < 4) {
+  else if (msg->data.size() < 4)
+  {
     result = robot->setDigitsASCII(msg->data[0], msg->data[1], msg->data[2], ' ');
   }
-  else {
+  else
+  {
     result = robot->setDigitsASCII(msg->data[0], msg->data[1], msg->data[2], msg->data[3]);
   }
 
-  if (!result) {
+  if (!result)
+  {
     ROS_ERROR("[CREATE] ASCII character out of range [32, 126]");
   }
 }
 
-void CreateDriver::dockCallback(const std_msgs::EmptyConstPtr& msg) {
+void CreateDriver::dockCallback(const std_msgs::EmptyConstPtr& msg)
+{
   robot->setMode(create::MODE_PASSIVE);
-  
+
   if (model == create::CREATE_1)
-    usleep(1000000); // Create 1 requires a delay (1 sec)
+    usleep(1000000);  // Create 1 requires a delay (1 sec)
 
   // Call docking behaviour
   robot->dock();
 }
 
-void CreateDriver::undockCallback(const std_msgs::EmptyConstPtr& msg) {
+void CreateDriver::undockCallback(const std_msgs::EmptyConstPtr& msg)
+{
   // Switch robot back to FULL mode
   robot->setMode(create::MODE_FULL);
 }
 
-bool CreateDriver::update() {
+bool CreateDriver::update()
+{
   publishOdom();
   publishBatteryInfo();
   publishButtonPresses();
@@ -162,14 +188,16 @@ bool CreateDriver::update() {
   publishState();
 
   // If last velocity command was sent longer than latch duration, stop robot
-  if (ros::Time::now() - lastCmdVelTime >= ros::Duration(latchDuration)) {
+  if (ros::Time::now() - lastCmdVelTime >= ros::Duration(latchDuration))
+  {
     robot->drive(0, 0);
   }
 
   return true;
 }
 
-void CreateDriver::publishOdom() {
+void CreateDriver::publishOdom()
+{
   create::Pose pose = robot->getPose();
   create::Vel vel = robot->getVel();
 
@@ -190,7 +218,8 @@ void CreateDriver::publishOdom() {
   odom.twist.twist.angular.z = vel.yaw;
 
   // Update covariances
-  if (fabs(vel.x) < 0.01 && fabs(vel.yaw) < 0.01) {
+  if (fabs(vel.x) < 0.01 && fabs(vel.yaw) < 0.01)
+  {
     odom.pose.covariance[0] = 1e-9;
     odom.pose.covariance[8] = 1e-9;
     odom.pose.covariance[35] = 1e-9;
@@ -198,7 +227,8 @@ void CreateDriver::publishOdom() {
     odom.twist.covariance[8] = 1e-9;
     odom.twist.covariance[35] = 1e-9;
   }
-  else {
+  else
+  {
     odom.pose.covariance[0] = 1e-3;
     odom.pose.covariance[8] = 0.0;
     odom.pose.covariance[35] = 1e3;
@@ -211,7 +241,8 @@ void CreateDriver::publishOdom() {
   odomPub.publish(odom);
 }
 
-void CreateDriver::publishBatteryInfo() {
+void CreateDriver::publishBatteryInfo()
+{
   float32Msg.data = robot->getVoltage();
   voltagePub.publish(float32Msg);
   float32Msg.data = robot->getCurrent();
@@ -222,41 +253,51 @@ void CreateDriver::publishBatteryInfo() {
   capacityPub.publish(float32Msg);
   int16Msg.data = robot->getTemperature();
   temperaturePub.publish(int16Msg);
-  float32Msg.data = (float) robot->getBatteryCharge() / (float) robot->getBatteryCapacity();
+  float32Msg.data = (float)robot->getBatteryCharge() / (float)robot->getBatteryCapacity();
   chargeRatioPub.publish(float32Msg);
 }
 
-void CreateDriver::publishButtonPresses() const {
-  if (robot->isCleanButtonPressed()) {
+void CreateDriver::publishButtonPresses() const
+{
+  if (robot->isCleanButtonPressed())
+  {
     cleanBtnPub.publish(emptyMsg);
   }
-  if (robot->isDayButtonPressed()) {
+  if (robot->isDayButtonPressed())
+  {
     dayBtnPub.publish(emptyMsg);
   }
-  if (robot->isHourButtonPressed()) {
+  if (robot->isHourButtonPressed())
+  {
     hourBtnPub.publish(emptyMsg);
   }
-  if (robot->isMinButtonPressed()) {
+  if (robot->isMinButtonPressed())
+  {
     minBtnPub.publish(emptyMsg);
   }
-  if (robot->isDockButtonPressed()) {
+  if (robot->isDockButtonPressed())
+  {
     dockBtnPub.publish(emptyMsg);
   }
-  if (robot->isSpotButtonPressed()) {
+  if (robot->isSpotButtonPressed())
+  {
     spotBtnPub.publish(emptyMsg);
   }
 }
 
-void CreateDriver::publishOmniChar() {
+void CreateDriver::publishOmniChar()
+{
   uint8_t irChar = robot->getIROmni();
   uint16Msg.data = irChar;
   omniCharPub.publish(uint16Msg);
   // TODO: Publish info based on character, such as dock in sight
 }
 
-void CreateDriver::publishState() {
+void CreateDriver::publishState()
+{
   const create::CreateMode mode = robot->getMode();
-  switch (mode) {
+  switch (mode)
+  {
     case create::MODE_OFF:
       modeMsg.mode = modeMsg.MODE_OFF;
       break;
@@ -273,7 +314,8 @@ void CreateDriver::publishState() {
   modePub.publish(modeMsg);
 
   const create::ChargingState chargingState = robot->getChargingState();
-  switch(chargingState) {
+  switch (chargingState)
+  {
     case create::CHARGE_NONE:
       chargingStateMsg.state = chargingStateMsg.CHARGE_NONE;
       break;
@@ -300,31 +342,38 @@ void CreateDriver::publishState() {
   chargingStatePub.publish(chargingStateMsg);
 }
 
-void CreateDriver::spinOnce() {
+void CreateDriver::spinOnce()
+{
   update();
   ros::spinOnce();
 }
 
-void CreateDriver::spin() {
+void CreateDriver::spin()
+{
   ros::Rate rate(loopHz);
-  while (ros::ok()) {
+  while (ros::ok())
+  {
     spinOnce();
-    if (!rate.sleep()) {
+    if (!rate.sleep())
+    {
       ROS_WARN("[CREATE] Loop running slowly.");
     }
   }
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv)
+{
   ros::init(argc, argv, "ca_driver");
   ros::NodeHandle nh;
 
   CreateDriver createDriver(nh);
 
-  try {
+  try
+  {
     createDriver.spin();
   }
-  catch (std::runtime_error& ex) {
+  catch (std::runtime_error& ex)
+  {
     ROS_FATAL_STREAM("[CREATE] Runtime error: " << ex.what());
     return 1;
   }
