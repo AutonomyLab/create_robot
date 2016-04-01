@@ -39,10 +39,15 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh) : nh_(nh), priv_nh_("~")
   // Show robot's battery level
   ROS_INFO("[CREATE] Battery level %.2f %%", (robot_->getBatteryCharge() / (float)robot_->getBatteryCapacity()) * 100.0);
 
+  // Set frame_id's
+  const std::string str_base_footprint("base_footprint");
+  mode_msg_.header.frame_id = str_base_footprint;
+  bumper_msg_.header.frame_id = str_base_footprint;
+  charging_state_msg_.header.frame_id = str_base_footprint;
   tf_odom_.header.frame_id = "odom";
-  tf_odom_.child_frame_id = "base_footprint";
+  tf_odom_.child_frame_id = str_base_footprint;
   odom_msg_.header.frame_id = "odom";
-  odom_msg_.child_frame_id = "base_footprint";
+  odom_msg_.child_frame_id = str_base_footprint;
 
   // Populate covariances
   for (int i = 0; i < 36; i++)
@@ -77,6 +82,8 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh) : nh_(nh), priv_nh_("~")
   charging_state_pub_ = nh.advertise<ca_msgs::ChargingState>("battery/charging_state", 30);
   omni_char_pub_ = nh.advertise<std_msgs::UInt16>("ir_omni", 30);
   mode_pub_ = nh.advertise<ca_msgs::Mode>("mode", 30);
+  bumper_pub_ = nh.advertise<ca_msgs::Bumper>("bumper", 30);
+  wheeldrop_pub_ = nh.advertise<std_msgs::Empty>("wheeldrop", 30);
   ROS_INFO("[CREATE] Ready.");
 }
 
@@ -186,6 +193,8 @@ bool CreateDriver::update()
   publishButtonPresses();
   publishOmniChar();
   publishState();
+  publishBumperInfo();
+  publishWheeldrop();
 
   // If last velocity command was sent longer than latch duration, stop robot
   if (ros::Time::now() - last_cmd_vel_time_ >= ros::Duration(latch_duration_))
@@ -340,6 +349,38 @@ void CreateDriver::publishState()
       break;
   }
   charging_state_pub_.publish(charging_state_msg_);
+}
+
+void CreateDriver::publishBumperInfo()
+{
+  bumper_msg_.header.stamp = ros::Time::now();
+  bumper_msg_.is_left_pressed = robot_->isLeftBumper();
+  bumper_msg_.is_right_pressed = robot_->isRightBumper();
+
+  if (model_ == create::CREATE_2)
+  {
+    bumper_msg_.is_light_left = robot_->isLightBumperLeft();
+    bumper_msg_.is_light_front_left = robot_->isLightBumperFrontLeft();
+    bumper_msg_.is_light_center_left = robot_->isLightBumperCenterLeft();
+    bumper_msg_.is_light_right = robot_->isLightBumperRight();
+    bumper_msg_.is_light_front_right = robot_->isLightBumperFrontRight();
+    bumper_msg_.is_light_center_right = robot_->isLightBumperCenterRight();
+
+    bumper_msg_.light_signal_left = robot_->getLightSignalLeft();
+    bumper_msg_.light_signal_front_left = robot_->getLightSignalFrontLeft();
+    bumper_msg_.light_signal_center_left = robot_->getLightSignalCenterLeft();
+    bumper_msg_.light_signal_right = robot_->getLightSignalRight();
+    bumper_msg_.light_signal_front_right = robot_->getLightSignalFrontRight();
+    bumper_msg_.light_signal_center_right = robot_->getLightSignalCenterRight();
+  }
+
+  bumper_pub_.publish(bumper_msg_);
+}
+
+void CreateDriver::publishWheeldrop()
+{
+  if (robot_->isWheeldrop())
+    wheeldrop_pub_.publish(empty_msg_);
 }
 
 void CreateDriver::spinOnce()
