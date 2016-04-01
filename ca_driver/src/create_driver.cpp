@@ -1,30 +1,30 @@
 #include <tf/transform_datatypes.h>
 #include "create_driver/create_driver.h"
 
-CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~")
+CreateDriver::CreateDriver(ros::NodeHandle& nh) : nh_(nh), priv_nh_("~")
 {
-  bool createOne;
-  privNh.param<double>("loop_hz", loopHz, 10.0);
-  privNh.param<std::string>("dev", dev, "/dev/ttyUSB0");
-  privNh.param<bool>("create_1", createOne, false);
-  privNh.param<double>("latch_cmd_duration", latchDuration, 0.2);
+  bool create_one;
+  priv_nh_.param<double>("loop_hz", loop_hz_, 10.0);
+  priv_nh_.param<std::string>("dev", dev_, "/dev/ttyUSB0");
+  priv_nh_.param<bool>("create_1", create_one, false);
+  priv_nh_.param<double>("latch_cmd_duration", latch_duration_, 0.2);
 
-  if (createOne)
+  if (create_one)
   {
-    model = create::CREATE_1;
-    privNh.param<int>("baud", baud, 57600);
+    model_ = create::CREATE_1;
+    priv_nh_.param<int>("baud", baud_, 57600);
     ROS_INFO("[CREATE] Create 1 model selected");
   }
   else
   {
-    model = create::CREATE_2;
-    privNh.param<int>("baud", baud, 115200);
+    model_ = create::CREATE_2;
+    priv_nh_.param<int>("baud", baud_, 115200);
     ROS_INFO("[CREATE] Create 2 model selected");
   }
 
-  robot = new create::Create(model);
+  robot_ = new create::Create(model_);
 
-  if (!robot->connect(dev, baud))
+  if (!robot_->connect(dev_, baud_))
   {
     ROS_FATAL("[CREATE] Failed to establish serial connection with Create.");
     ros::shutdown();
@@ -34,83 +34,83 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh_) : nh(nh_), privNh("~")
 
   // Put into full control mode
   // TODO: Make option to run in safe mode as parameter
-  robot->setMode(create::MODE_FULL);
+  robot_->setMode(create::MODE_FULL);
 
   // Show robot's battery level
-  ROS_INFO("[CREATE] Battery level %.2f %%", (robot->getBatteryCharge() / (float)robot->getBatteryCapacity()) * 100.0);
+  ROS_INFO("[CREATE] Battery level %.2f %%", (robot_->getBatteryCharge() / (float)robot_->getBatteryCapacity()) * 100.0);
 
-  tfOdom.header.frame_id = "odom";
-  tfOdom.child_frame_id = "base_footprint";
-  odom.header.frame_id = "odom";
-  odom.child_frame_id = "base_footprint";
+  tf_odom_.header.frame_id = "odom";
+  tf_odom_.child_frame_id = "base_footprint";
+  odom_msg_.header.frame_id = "odom";
+  odom_msg_.child_frame_id = "base_footprint";
 
   // Populate covariances
   for (int i = 0; i < 36; i++)
   {
-    odom.pose.covariance[i] = COVARIANCE[i];
-    odom.twist.covariance[i] = COVARIANCE[i];
+    odom_msg_.pose.covariance[i] = COVARIANCE[i];
+    odom_msg_.twist.covariance[i] = COVARIANCE[i];
   }
 
-  cmdVelSub = nh.subscribe("cmd_vel", 1, &CreateDriver::cmdVelCallback, this);
-  debrisLEDSub = nh.subscribe("debris_led", 10, &CreateDriver::debrisLEDCallback, this);
-  spotLEDSub = nh.subscribe("spot_led", 10, &CreateDriver::spotLEDCallback, this);
-  dockLEDSub = nh.subscribe("dock_led", 10, &CreateDriver::dockLEDCallback, this);
-  checkLEDSub = nh.subscribe("check_led", 10, &CreateDriver::checkLEDCallback, this);
-  powerLEDSub = nh.subscribe("power_led", 10, &CreateDriver::powerLEDCallback, this);
-  setASCIISub = nh.subscribe("set_ascii", 10, &CreateDriver::setASCIICallback, this);
-  dockSub = nh.subscribe("dock", 10, &CreateDriver::dockCallback, this);
-  undockSub = nh.subscribe("undock", 10, &CreateDriver::undockCallback, this);
+  cmd_vel_sub_ = nh.subscribe("cmd_vel", 1, &CreateDriver::cmdVelCallback, this);
+  debris_led_sub_ = nh.subscribe("debris_led", 10, &CreateDriver::debrisLEDCallback, this);
+  spot_led_sub_ = nh.subscribe("spot_led", 10, &CreateDriver::spotLEDCallback, this);
+  dock_led_sub_ = nh.subscribe("dock_led", 10, &CreateDriver::dockLEDCallback, this);
+  check_led_sub_ = nh.subscribe("check_led", 10, &CreateDriver::checkLEDCallback, this);
+  power_led_sub_ = nh.subscribe("power_led", 10, &CreateDriver::powerLEDCallback, this);
+  set_ascii_sub_ = nh.subscribe("set_ascii", 10, &CreateDriver::setASCIICallback, this);
+  dock_sub_ = nh.subscribe("dock", 10, &CreateDriver::dockCallback, this);
+  undock_sub_ = nh.subscribe("undock", 10, &CreateDriver::undockCallback, this);
 
-  odomPub = nh.advertise<nav_msgs::Odometry>("odom", 30);
-  cleanBtnPub = nh.advertise<std_msgs::Empty>("clean_button", 30);
-  dayBtnPub = nh.advertise<std_msgs::Empty>("day_button", 30);
-  hourBtnPub = nh.advertise<std_msgs::Empty>("hour_button", 30);
-  minBtnPub = nh.advertise<std_msgs::Empty>("minute_button", 30);
-  dockBtnPub = nh.advertise<std_msgs::Empty>("dock_button", 30);
-  spotBtnPub = nh.advertise<std_msgs::Empty>("spot_button", 30);
-  voltagePub = nh.advertise<std_msgs::Float32>("battery/voltage", 30);
-  currentPub = nh.advertise<std_msgs::Float32>("battery/current", 30);
-  chargePub = nh.advertise<std_msgs::Float32>("battery/charge", 30);
-  chargeRatioPub = nh.advertise<std_msgs::Float32>("battery/charge_ratio", 30);
-  capacityPub = nh.advertise<std_msgs::Float32>("battery/capacity", 30);
-  temperaturePub = nh.advertise<std_msgs::Int16>("battery/temperature", 30);
-  chargingStatePub = nh.advertise<ca_msgs::ChargingState>("battery/charging_state", 30);
-  omniCharPub = nh.advertise<std_msgs::UInt16>("ir_omni", 30);
-  modePub = nh.advertise<ca_msgs::Mode>("mode", 30);
+  odom_pub_ = nh.advertise<nav_msgs::Odometry>("odom", 30);
+  clean_btn_pub_ = nh.advertise<std_msgs::Empty>("clean_button", 30);
+  day_btn_pub_ = nh.advertise<std_msgs::Empty>("day_button", 30);
+  hour_btn_pub_ = nh.advertise<std_msgs::Empty>("hour_button", 30);
+  min_btn_pub_ = nh.advertise<std_msgs::Empty>("minute_button", 30);
+  dock_btn_pub_ = nh.advertise<std_msgs::Empty>("dock_button", 30);
+  spot_btn_pub_ = nh.advertise<std_msgs::Empty>("spot_button", 30);
+  voltage_pub_ = nh.advertise<std_msgs::Float32>("battery/voltage", 30);
+  current_pub_ = nh.advertise<std_msgs::Float32>("battery/current", 30);
+  charge_pub_ = nh.advertise<std_msgs::Float32>("battery/charge", 30);
+  charge_ratio_pub_ = nh.advertise<std_msgs::Float32>("battery/charge_ratio", 30);
+  capacity_pub_ = nh.advertise<std_msgs::Float32>("battery/capacity", 30);
+  temperature_pub_ = nh.advertise<std_msgs::Int16>("battery/temperature", 30);
+  charging_state_pub_ = nh.advertise<ca_msgs::ChargingState>("battery/charging_state", 30);
+  omni_char_pub_ = nh.advertise<std_msgs::UInt16>("ir_omni", 30);
+  mode_pub_ = nh.advertise<ca_msgs::Mode>("mode", 30);
   ROS_INFO("[CREATE] Ready.");
 }
 
 CreateDriver::~CreateDriver()
 {
   ROS_INFO("[CREATE] Destruct sequence initiated.");
-  robot->disconnect();
-  delete robot;
+  robot_->disconnect();
+  delete robot_;
 }
 
 void CreateDriver::cmdVelCallback(const geometry_msgs::TwistConstPtr& msg)
 {
-  robot->drive(msg->linear.x, msg->angular.z);
-  lastCmdVelTime = ros::Time::now();
+  robot_->drive(msg->linear.x, msg->angular.z);
+  last_cmd_vel_time_ = ros::Time::now();
 }
 
 void CreateDriver::debrisLEDCallback(const std_msgs::BoolConstPtr& msg)
 {
-  robot->enableDebrisLED(msg->data);
+  robot_->enableDebrisLED(msg->data);
 }
 
 void CreateDriver::spotLEDCallback(const std_msgs::BoolConstPtr& msg)
 {
-  robot->enableSpotLED(msg->data);
+  robot_->enableSpotLED(msg->data);
 }
 
 void CreateDriver::dockLEDCallback(const std_msgs::BoolConstPtr& msg)
 {
-  robot->enableDockLED(msg->data);
+  robot_->enableDockLED(msg->data);
 }
 
 void CreateDriver::checkLEDCallback(const std_msgs::BoolConstPtr& msg)
 {
-  robot->enableCheckRobotLED(msg->data);
+  robot_->enableCheckRobotLED(msg->data);
 }
 
 void CreateDriver::powerLEDCallback(const std_msgs::UInt8MultiArrayConstPtr& msg)
@@ -123,11 +123,11 @@ void CreateDriver::powerLEDCallback(const std_msgs::UInt8MultiArrayConstPtr& msg
   {
     if (msg->data.size() < 2)
     {
-      robot->setPowerLED(msg->data[0]);
+      robot_->setPowerLED(msg->data[0]);
     }
     else
     {
-      robot->setPowerLED(msg->data[0], msg->data[1]);
+      robot_->setPowerLED(msg->data[0], msg->data[1]);
     }
   }
 }
@@ -141,19 +141,19 @@ void CreateDriver::setASCIICallback(const std_msgs::UInt8MultiArrayConstPtr& msg
   }
   else if (msg->data.size() < 2)
   {
-    result = robot->setDigitsASCII(msg->data[0], ' ', ' ', ' ');
+    result = robot_->setDigitsASCII(msg->data[0], ' ', ' ', ' ');
   }
   else if (msg->data.size() < 3)
   {
-    result = robot->setDigitsASCII(msg->data[0], msg->data[1], ' ', ' ');
+    result = robot_->setDigitsASCII(msg->data[0], msg->data[1], ' ', ' ');
   }
   else if (msg->data.size() < 4)
   {
-    result = robot->setDigitsASCII(msg->data[0], msg->data[1], msg->data[2], ' ');
+    result = robot_->setDigitsASCII(msg->data[0], msg->data[1], msg->data[2], ' ');
   }
   else
   {
-    result = robot->setDigitsASCII(msg->data[0], msg->data[1], msg->data[2], msg->data[3]);
+    result = robot_->setDigitsASCII(msg->data[0], msg->data[1], msg->data[2], msg->data[3]);
   }
 
   if (!result)
@@ -164,19 +164,19 @@ void CreateDriver::setASCIICallback(const std_msgs::UInt8MultiArrayConstPtr& msg
 
 void CreateDriver::dockCallback(const std_msgs::EmptyConstPtr& msg)
 {
-  robot->setMode(create::MODE_PASSIVE);
+  robot_->setMode(create::MODE_PASSIVE);
 
-  if (model == create::CREATE_1)
+  if (model_ == create::CREATE_1)
     usleep(1000000);  // Create 1 requires a delay (1 sec)
 
   // Call docking behaviour
-  robot->dock();
+  robot_->dock();
 }
 
 void CreateDriver::undockCallback(const std_msgs::EmptyConstPtr& msg)
 {
   // Switch robot back to FULL mode
-  robot->setMode(create::MODE_FULL);
+  robot_->setMode(create::MODE_FULL);
 }
 
 bool CreateDriver::update()
@@ -188,9 +188,9 @@ bool CreateDriver::update()
   publishState();
 
   // If last velocity command was sent longer than latch duration, stop robot
-  if (ros::Time::now() - lastCmdVelTime >= ros::Duration(latchDuration))
+  if (ros::Time::now() - last_cmd_vel_time_ >= ros::Duration(latch_duration_))
   {
-    robot->drive(0, 0);
+    robot_->drive(0, 0);
   }
 
   return true;
@@ -198,148 +198,148 @@ bool CreateDriver::update()
 
 void CreateDriver::publishOdom()
 {
-  create::Pose pose = robot->getPose();
-  create::Vel vel = robot->getVel();
+  create::Pose pose = robot_->getPose();
+  create::Vel vel = robot_->getVel();
 
   // Populate position info
   geometry_msgs::Quaternion quat = tf::createQuaternionMsgFromRollPitchYaw(0, 0, pose.yaw);
-  odom.header.stamp = ros::Time::now();
-  odom.pose.pose.position.x = pose.x;
-  odom.pose.pose.position.y = pose.y;
-  odom.pose.pose.orientation = quat;
-  tfOdom.header.stamp = ros::Time::now();
-  tfOdom.transform.translation.x = pose.x;
-  tfOdom.transform.translation.y = pose.y;
-  tfOdom.transform.rotation = quat;
+  odom_msg_.header.stamp = ros::Time::now();
+  odom_msg_.pose.pose.position.x = pose.x;
+  odom_msg_.pose.pose.position.y = pose.y;
+  odom_msg_.pose.pose.orientation = quat;
+  tf_odom_.header.stamp = ros::Time::now();
+  tf_odom_.transform.translation.x = pose.x;
+  tf_odom_.transform.translation.y = pose.y;
+  tf_odom_.transform.rotation = quat;
 
   // Populate velocity info
-  odom.twist.twist.linear.x = vel.x;
-  odom.twist.twist.linear.y = vel.y;
-  odom.twist.twist.angular.z = vel.yaw;
+  odom_msg_.twist.twist.linear.x = vel.x;
+  odom_msg_.twist.twist.linear.y = vel.y;
+  odom_msg_.twist.twist.angular.z = vel.yaw;
 
   // Update covariances
   if (fabs(vel.x) < 0.01 && fabs(vel.yaw) < 0.01)
   {
-    odom.pose.covariance[0] = 1e-9;
-    odom.pose.covariance[8] = 1e-9;
-    odom.pose.covariance[35] = 1e-9;
-    odom.twist.covariance[0] = 1e-9;
-    odom.twist.covariance[8] = 1e-9;
-    odom.twist.covariance[35] = 1e-9;
+    odom_msg_.pose.covariance[0] = 1e-9;
+    odom_msg_.pose.covariance[8] = 1e-9;
+    odom_msg_.pose.covariance[35] = 1e-9;
+    odom_msg_.twist.covariance[0] = 1e-9;
+    odom_msg_.twist.covariance[8] = 1e-9;
+    odom_msg_.twist.covariance[35] = 1e-9;
   }
   else
   {
-    odom.pose.covariance[0] = 1e-3;
-    odom.pose.covariance[8] = 0.0;
-    odom.pose.covariance[35] = 1e3;
-    odom.twist.covariance[0] = 1e-3;
-    odom.twist.covariance[8] = 0.0;
-    odom.twist.covariance[35] = 1e3;
+    odom_msg_.pose.covariance[0] = 1e-3;
+    odom_msg_.pose.covariance[8] = 0.0;
+    odom_msg_.pose.covariance[35] = 1e3;
+    odom_msg_.twist.covariance[0] = 1e-3;
+    odom_msg_.twist.covariance[8] = 0.0;
+    odom_msg_.twist.covariance[35] = 1e3;
   }
 
-  tfBroadcaster.sendTransform(tfOdom);
-  odomPub.publish(odom);
+  tf_broadcaster_.sendTransform(tf_odom_);
+  odom_pub_.publish(odom_msg_);
 }
 
 void CreateDriver::publishBatteryInfo()
 {
-  float32Msg.data = robot->getVoltage();
-  voltagePub.publish(float32Msg);
-  float32Msg.data = robot->getCurrent();
-  currentPub.publish(float32Msg);
-  float32Msg.data = robot->getBatteryCharge();
-  chargePub.publish(float32Msg);
-  float32Msg.data = robot->getBatteryCapacity();
-  capacityPub.publish(float32Msg);
-  int16Msg.data = robot->getTemperature();
-  temperaturePub.publish(int16Msg);
-  float32Msg.data = (float)robot->getBatteryCharge() / (float)robot->getBatteryCapacity();
-  chargeRatioPub.publish(float32Msg);
+  float32_msg_.data = robot_->getVoltage();
+  voltage_pub_.publish(float32_msg_);
+  float32_msg_.data = robot_->getCurrent();
+  current_pub_.publish(float32_msg_);
+  float32_msg_.data = robot_->getBatteryCharge();
+  charge_pub_.publish(float32_msg_);
+  float32_msg_.data = robot_->getBatteryCapacity();
+  capacity_pub_.publish(float32_msg_);
+  int16_msg_.data = robot_->getTemperature();
+  temperature_pub_.publish(int16_msg_);
+  float32_msg_.data = (float)robot_->getBatteryCharge() / (float)robot_->getBatteryCapacity();
+  charge_ratio_pub_.publish(float32_msg_);
 }
 
 void CreateDriver::publishButtonPresses() const
 {
-  if (robot->isCleanButtonPressed())
+  if (robot_->isCleanButtonPressed())
   {
-    cleanBtnPub.publish(emptyMsg);
+    clean_btn_pub_.publish(empty_msg_);
   }
-  if (robot->isDayButtonPressed())
+  if (robot_->isDayButtonPressed())
   {
-    dayBtnPub.publish(emptyMsg);
+    day_btn_pub_.publish(empty_msg_);
   }
-  if (robot->isHourButtonPressed())
+  if (robot_->isHourButtonPressed())
   {
-    hourBtnPub.publish(emptyMsg);
+    hour_btn_pub_.publish(empty_msg_);
   }
-  if (robot->isMinButtonPressed())
+  if (robot_->isMinButtonPressed())
   {
-    minBtnPub.publish(emptyMsg);
+    min_btn_pub_.publish(empty_msg_);
   }
-  if (robot->isDockButtonPressed())
+  if (robot_->isDockButtonPressed())
   {
-    dockBtnPub.publish(emptyMsg);
+    dock_btn_pub_.publish(empty_msg_);
   }
-  if (robot->isSpotButtonPressed())
+  if (robot_->isSpotButtonPressed())
   {
-    spotBtnPub.publish(emptyMsg);
+    spot_btn_pub_.publish(empty_msg_);
   }
 }
 
 void CreateDriver::publishOmniChar()
 {
-  uint8_t irChar = robot->getIROmni();
-  uint16Msg.data = irChar;
-  omniCharPub.publish(uint16Msg);
+  uint8_t ir_char = robot_->getIROmni();
+  uint16_msg_.data = ir_char;
+  omni_char_pub_.publish(uint16_msg_);
   // TODO: Publish info based on character, such as dock in sight
 }
 
 void CreateDriver::publishState()
 {
-  const create::CreateMode mode = robot->getMode();
+  const create::CreateMode mode = robot_->getMode();
   switch (mode)
   {
     case create::MODE_OFF:
-      modeMsg.mode = modeMsg.MODE_OFF;
+      mode_msg_.mode = mode_msg_.MODE_OFF;
       break;
     case create::MODE_PASSIVE:
-      modeMsg.mode = modeMsg.MODE_PASSIVE;
+      mode_msg_.mode = mode_msg_.MODE_PASSIVE;
       break;
     case create::MODE_SAFE:
-      modeMsg.mode = modeMsg.MODE_SAFE;
+      mode_msg_.mode = mode_msg_.MODE_SAFE;
       break;
     case create::MODE_FULL:
-      modeMsg.mode = modeMsg.MODE_FULL;
+      mode_msg_.mode = mode_msg_.MODE_FULL;
       break;
   }
-  modePub.publish(modeMsg);
+  mode_pub_.publish(mode_msg_);
 
-  const create::ChargingState chargingState = robot->getChargingState();
-  switch (chargingState)
+  const create::ChargingState charging_state = robot_->getChargingState();
+  switch (charging_state)
   {
     case create::CHARGE_NONE:
-      chargingStateMsg.state = chargingStateMsg.CHARGE_NONE;
+      charging_state_msg_.state = charging_state_msg_.CHARGE_NONE;
       break;
     case create::CHARGE_RECONDITION:
-      chargingStateMsg.state = chargingStateMsg.CHARGE_RECONDITION;
+      charging_state_msg_.state = charging_state_msg_.CHARGE_RECONDITION;
       break;
 
     case create::CHARGE_FULL:
-      chargingStateMsg.state = chargingStateMsg.CHARGE_FULL;
+      charging_state_msg_.state = charging_state_msg_.CHARGE_FULL;
       break;
 
     case create::CHARGE_TRICKLE:
-      chargingStateMsg.state = chargingStateMsg.CHARGE_TRICKLE;
+      charging_state_msg_.state = charging_state_msg_.CHARGE_TRICKLE;
       break;
 
     case create::CHARGE_WAITING:
-      chargingStateMsg.state = chargingStateMsg.CHARGE_WAITING;
+      charging_state_msg_.state = charging_state_msg_.CHARGE_WAITING;
       break;
 
     case create::CHARGE_FAULT:
-      chargingStateMsg.state = chargingStateMsg.CHARGE_FAULT;
+      charging_state_msg_.state = charging_state_msg_.CHARGE_FAULT;
       break;
   }
-  chargingStatePub.publish(chargingStateMsg);
+  charging_state_pub_.publish(charging_state_msg_);
 }
 
 void CreateDriver::spinOnce()
@@ -350,7 +350,7 @@ void CreateDriver::spinOnce()
 
 void CreateDriver::spin()
 {
-  ros::Rate rate(loopHz);
+  ros::Rate rate(loop_hz_);
   while (ros::ok())
   {
     spinOnce();
@@ -366,11 +366,11 @@ int main(int argc, char** argv)
   ros::init(argc, argv, "ca_driver");
   ros::NodeHandle nh;
 
-  CreateDriver createDriver(nh);
+  CreateDriver create_driver(nh);
 
   try
   {
-    createDriver.spin();
+    create_driver.spin();
   }
   catch (std::runtime_error& ex)
   {
