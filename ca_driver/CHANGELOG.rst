@@ -2,6 +2,21 @@
 Changelog for package create_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Update libcreate git tag
+* Rename variables according to ROS cpp style guide
+* Run clang-format
+* Fix typo
+* Add ca_description as runtime dependency to ca_driver
+* Change message type of various battery info topics
+* Add ChargingState and Mode messages
+* Add charging state and mode publishers
+* Add 'ca_msgs' package
+* Update ca_driver README.md
+* Rename 'create_driver' and 'create_tools' to 'ca_driver' and 'ca_tools'
+* Contributors: Jacob Perron
+
 0.4.0 (2016-03-26)
 ------------------
 * Add timestamp to odometry message

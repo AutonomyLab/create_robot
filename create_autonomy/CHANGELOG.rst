@@ -2,6 +2,13 @@
 Changelog for package create_autonomy
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add ca_description package
+* Add ca_msgs to metapackage
+* Rename 'create_driver' and 'create_tools' to 'ca_driver' and 'ca_tools'
+* Contributors: Jacob Perron
+
 0.4.0 (2016-03-26)
 ------------------
 

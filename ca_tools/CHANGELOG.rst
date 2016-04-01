@@ -2,6 +2,12 @@
 Changelog for package create_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix typo in joy_teleop.launch
+* Rename 'create_driver' and 'create_tools' to 'ca_driver' and 'ca_tools'
+* Contributors: Jacob Perron
+
 0.4.0 (2016-03-26)
 ------------------
 * Update teleop configurations files
