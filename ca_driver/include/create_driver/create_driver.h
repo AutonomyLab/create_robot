@@ -60,7 +60,7 @@ private:
   void publishBatteryInfo();
   void publishButtonPresses() const;
   void publishOmniChar();
-  void publishState();
+  void publishMode();
   void publishBumperInfo();
   void publishWheeldrop();
 

@@ -192,7 +192,7 @@ bool CreateDriver::update()
   publishBatteryInfo();
   publishButtonPresses();
   publishOmniChar();
-  publishState();
+  publishMode();
   publishBumperInfo();
   publishWheeldrop();
 
@@ -264,6 +264,35 @@ void CreateDriver::publishBatteryInfo()
   temperature_pub_.publish(int16_msg_);
   float32_msg_.data = (float)robot_->getBatteryCharge() / (float)robot_->getBatteryCapacity();
   charge_ratio_pub_.publish(float32_msg_);
+
+  const create::ChargingState charging_state = robot_->getChargingState();
+  charging_state_msg_.header.stamp = ros::Time::now();
+  switch (charging_state)
+  {
+    case create::CHARGE_NONE:
+      charging_state_msg_.state = charging_state_msg_.CHARGE_NONE;
+      break;
+    case create::CHARGE_RECONDITION:
+      charging_state_msg_.state = charging_state_msg_.CHARGE_RECONDITION;
+      break;
+
+    case create::CHARGE_FULL:
+      charging_state_msg_.state = charging_state_msg_.CHARGE_FULL;
+      break;
+
+    case create::CHARGE_TRICKLE:
+      charging_state_msg_.state = charging_state_msg_.CHARGE_TRICKLE;
+      break;
+
+    case create::CHARGE_WAITING:
+      charging_state_msg_.state = charging_state_msg_.CHARGE_WAITING;
+      break;
+
+    case create::CHARGE_FAULT:
+      charging_state_msg_.state = charging_state_msg_.CHARGE_FAULT;
+      break;
+  }
+  charging_state_pub_.publish(charging_state_msg_);
 }
 
 void CreateDriver::publishButtonPresses() const
@@ -302,9 +331,10 @@ void CreateDriver::publishOmniChar()
   // TODO: Publish info based on character, such as dock in sight
 }
 
-void CreateDriver::publishState()
+void CreateDriver::publishMode()
 {
   const create::CreateMode mode = robot_->getMode();
+  mode_msg_.header.stamp = ros::Time::now();
   switch (mode)
   {
     case create::MODE_OFF:
@@ -321,34 +351,6 @@ void CreateDriver::publishState()
       break;
   }
   mode_pub_.publish(mode_msg_);
-
-  const create::ChargingState charging_state = robot_->getChargingState();
-  switch (charging_state)
-  {
-    case create::CHARGE_NONE:
-      charging_state_msg_.state = charging_state_msg_.CHARGE_NONE;
-      break;
-    case create::CHARGE_RECONDITION:
-      charging_state_msg_.state = charging_state_msg_.CHARGE_RECONDITION;
-      break;
-
-    case create::CHARGE_FULL:
-      charging_state_msg_.state = charging_state_msg_.CHARGE_FULL;
-      break;
-
-    case create::CHARGE_TRICKLE:
-      charging_state_msg_.state = charging_state_msg_.CHARGE_TRICKLE;
-      break;
-
-    case create::CHARGE_WAITING:
-      charging_state_msg_.state = charging_state_msg_.CHARGE_WAITING;
-      break;
-
-    case create::CHARGE_FAULT:
-      charging_state_msg_.state = charging_state_msg_.CHARGE_FAULT;
-      break;
-  }
-  charging_state_pub_.publish(charging_state_msg_);
 }
 
 void CreateDriver::publishBumperInfo()
