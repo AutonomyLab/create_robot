@@ -16,6 +16,7 @@
 #include "create/create.h"
 #include "ca_msgs/ChargingState.h"
 #include "ca_msgs/Mode.h"
+#include "ca_msgs/Bumper.h"
 
 static const double COVARIANCE[36] = {1e-3, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1e-3, 0.0, 0.0, 0.0, 0.0,
                                       0.0,  0.0, 1e6, 0.0, 0.0, 0.0, 0.0, 0.0,  0.0, 1e6, 0.0, 0.0,
@@ -28,6 +29,7 @@ private:
   create::RobotModel model_;
   ca_msgs::Mode mode_msg_;
   ca_msgs::ChargingState charging_state_msg_;
+  ca_msgs::Bumper bumper_msg_;
   nav_msgs::Odometry odom_msg_;
   tf::TransformBroadcaster tf_broadcaster_;
   geometry_msgs::TransformStamped tf_odom_;
@@ -58,7 +60,9 @@ private:
   void publishBatteryInfo();
   void publishButtonPresses() const;
   void publishOmniChar();
-  void publishState();
+  void publishMode();
+  void publishBumperInfo();
+  void publishWheeldrop();
 
 protected:
   ros::NodeHandle nh_;
@@ -72,6 +76,7 @@ protected:
   ros::Subscriber set_ascii_sub_;
   ros::Subscriber dock_sub_;
   ros::Subscriber undock_sub_;
+
   ros::Publisher odom_pub_;
   ros::Publisher clean_btn_pub_;
   ros::Publisher day_btn_pub_;
@@ -88,6 +93,8 @@ protected:
   ros::Publisher charging_state_pub_;
   ros::Publisher omni_char_pub_;
   ros::Publisher mode_pub_;
+  ros::Publisher bumper_pub_;
+  ros::Publisher wheeldrop_pub_;
 
 public:
   CreateDriver(ros::NodeHandle& nh);

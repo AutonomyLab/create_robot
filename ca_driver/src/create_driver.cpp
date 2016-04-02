@@ -39,10 +39,15 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh) : nh_(nh), priv_nh_("~")
   // Show robot's battery level
   ROS_INFO("[CREATE] Battery level %.2f %%", (robot_->getBatteryCharge() / (float)robot_->getBatteryCapacity()) * 100.0);
 
+  // Set frame_id's
+  const std::string str_base_footprint("base_footprint");
+  mode_msg_.header.frame_id = str_base_footprint;
+  bumper_msg_.header.frame_id = str_base_footprint;
+  charging_state_msg_.header.frame_id = str_base_footprint;
   tf_odom_.header.frame_id = "odom";
-  tf_odom_.child_frame_id = "base_footprint";
+  tf_odom_.child_frame_id = str_base_footprint;
   odom_msg_.header.frame_id = "odom";
-  odom_msg_.child_frame_id = "base_footprint";
+  odom_msg_.child_frame_id = str_base_footprint;
 
   // Populate covariances
   for (int i = 0; i < 36; i++)
@@ -77,6 +82,8 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh) : nh_(nh), priv_nh_("~")
   charging_state_pub_ = nh.advertise<ca_msgs::ChargingState>("battery/charging_state", 30);
   omni_char_pub_ = nh.advertise<std_msgs::UInt16>("ir_omni", 30);
   mode_pub_ = nh.advertise<ca_msgs::Mode>("mode", 30);
+  bumper_pub_ = nh.advertise<ca_msgs::Bumper>("bumper", 30);
+  wheeldrop_pub_ = nh.advertise<std_msgs::Empty>("wheeldrop", 30);
   ROS_INFO("[CREATE] Ready.");
 }
 
@@ -185,7 +192,9 @@ bool CreateDriver::update()
   publishBatteryInfo();
   publishButtonPresses();
   publishOmniChar();
-  publishState();
+  publishMode();
+  publishBumperInfo();
+  publishWheeldrop();
 
   // If last velocity command was sent longer than latch duration, stop robot
   if (ros::Time::now() - last_cmd_vel_time_ >= ros::Duration(latch_duration_))
@@ -255,6 +264,35 @@ void CreateDriver::publishBatteryInfo()
   temperature_pub_.publish(int16_msg_);
   float32_msg_.data = (float)robot_->getBatteryCharge() / (float)robot_->getBatteryCapacity();
   charge_ratio_pub_.publish(float32_msg_);
+
+  const create::ChargingState charging_state = robot_->getChargingState();
+  charging_state_msg_.header.stamp = ros::Time::now();
+  switch (charging_state)
+  {
+    case create::CHARGE_NONE:
+      charging_state_msg_.state = charging_state_msg_.CHARGE_NONE;
+      break;
+    case create::CHARGE_RECONDITION:
+      charging_state_msg_.state = charging_state_msg_.CHARGE_RECONDITION;
+      break;
+
+    case create::CHARGE_FULL:
+      charging_state_msg_.state = charging_state_msg_.CHARGE_FULL;
+      break;
+
+    case create::CHARGE_TRICKLE:
+      charging_state_msg_.state = charging_state_msg_.CHARGE_TRICKLE;
+      break;
+
+    case create::CHARGE_WAITING:
+      charging_state_msg_.state = charging_state_msg_.CHARGE_WAITING;
+      break;
+
+    case create::CHARGE_FAULT:
+      charging_state_msg_.state = charging_state_msg_.CHARGE_FAULT;
+      break;
+  }
+  charging_state_pub_.publish(charging_state_msg_);
 }
 
 void CreateDriver::publishButtonPresses() const
@@ -293,9 +331,10 @@ void CreateDriver::publishOmniChar()
   // TODO: Publish info based on character, such as dock in sight
 }
 
-void CreateDriver::publishState()
+void CreateDriver::publishMode()
 {
   const create::CreateMode mode = robot_->getMode();
+  mode_msg_.header.stamp = ros::Time::now();
   switch (mode)
   {
     case create::MODE_OFF:
@@ -312,34 +351,38 @@ void CreateDriver::publishState()
       break;
   }
   mode_pub_.publish(mode_msg_);
+}
 
-  const create::ChargingState charging_state = robot_->getChargingState();
-  switch (charging_state)
+void CreateDriver::publishBumperInfo()
+{
+  bumper_msg_.header.stamp = ros::Time::now();
+  bumper_msg_.is_left_pressed = robot_->isLeftBumper();
+  bumper_msg_.is_right_pressed = robot_->isRightBumper();
+
+  if (model_ == create::CREATE_2)
   {
-    case create::CHARGE_NONE:
-      charging_state_msg_.state = charging_state_msg_.CHARGE_NONE;
-      break;
-    case create::CHARGE_RECONDITION:
-      charging_state_msg_.state = charging_state_msg_.CHARGE_RECONDITION;
-      break;
+    bumper_msg_.is_light_left = robot_->isLightBumperLeft();
+    bumper_msg_.is_light_front_left = robot_->isLightBumperFrontLeft();
+    bumper_msg_.is_light_center_left = robot_->isLightBumperCenterLeft();
+    bumper_msg_.is_light_right = robot_->isLightBumperRight();
+    bumper_msg_.is_light_front_right = robot_->isLightBumperFrontRight();
+    bumper_msg_.is_light_center_right = robot_->isLightBumperCenterRight();
 
-    case create::CHARGE_FULL:
-      charging_state_msg_.state = charging_state_msg_.CHARGE_FULL;
-      break;
-
-    case create::CHARGE_TRICKLE:
-      charging_state_msg_.state = charging_state_msg_.CHARGE_TRICKLE;
-      break;
-
-    case create::CHARGE_WAITING:
-      charging_state_msg_.state = charging_state_msg_.CHARGE_WAITING;
-      break;
-
-    case create::CHARGE_FAULT:
-      charging_state_msg_.state = charging_state_msg_.CHARGE_FAULT;
-      break;
+    bumper_msg_.light_signal_left = robot_->getLightSignalLeft();
+    bumper_msg_.light_signal_front_left = robot_->getLightSignalFrontLeft();
+    bumper_msg_.light_signal_center_left = robot_->getLightSignalCenterLeft();
+    bumper_msg_.light_signal_right = robot_->getLightSignalRight();
+    bumper_msg_.light_signal_front_right = robot_->getLightSignalFrontRight();
+    bumper_msg_.light_signal_center_right = robot_->getLightSignalCenterRight();
   }
-  charging_state_pub_.publish(charging_state_msg_);
+
+  bumper_pub_.publish(bumper_msg_);
+}
+
+void CreateDriver::publishWheeldrop()
+{
+  if (robot_->isWheeldrop())
+    wheeldrop_pub_.publish(empty_msg_);
 }
 
 void CreateDriver::spinOnce()
