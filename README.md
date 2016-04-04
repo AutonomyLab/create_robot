@@ -43,8 +43,8 @@ _* Not verified. Anyone who is able to verify that this driver works or not is e
 |  LEDs             | Available     |
 |  Digit LEDs       | Available     |
 |  Sound            | Planned [#5](https://github.com/AutonomyLab/create_autonomy/issues/5) |
-|  Wheeldrop        | Planned [#6](https://github.com/AutonomyLab/create_autonomy/issues/6) |
-|  Bumpers          | Planned [#6](https://github.com/AutonomyLab/create_autonomy/issues/6) |
+|  Wheeldrop        | Available     |
+|  Bumpers          | Available     |
 |  Cliff sensor     | Planned       |
 |  Dirt detect      | N/A           |
 |  Omni IR sensor   | Available     |
