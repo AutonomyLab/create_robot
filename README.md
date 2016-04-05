@@ -65,35 +65,40 @@ _* Not verified. Anyone who is able to verify that this driver works or not is e
 * Ubuntu packages: `python-rosdep`, `python-catkin-tools`
 
 ``` bash
-$ sudo apt-get install python-rosdep python-catkin-tools`
+$ sudo apt-get install python-rosdep python-catkin-tools
 ```
 
 #### Compiling
 
-1. Create a catkin workspace
-``` bash
-$ mkdir -p create_ws/src
-$ cd create_ws
-$ catkin init
-```
-2. Clone this repo
-``` bash
-$ git clone https://github.com/AutonomyLab/create_autonomy.git
-```
-3. Install dependencies
-``` bash
-$ rosdep update
-$ rosdep install --from-paths src -i
-```
-4. Build
-``` bash
-$ catkin build
-```
+1. Create a catkin workspace  
+    ``` bash
+    $ mkdir -p create_ws/src  
+    $ cd create_ws  
+    $ catkin init  
+    ```
+
+2. Clone this repo  
+    ``` bash
+    $ git clone https://github.com/AutonomyLab/create_autonomy.git  
+    ```
+  
+3. Install dependencies  
+    ``` bash
+    $ rosdep update  
+    $ rosdep install --from-paths src -i  
+    ```
+
+4. Build  
+
+    ``` bash
+    $ catkin build
+    ```
 #### USB Permissions
 5. In order to connect to Create over USB, ensure your user is in the dialout group
-``` bash
-$ sudo usermod -a -G dialout $USER
-```
+    ``` bash
+    $ sudo usermod -a -G dialout $USER
+    ```
+
 6. Logout and login for permission to take effect
 
 ## Running the driver
