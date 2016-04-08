@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <launch>
+  <arg name="desc" default="true"/>
   <node name="ca_driver" pkg="ca_driver" type="ca_driver" output="screen">
     <param name="~loop_hz" value="30" />
     <param name="~dev" value="/dev/ttyUSB0" />
@@ -7,5 +8,5 @@
   </node>
 
   <!-- Robot description -->
-  <include file="$(find ca_description)/launch/create_2.launch"/>
+  <include if="$(arg desc)" file="$(find ca_description)/launch/create_2.launch"/>
 </launch>
