@@ -22,11 +22,11 @@ catkin_package(
 include(ExternalProject)
 ExternalProject_Add(libcreate
   GIT_REPOSITORY https://github.com/AutonomyLab/libcreate.git
-  GIT_TAG 1.1.0 
+  GIT_TAG 1.1.1
   PREFIX ${CATKIN_DEVEL_PREFIX}
-  CONFIGURE_COMMAND cmake . 
+  CONFIGURE_COMMAND cmake .
   BUILD_COMMAND make
-  INSTALL_COMMAND echo "No install" 
+  INSTALL_COMMAND echo "No install"
   #make install INSTALL_PREFIX=${CATKIN_DEVEL_PREFIX}/lib/create
   BUILD_IN_SOURCE 1
 )
