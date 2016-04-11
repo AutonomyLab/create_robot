@@ -181,6 +181,8 @@ linear.x  (+)     Move forward (m/s)
 angular.z (+)     Rotate counter-clockwise (rad/s)
           (-)     Rotate clockwise (rad/s)
 ```
+#### Velocity limits
+
 ` -0.5 <= linear.x <= 0.5` and `-4.25 <= angular.z <= 4.25`
 
 ### Teleoperation
