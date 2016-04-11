@@ -21,12 +21,13 @@ TravisCI (Ubuntu _Trusty_, ROS _Indigo_ and _Jade_)
 | Create 2  _(firmware >= 3.2.6)_ |  Yes       |
 | Roomba Original Series | No *     |
 | Roomba 400 Series |  Yes * |
-| Roomba 500 Series |  No *  |
+| Roomba 500 Series |  Yes *  |
 | Roomba 600 Series |  Yes * |
-| Roomba 700 Series |  No *  |
-| Roomba 800 Series |  No * |
+| Roomba 700 Series |  Yes +  |
+| Roomba 800 Series |  Yes + |
 | Roomba 900 Series |  No *  |
 
+_+ Verified by third-party._  
 _* Not verified. Anyone who is able to verify that this driver works or not is encouraged to contact [Jacob](https://jacobperron.ca) with their findings or open an issue._
 
 ## Features
@@ -194,6 +195,14 @@ $ roslaunch ca_tools joy_teleop.launch [joy_config:=xbox360]
 ```
 
 There exists configuration files for the [Xbox 360 wired controller](https://www.amazon.ca/Microsoft-Xbox-360-Wired-Controller/dp/B003ZSN600) and the [Logitech F710 controller](http://gaming.logitech.com/en-ca/product/f710-wireless-gamepad). You can adapt these files for your preferred joystick configuration.
+
+## Contributions
+
+Contributing to the development and maintenance of _create\_autonomy_ is encouraged. Feel free to open issues or create pull requests on [GitHub](https://github.com/AutonomyLab/create_autonomy).
+
+### Contributors
+
+* [Michael Browne](http://brownem.engineer/) - _Confirms driver works with Roomba 700 and 800 series._
 
 [libcreate]:  https://github.com/AutonomyLab/libcreate
 [oi_spec]:  https://www.adafruit.com/datasheets/create_2_Open_Interface_Spec.pdf
