@@ -89,7 +89,6 @@ $ sudo apt-get install python-rosdep python-catkin-tools
     ```
 
 4. Build  
-
     ``` bash
     $ catkin build
     ```
@@ -105,10 +104,17 @@ $ sudo apt-get install python-rosdep python-catkin-tools
 
 ### Setup
 
-Connect computer to Create's 7-pin serial port
+1. After compiling from source, don't forget to source your workspace:  
+    ``` bash
+    $ source ~/create_ws/devel/setup.bash
+    ```
+
+2. Connect computer to Create's 7-pin serial port
   - If using Create 1, ensure that nothing is connected to Create's DB-25 port
 
-### Launch file
+3. Launch one of the existing launch files or adapt them to create your own.
+
+### Launch files
 
 For Create 2 (Roomba 600 series):
 ``` bash
