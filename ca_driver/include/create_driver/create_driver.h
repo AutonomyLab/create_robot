@@ -18,9 +18,13 @@
 #include "ca_msgs/Mode.h"
 #include "ca_msgs/Bumper.h"
 
-static const double COVARIANCE[36] = {1e-3, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1e-3, 0.0, 0.0, 0.0, 0.0,
-                                      0.0,  0.0, 1e6, 0.0, 0.0, 0.0, 0.0, 0.0,  0.0, 1e6, 0.0, 0.0,
-                                      0.0,  0.0, 0.0, 0.0, 1e6, 0.0, 0.0, 0.0,  0.0, 0.0, 0.0, 1e3};
+static const double MAX_DBL = std::numeric_limits<double>::max();
+static const double COVARIANCE[36] = {1e-5, 1e-5, 0.0,     0.0,     0.0,     1e-5,
+                                      1e-5, 1e-5, 0.0,     0.0,     0.0,     1e-5,
+                                      0.0,  0.0,  MAX_DBL, 0.0,     0.0,     0.0,
+                                      0.0,  0.0,  0.0,     MAX_DBL, 0.0,     0.0,
+                                      0.0,  0.0,  0.0,     0.0,     MAX_DBL, 0.0,
+                                      1e-5, 1e-5, 0.0,     0.0,     0.0,     1e-5};
 
 class CreateDriver
 {
