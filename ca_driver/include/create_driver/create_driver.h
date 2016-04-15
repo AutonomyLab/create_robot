@@ -18,9 +18,13 @@
 #include "ca_msgs/Mode.h"
 #include "ca_msgs/Bumper.h"
 
-static const double COVARIANCE[36] = {1e-3, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1e-3, 0.0, 0.0, 0.0, 0.0,
-                                      0.0,  0.0, 1e6, 0.0, 0.0, 0.0, 0.0, 0.0,  0.0, 1e6, 0.0, 0.0,
-                                      0.0,  0.0, 0.0, 0.0, 1e6, 0.0, 0.0, 0.0,  0.0, 0.0, 0.0, 1e3};
+static const double MAX_DBL = std::numeric_limits<double>::max();
+static const double COVARIANCE[36] = {1e-5, 1e-5, 0.0,     0.0,     0.0,     1e-5,
+                                      1e-5, 1e-5, 0.0,     0.0,     0.0,     1e-5,
+                                      0.0,  0.0,  MAX_DBL, 0.0,     0.0,     0.0,
+                                      0.0,  0.0,  0.0,     MAX_DBL, 0.0,     0.0,
+                                      0.0,  0.0,  0.0,     0.0,     MAX_DBL, 0.0,
+                                      1e-5, 1e-5, 0.0,     0.0,     0.0,     1e-5};
 
 class CreateDriver
 {
@@ -44,6 +48,7 @@ private:
   std::string dev_;
   int baud_;
   double latch_duration_;
+  bool publish_tf_;
 
   void cmdVelCallback(const geometry_msgs::TwistConstPtr& msg);
   void debrisLEDCallback(const std_msgs::BoolConstPtr& msg);

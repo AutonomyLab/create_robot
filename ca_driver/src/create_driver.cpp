@@ -8,6 +8,7 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh) : nh_(nh), priv_nh_("~")
   priv_nh_.param<std::string>("dev", dev_, "/dev/ttyUSB0");
   priv_nh_.param<bool>("create_1", create_one, false);
   priv_nh_.param<double>("latch_cmd_duration", latch_duration_, 0.2);
+  priv_nh_.param<bool>("publish_tf", publish_tf_, true);
 
   if (create_one)
   {
@@ -49,7 +50,7 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh) : nh_(nh), priv_nh_("~")
   odom_msg_.header.frame_id = "odom";
   odom_msg_.child_frame_id = str_base_footprint;
 
-  // Populate covariances
+  // Populate intial covariances
   for (int i = 0; i < 36; i++)
   {
     odom_msg_.pose.covariance[i] = COVARIANCE[i];
@@ -216,10 +217,6 @@ void CreateDriver::publishOdom()
   odom_msg_.pose.pose.position.x = pose.x;
   odom_msg_.pose.pose.position.y = pose.y;
   odom_msg_.pose.pose.orientation = quat;
-  tf_odom_.header.stamp = ros::Time::now();
-  tf_odom_.transform.translation.x = pose.x;
-  tf_odom_.transform.translation.y = pose.y;
-  tf_odom_.transform.rotation = quat;
 
   // Populate velocity info
   odom_msg_.twist.twist.linear.x = vel.x;
@@ -227,26 +224,34 @@ void CreateDriver::publishOdom()
   odom_msg_.twist.twist.angular.z = vel.yaw;
 
   // Update covariances
-  if (fabs(vel.x) < 0.01 && fabs(vel.yaw) < 0.01)
+  odom_msg_.pose.covariance[0] = (double) pose.covariance[0];
+  odom_msg_.pose.covariance[1] = pose.covariance[1];
+  odom_msg_.pose.covariance[5] = pose.covariance[2];
+  odom_msg_.pose.covariance[6] = pose.covariance[3];
+  odom_msg_.pose.covariance[7] = pose.covariance[4];
+  odom_msg_.pose.covariance[11] = pose.covariance[5];
+  odom_msg_.pose.covariance[30] = pose.covariance[6];
+  odom_msg_.pose.covariance[31] = pose.covariance[7];
+  odom_msg_.pose.covariance[35] = pose.covariance[8];
+  odom_msg_.twist.covariance[0] = vel.covariance[0];
+  odom_msg_.twist.covariance[1] = vel.covariance[1];
+  odom_msg_.twist.covariance[5] = vel.covariance[2];
+  odom_msg_.twist.covariance[6] = vel.covariance[3];
+  odom_msg_.twist.covariance[7] = vel.covariance[4];
+  odom_msg_.twist.covariance[11] = vel.covariance[5];
+  odom_msg_.twist.covariance[30] = vel.covariance[6];
+  odom_msg_.twist.covariance[31] = vel.covariance[7];
+  odom_msg_.twist.covariance[35] = vel.covariance[8];
+
+  if (publish_tf_)
   {
-    odom_msg_.pose.covariance[0] = 1e-9;
-    odom_msg_.pose.covariance[8] = 1e-9;
-    odom_msg_.pose.covariance[35] = 1e-9;
-    odom_msg_.twist.covariance[0] = 1e-9;
-    odom_msg_.twist.covariance[8] = 1e-9;
-    odom_msg_.twist.covariance[35] = 1e-9;
-  }
-  else
-  {
-    odom_msg_.pose.covariance[0] = 1e-3;
-    odom_msg_.pose.covariance[8] = 0.0;
-    odom_msg_.pose.covariance[35] = 1e3;
-    odom_msg_.twist.covariance[0] = 1e-3;
-    odom_msg_.twist.covariance[8] = 0.0;
-    odom_msg_.twist.covariance[35] = 1e3;
+    tf_odom_.header.stamp = ros::Time::now();
+    tf_odom_.transform.translation.x = pose.x;
+    tf_odom_.transform.translation.y = pose.y;
+    tf_odom_.transform.rotation = quat;
+    tf_broadcaster_.sendTransform(tf_odom_);
   }
 
-  tf_broadcaster_.sendTransform(tf_odom_);
   odom_pub_.publish(odom_msg_);
 }
 
