@@ -8,6 +8,7 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh) : nh_(nh), priv_nh_("~")
   priv_nh_.param<std::string>("dev", dev_, "/dev/ttyUSB0");
   priv_nh_.param<bool>("create_1", create_one, false);
   priv_nh_.param<double>("latch_cmd_duration", latch_duration_, 0.2);
+  priv_nh_.param<bool>("publish_tf", publish_tf_, true);
 
   if (create_one)
   {
@@ -216,10 +217,6 @@ void CreateDriver::publishOdom()
   odom_msg_.pose.pose.position.x = pose.x;
   odom_msg_.pose.pose.position.y = pose.y;
   odom_msg_.pose.pose.orientation = quat;
-  tf_odom_.header.stamp = ros::Time::now();
-  tf_odom_.transform.translation.x = pose.x;
-  tf_odom_.transform.translation.y = pose.y;
-  tf_odom_.transform.rotation = quat;
 
   // Populate velocity info
   odom_msg_.twist.twist.linear.x = vel.x;
@@ -246,7 +243,15 @@ void CreateDriver::publishOdom()
     odom_msg_.twist.covariance[35] = 1e3;
   }
 
-  tf_broadcaster_.sendTransform(tf_odom_);
+  if (publish_tf_)
+  {
+    tf_odom_.header.stamp = ros::Time::now();
+    tf_odom_.transform.translation.x = pose.x;
+    tf_odom_.transform.translation.y = pose.y;
+    tf_odom_.transform.rotation = quat;
+    tf_broadcaster_.sendTransform(tf_odom_);
+  }
+
   odom_pub_.publish(odom_msg_);
 }
 

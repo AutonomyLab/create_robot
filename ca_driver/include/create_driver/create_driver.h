@@ -44,6 +44,7 @@ private:
   std::string dev_;
   int baud_;
   double latch_duration_;
+  bool publish_tf_;
 
   void cmdVelCallback(const geometry_msgs::TwistConstPtr& msg);
   void debrisLEDCallback(const std_msgs::BoolConstPtr& msg);
