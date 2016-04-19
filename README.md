@@ -35,24 +35,24 @@ _* Not verified. Anyone who is able to verify that this driver works or not is e
 |  Feature          |  Status       |
 |-------------------|---------------|
 |  Odometry         | Available     |
-|  Safe mode        | Planned       |
-|  Clean demo       | N/A           |
+|  Safe mode        | Planned [#13](https://github.com/AutonomyLab/create_autonomy/issues/13) |
+|  Clean demo       | Planned [#14](https://github.com/AutonomyLab/create_autonomy/issues/14) |
 |  Dock demo        | Available     |
 |  Drive wheels     | N/A           |
 |  Drive (v,w)      | Available     |
-|  Brush motors     | Planned       |
+|  Brush motors     | Planned [#15](https://github.com/AutonomyLab/create_autonomy/issues/15) |
 |  LEDs             | Available     |
 |  Digit LEDs       | Available     |
 |  Sound            | Planned [#5](https://github.com/AutonomyLab/create_autonomy/issues/5) |
 |  Wheeldrop        | Available     |
 |  Bumpers          | Available     |
-|  Cliff sensor     | Planned       |
+|  Cliff sensor     | Planned [#22](https://github.com/AutonomyLab/create_autonomy/issues/22)      |
 |  Dirt detect      | N/A           |
 |  Omni IR sensor   | Available     |
 |  Left IR sensor   | N/A           |
 |  Right IR sensor  | N/A           |
 |  Battery info     | Available     |
-|  Light sensors    | Planned       |
+|  Light sensors    | Available     |
 |  Create 1 support | Available     |
 | **_Diagnostics_** |               |
 |  Corrupt Packets  | Planned       |
@@ -119,13 +119,16 @@ $ sudo apt-get install python-rosdep python-catkin-tools
 
 For Create 2 (Roomba 600 series):
 ``` bash
-$ roslaunch ca_driver create_2.launch
+$ roslaunch ca_driver create_2.launch [desc:=true] [publish_tf:=true]
 ```
 
 For Create 1 (Roomba 400 series):
 ``` bash
-$ roslaunch ca_driver create_1.launch
+$ roslaunch ca_driver create_1.launch [publish_tf:=true]
 ```
+
+`desc` determines if the robot description (URDF model and TF tree) is launched.  
+`publish_tf` detemines if the transform between the odometry frame (`odom`) and base frame (`base_footprint`) is published.
 
 ### Parameters
 
@@ -133,6 +136,7 @@ $ roslaunch ca_driver create_1.launch
 ------------|--------------|----------
 `loop_hz`   |  Frequency of internal update loop |  `10.0`
 `dev`       |  Serial port |  `/dev/ttyUSB0`
+`publish_tf`|  Publish the transform between `odom` and `base_footprint` frames | `true`  
 `create_1`  |  Is robot model Create 1 (Roomba 400 series)?  | `false`
 `latch_cmd_duration` | If this many seconds passes without receiving a velocity command the robot stops | `0.2`
 
@@ -144,10 +148,11 @@ $ roslaunch ca_driver create_1.launch
  `battery/capacity` | The estimated charge capacity of the robot's battery (Ah) | [std_msgs/Float32][float32]
  `battery/charge` | The current charge of the robot's battery (Ah) | [std_msgs/Float32][float32]
  `battery/charge_ratio` | Charge / capacity | [std_msgs/Float32][float32]
- `battery/charging_state` | The chargins state of the battery | [ca_msgs/ChargingState][ca_msgs]
+ `battery/charging_state` | The chargins state of the battery | [ca_msgs/ChargingState][chargingstate_msg]
  `battery/current` | Current flowing through the robot's battery (A). Positive current implies charging | [std_msgs/Float32][float32]
  `battery/temperature` | The temperature of the robot's battery (degrees Celsius) | [std_msgs/Int16][int16]
  `battery/voltage` | Voltage of the robot's battery (V) | [std_msgs/Float32][float32]
+ `bumper` | Bumper state message (including light sensors on bumpers) | [ca_msgs/Bumper][bumper_msg]
  `clean_button` | 'clean' button is pressed ('play' button for Create 1) | [std_msgs/Empty][empty]
  `day_button` |  'day' button is pressed | [std_msgs/Empty][empty]
  `hour_button` | 'hour' button is pressed | [std_msgs/Empty][empty]
@@ -155,7 +160,7 @@ $ roslaunch ca_driver create_1.launch
  `dock_button` | 'dock' button is pressed ('advance' button for Create 1) | [std_msgs/Empty][empty]
  `spot_button` | 'spot' button is pressed | [std_msgs/Empty][empty]
  `ir_omni` | The IR character currently being read by the omnidirectional receiver. Value 0 means no character is being received | [std_msgs/UInt16][uint16]
- `mode` | The current mode of the robot (See [OI Spec][oi_spec] for details)| [ca_msgs/Mode][ca_msgs]
+ `mode` | The current mode of the robot (See [OI Spec][oi_spec] for details)| [ca_msgs/Mode][mode_msg]
  `odom` |  Robot odometry according to wheel encoders | [nav_msgs/Odometry][odometry]
 
 ### Subscribers
@@ -215,3 +220,6 @@ Contributing to the development and maintenance of _create\_autonomy_ is encoura
 [uint8multiarray]:  http://docs.ros.org/api/std_msgs/html/msg/UInt8MultiArray.html
 [float32]:  http://docs.ros.org/api/std_msgs/html/msg/Float32.html
 [ca_msgs]:  http://github.com/AutonomyLab/create_autonomy/tree/indigo-devel
+[bumper_msg]:  https://github.com/AutonomyLab/create_autonomy/blob/indigo-devel/ca_msgs/msg/Bumper.msg
+[mode_msg]:  https://github.com/AutonomyLab/create_autonomy/blob/indigo-devel/ca_msgs/msg/Mode.msg
+[chargingstate_msg]:  https://github.com/AutonomyLab/create_autonomy/blob/indigo-devel/ca_msgs/msg/ChargingState.msg
