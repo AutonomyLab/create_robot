@@ -53,15 +53,16 @@ _* Not verified. Anyone who is able to verify that this driver works or not is e
 |  Right IR sensor  | N/A           |
 |  Battery info     | Available     |
 |  Light sensors    | Available     |
-|  Create 1 support | Available     |
 | **_Diagnostics_** |               |
-|  Corrupt Packets  | Planned       |
-|  Phyiscal tests   | Planned       |
+|  Corrupt packets  | Planned       |
+|  Physical tests   | Planned       |
+|  Overcurrent info | Planned       |
 
 ## Install
 
 #### Prerequisites
 
+* Internet connection
 * [ROS](http://wiki.ros.org/ROS/Installation) _Indigo_ or _Jade_
 * Ubuntu packages: `python-rosdep`, `python-catkin-tools`
 
@@ -162,6 +163,8 @@ $ roslaunch ca_driver create_1.launch [publish_tf:=true]
  `ir_omni` | The IR character currently being read by the omnidirectional receiver. Value 0 means no character is being received | [std_msgs/UInt16][uint16]
  `mode` | The current mode of the robot (See [OI Spec][oi_spec] for details)| [ca_msgs/Mode][mode_msg]
  `odom` |  Robot odometry according to wheel encoders | [nav_msgs/Odometry][odometry]
+ `wheeldrop` | At least one of the drive wheels has dropped | [std_msgs/Empty][empty]
+ `/tf` | The transform from the `odom` frame to `base_footprint`. Only if the parameter `publish_tf` is `true` | [tf2_msgs/TFMessage](http://docs.ros.org/jade/api/tf2_msgs/html/msg/TFMessage.html)
 
 ### Subscribers
 
