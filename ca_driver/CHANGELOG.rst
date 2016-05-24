@@ -2,8 +2,8 @@
 Changelog for package create_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.1 (2016-05-24)
+------------------
 * Get pose covariance from underlying library
 * Make publishing TF (odom frame) optional
 * Add launch file argument making description optional
