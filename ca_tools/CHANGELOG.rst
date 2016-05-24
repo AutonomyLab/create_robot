@@ -2,6 +2,9 @@
 Changelog for package create_tools
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.0.0 (2016-04-01)
 ------------------
 * Fix typo in joy_teleop.launch

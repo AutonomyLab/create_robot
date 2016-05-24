@@ -2,6 +2,12 @@
 Changelog for package ca_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add Bumper message with contact sensor states and light sensor states
+* Add header to all custom message types
+* Contributors: Jacob Perron
+
 1.0.0 (2016-04-01)
 ------------------
 * Add ChargingState and Mode messages

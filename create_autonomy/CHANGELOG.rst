@@ -2,6 +2,9 @@
 Changelog for package create_autonomy
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.0.0 (2016-04-01)
 ------------------
 * Add ca_description package

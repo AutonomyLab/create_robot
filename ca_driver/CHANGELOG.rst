@@ -2,6 +2,18 @@
 Changelog for package create_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Get pose covariance from underlying library
+* Make publishing TF (odom frame) optional
+* Add launch file argument making description optional
+* Update libcreate tag, with odometry patch
+* Add git as build dependency
+* Move ChargingState publisher with other battery state information
+* Add Bumper message with contact sensor states and light sensor states
+* Add header to all custom message types
+* Contributors: Jacob Perron
+
 1.0.0 (2016-04-01)
 ------------------
 * Update libcreate git tag
