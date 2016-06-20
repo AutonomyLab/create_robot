@@ -1,0 +1,7 @@
+uint8 CLEAN_MODE_NONE=0
+uint8 CLEAN_MODE_DEFAULT=1
+uint8 CLEAN_MODE_MAX=2
+uint8 CLEAN_MODE_SPOT=3
+
+Header header
+uint8 mode

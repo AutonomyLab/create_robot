@@ -10,6 +10,7 @@ add_message_files(
   FILES
   ChargingState.msg
   Mode.msg
+  CleanMode.msg
   Bumper.msg
 )
 
