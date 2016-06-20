@@ -67,6 +67,7 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh) : nh_(nh), priv_nh_("~")
   dock_sub_ = nh.subscribe("dock", 10, &CreateDriver::dockCallback, this);
   undock_sub_ = nh.subscribe("undock", 10, &CreateDriver::undockCallback, this);
   set_mode_sub_ = nh.subscribe("set_mode", 10, &CreateDriver::setModeCallback, this);
+  clean_mode_sub_ = nh.subscribe("set_clean_mode", 10, &CreateDriver::cleanModeCallback, this);
 
   odom_pub_ = nh.advertise<nav_msgs::Odometry>("odom", 30);
   clean_btn_pub_ = nh.advertise<std_msgs::Empty>("clean_button", 30);
@@ -234,6 +235,56 @@ void CreateDriver::setModeCallback(const ca_msgs::ModeConstPtr& msg)
       break;
     default:
       ROS_ERROR("[CREATE] Failed to set unknown mode: %u", msg->mode);
+  }
+}
+
+void CreateDriver::cleanModeCallback(const ca_msgs::CleanModeConstPtr& msg)
+{
+  switch (msg->mode)
+  {
+    case ca_msgs::CleanMode::CLEAN_MODE_NONE:
+      // Stop any cleaning modes by switch to safe mode
+      if (robot_->setMode(create::MODE_SAFE))
+      {
+        ROS_INFO("[CREATE] Stopping clean mode");
+      }
+      else
+      {
+        ROS_ERROR("[CREATE] Failed to stop clean mode");
+      }
+      break;
+    case ca_msgs::CleanMode::CLEAN_MODE_DEFAULT:
+      if (robot_->clean(create::CLEAN_DEFAULT))
+      {
+        ROS_INFO("[CREATE] Start clean mode DEFAULT");
+      }
+      else
+      {
+        ROS_ERROR("[CREATE] Failed to start clean mode DEFAULT");
+      }
+      break;
+    case ca_msgs::CleanMode::CLEAN_MODE_MAX:
+      if (robot_->clean(create::CLEAN_MAX))
+      {
+        ROS_INFO("[CREATE] Start clean mode MAX");
+      }
+      else
+      {
+        ROS_ERROR("[CREATE] Failed to start clean mode MAX");
+      }
+      break;
+    case ca_msgs::CleanMode::CLEAN_MODE_SPOT:
+      if (robot_->clean(create::CLEAN_SPOT))
+      {
+        ROS_INFO("[CREATE] Start clean mode SPOT");
+      }
+      else
+      {
+        ROS_ERROR("[CREATE] Failed to start clean mode SPOT");
+      }
+      break;
+    default:
+      ROS_ERROR("[CREATE] Failed to start unknown clean mode: %u", msg->mode);
   }
 }
 

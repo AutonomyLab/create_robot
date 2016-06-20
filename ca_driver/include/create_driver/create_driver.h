@@ -16,6 +16,7 @@
 #include "create/create.h"
 #include "ca_msgs/ChargingState.h"
 #include "ca_msgs/Mode.h"
+#include "ca_msgs/CleanMode.h"
 #include "ca_msgs/Bumper.h"
 
 static const double MAX_DBL = std::numeric_limits<double>::max();
@@ -60,6 +61,7 @@ private:
   void dockCallback(const std_msgs::EmptyConstPtr& msg);
   void undockCallback(const std_msgs::EmptyConstPtr& msg);
   void setModeCallback(const ca_msgs::ModeConstPtr& msg);
+  void cleanModeCallback(const ca_msgs::CleanModeConstPtr& msg);
 
   bool update();
   void publishOdom();
@@ -83,6 +85,7 @@ protected:
   ros::Subscriber dock_sub_;
   ros::Subscriber undock_sub_;
   ros::Subscriber set_mode_sub_;
+  ros::Subscriber clean_mode_sub_;
 
   ros::Publisher odom_pub_;
   ros::Publisher clean_btn_pub_;
