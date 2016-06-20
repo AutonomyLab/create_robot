@@ -59,6 +59,7 @@ private:
   void setASCIICallback(const std_msgs::UInt8MultiArrayConstPtr& msg);
   void dockCallback(const std_msgs::EmptyConstPtr& msg);
   void undockCallback(const std_msgs::EmptyConstPtr& msg);
+  void setModeCallback(const ca_msgs::ModeConstPtr& msg);
 
   bool update();
   void publishOdom();
@@ -81,6 +82,7 @@ protected:
   ros::Subscriber set_ascii_sub_;
   ros::Subscriber dock_sub_;
   ros::Subscriber undock_sub_;
+  ros::Subscriber set_mode_sub_;
 
   ros::Publisher odom_pub_;
   ros::Publisher clean_btn_pub_;

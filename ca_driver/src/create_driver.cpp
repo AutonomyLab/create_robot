@@ -66,6 +66,7 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh) : nh_(nh), priv_nh_("~")
   set_ascii_sub_ = nh.subscribe("set_ascii", 10, &CreateDriver::setASCIICallback, this);
   dock_sub_ = nh.subscribe("dock", 10, &CreateDriver::dockCallback, this);
   undock_sub_ = nh.subscribe("undock", 10, &CreateDriver::undockCallback, this);
+  set_mode_sub_ = nh.subscribe("set_mode", 10, &CreateDriver::setModeCallback, this);
 
   odom_pub_ = nh.advertise<nav_msgs::Odometry>("odom", 30);
   clean_btn_pub_ = nh.advertise<std_msgs::Empty>("clean_button", 30);
@@ -185,6 +186,55 @@ void CreateDriver::undockCallback(const std_msgs::EmptyConstPtr& msg)
 {
   // Switch robot back to FULL mode
   robot_->setMode(create::MODE_FULL);
+}
+
+void CreateDriver::setModeCallback(const ca_msgs::ModeConstPtr& msg)
+{
+  switch (msg->mode)
+  {
+    case ca_msgs::Mode::MODE_OFF:
+      if (robot_->setMode(create::MODE_OFF))
+      {
+        ROS_INFO("[CREATE] Mode set to OFF");
+      }
+      else
+      {
+        ROS_ERROR("[CREATE] Failed to set mode to OFF");
+      }
+      break;
+    case ca_msgs::Mode::MODE_PASSIVE:
+      if (robot_->setMode(create::MODE_PASSIVE))
+      {
+        ROS_INFO("[CREATE] Mode set to PASSIVE");
+      }
+      else
+      {
+        ROS_ERROR("[CREATE] Failed to set mode to PASSIVE");
+      }
+      break;
+    case ca_msgs::Mode::MODE_SAFE:
+      if (robot_->setMode(create::MODE_SAFE))
+      {
+        ROS_INFO("[CREATE] Mode set to SAFE");
+      }
+      else
+      {
+        ROS_ERROR("[CREATE] Failed to set mode to SAFE");
+      }
+      break;
+    case ca_msgs::Mode::MODE_FULL:
+      if (robot_->setMode(create::MODE_FULL))
+      {
+        ROS_INFO("[CREATE] Mode set to FULL");
+      }
+      else
+      {
+        ROS_ERROR("[CREATE] Failed to set mode to FULL");
+      }
+      break;
+    default:
+      ROS_ERROR("[CREATE] Failed to set unknown mode: %u", msg->mode);
+  }
 }
 
 bool CreateDriver::update()
