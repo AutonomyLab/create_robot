@@ -161,10 +161,12 @@ $ roslaunch ca_driver create_1.launch [publish_tf:=true]
  `dock_button` | 'dock' button is pressed ('advance' button for Create 1) | [std_msgs/Empty][empty]
  `spot_button` | 'spot' button is pressed | [std_msgs/Empty][empty]
  `ir_omni` | The IR character currently being read by the omnidirectional receiver. Value 0 means no character is being received | [std_msgs/UInt16][uint16]
+ `joint_states` | The states (position, velocity) of the drive wheel joints | [sensor_msgs/JointState][jointstate_msg]
  `mode` | The current mode of the robot (See [OI Spec][oi_spec] for details)| [ca_msgs/Mode][mode_msg]
  `odom` |  Robot odometry according to wheel encoders | [nav_msgs/Odometry][odometry]
  `wheeldrop` | At least one of the drive wheels has dropped | [std_msgs/Empty][empty]
  `/tf` | The transform from the `odom` frame to `base_footprint`. Only if the parameter `publish_tf` is `true` | [tf2_msgs/TFMessage](http://docs.ros.org/jade/api/tf2_msgs/html/msg/TFMessage.html)
+
 
 ### Subscribers
 
@@ -226,3 +228,4 @@ Contributing to the development and maintenance of _create\_autonomy_ is encoura
 [bumper_msg]:  https://github.com/AutonomyLab/create_autonomy/blob/indigo-devel/ca_msgs/msg/Bumper.msg
 [mode_msg]:  https://github.com/AutonomyLab/create_autonomy/blob/indigo-devel/ca_msgs/msg/Mode.msg
 [chargingstate_msg]:  https://github.com/AutonomyLab/create_autonomy/blob/indigo-devel/ca_msgs/msg/ChargingState.msg
+[jointstate_msg]:  http://docs.ros.org/api/sensor_msgs/html/msg/JointState.html
