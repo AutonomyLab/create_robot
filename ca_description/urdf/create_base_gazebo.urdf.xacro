@@ -1,0 +1,207 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:macro name="sim_create_base">
+    <gazebo>
+      <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>${diffdrive_update_rate}</updateRate>
+        <leftJoint>right_wheel_joint</leftJoint>
+        <rightJoint>left_wheel_joint</rightJoint>
+        <wheelSeparation>${wheel_separation}</wheelSeparation>
+        <wheelDiameter>${wheel_radius * 2}</wheelDiameter>
+        <wheelTorque>${wheel_torque}</wheelTorque>
+        <!--wheelAcceleration>${wheel_accel}</wheelAcceleration-->
+        <commandTopic>cmd_vel</commandTopic>
+        <odometryTopic>odom</odometryTopic>
+        <odometryFrame>odom</odometryFrame>
+        <robotBaseFrame>base_footprint</robotBaseFrame>
+      </plugin>
+
+      <plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>100.0</updateRate>
+        <bodyName>base_link</bodyName>
+        <topicName>simple_controller/absolute_position</topicName>
+        <gaussianNoise>0</gaussianNoise>
+        <frameName>map</frameName>
+        <xyzOffsets>0 0 0</xyzOffsets>
+        <rpyOffsets>0 0 0</rpyOffsets>
+        <!--<interface:position name="p3d_base_position"/>-->
+      </plugin>
+    </gazebo>
+
+    <gazebo reference="left_wheel_link">
+      <mu1>1.0</mu1>
+      <mu2>1.0</mu2>
+      <kp>1000000.0</kp>
+      <kd>100.0</kd>
+      <minDepth>0.001</minDepth>
+      <maxVel>1.0</maxVel>
+    </gazebo>
+
+    <gazebo reference="right_wheel_link">
+      <mu1>1.0</mu1>
+      <mu2>1.0</mu2>
+      <kp>1000000.0</kp>
+      <kd>100.0</kd>
+      <minDepth>0.001</minDepth>
+      <maxVel>1.0</maxVel>
+    </gazebo>
+    <gazebo reference="rear_wheel_link">
+      <mu1>0.0</mu1>
+      <mu2>0.0</mu2>
+      <kp>1000000.0</kp>
+      <kd>100.0</kd>
+      <minDepth>0.001</minDepth>
+      <maxVel>1.0</maxVel>
+    </gazebo>
+
+    <gazebo reference="front_wheel_link">
+      <mu1>0.0</mu1>
+      <mu2>0.0</mu2>
+      <kp>1000000.0</kp>
+      <kd>100.0</kd>
+      <minDepth>0.001</minDepth>
+      <maxVel>1.0</maxVel>
+    </gazebo>
+  </xacro:macro>
+
+  <xacro:macro name="sim_imu">
+    <gazebo>
+      <plugin name="imu_controller" filename="libgazebo_ros_imu.so">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>30</updateRate>
+        <bodyName>gyro_link</bodyName>
+        <topicName>imu/data</topicName>
+        <serviceName>imu/is_calibrated</serviceName>
+        <gaussianNoise>${0.0017*0.0017}</gaussianNoise>
+        <xyzOffsets>0 0 0</xyzOffsets>
+        <rpyOffsets>0 0 0</rpyOffsets>
+      </plugin>
+    </gazebo>
+  </xacro:macro>
+
+  <xacro:macro name="sim_create_wall_sensor">
+    <gazebo reference="wall_sensor_link">
+      <sensor type="ray" name="wall_sensor">
+        <always_on>true</always_on>
+        <update_rate>20.0</update_rate>
+        <pose>0 0 0 0 0 0</pose>
+        <visualize>false</visualize>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>1</samples>
+              <resolution>1</resolution>
+              <min_angle>0</min_angle>
+              <max_angle>0</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.0160</min>
+            <max>0.04</max>
+            <resolution>0.1</resolution>
+          </range>
+        </ray>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+
+  <xacro:macro name="sim_create_cliff_sensors">
+    <gazebo reference="left_cliff_sensor_link">
+      <sensor type="ray" name="left_cliff_sensor">
+        <always_on>true</always_on>
+        <update_rate>20.0</update_rate>
+        <pose>0 0 0 0 0 0</pose>
+        <visualize>false</visualize>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>1</samples>
+              <resolution>1</resolution>
+              <min_angle>0</min_angle>
+              <max_angle>0</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.01</min>
+            <max>0.04</max>
+            <resolution>0.1</resolution>
+          </range>
+        </ray>
+      </sensor>
+    </gazebo>
+
+    <gazebo reference="right_cliff_sensor_link">
+      <sensor type="ray" name="right_cliff_sensor">
+        <always_on>true</always_on>
+        <update_rate>20.0</update_rate>
+        <pose>0 0 0 0 0 0</pose>
+        <visualize>false</visualize>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>1</samples>
+              <resolution>1</resolution>
+              <min_angle>0</min_angle>
+              <max_angle>0</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.01</min>
+            <max>0.04</max>
+            <resolution>0.1</resolution>
+          </range>
+        </ray>
+      </sensor>
+    </gazebo>
+
+    <gazebo reference="leftfront_cliff_sensor_link">
+      <sensor type="ray" name="leftfront_cliff_sensor">
+        <always_on>true</always_on>
+        <update_rate>20.0</update_rate>
+        <pose>0 0 0 0 0 0</pose>
+        <visualize>false</visualize>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>1</samples>
+              <resolution>1</resolution>
+              <min_angle>0</min_angle>
+              <max_angle>0</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.01</min>
+            <max>0.04</max>
+            <resolution>0.1</resolution>
+          </range>
+        </ray>
+      </sensor>
+    </gazebo>
+
+    <gazebo reference="rightfront_cliff_sensor_link">
+      <sensor type="ray" name="rightfront_cliff_sensor">
+        <always_on>true</always_on>
+        <update_rate>20.0</update_rate>
+        <pose>0 0 0 0 0 0</pose>
+        <visualize>false</visualize>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>1</samples>
+              <resolution>1</resolution>
+              <min_angle>0</min_angle>
+              <max_angle>0</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.01</min>
+            <max>0.04</max>
+            <resolution>0.1</resolution>
+          </range>
+        </ray>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+</robot>
