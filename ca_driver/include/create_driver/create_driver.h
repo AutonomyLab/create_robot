@@ -8,6 +8,7 @@
 #include <std_msgs/UInt16.h>
 #include <std_msgs/Int16.h>
 #include <std_msgs/UInt8MultiArray.h>
+#include <sensor_msgs/JointState.h>
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/TransformStamped.h>
 #include <nav_msgs/Odometry.h>
@@ -42,6 +43,7 @@ private:
   std_msgs::Float32 float32_msg_;
   std_msgs::UInt16 uint16_msg_;
   std_msgs::Int16 int16_msg_;
+  sensor_msgs::JointState joint_state_msg_;
 
   // ROS params
   double loop_hz_;
@@ -62,6 +64,7 @@ private:
 
   bool update();
   void publishOdom();
+  void publishJointState();
   void publishBatteryInfo();
   void publishButtonPresses() const;
   void publishOmniChar();
@@ -100,6 +103,7 @@ protected:
   ros::Publisher mode_pub_;
   ros::Publisher bumper_pub_;
   ros::Publisher wheeldrop_pub_;
+  ros::Publisher wheel_joint_pub_;
 
 public:
   CreateDriver(ros::NodeHandle& nh);

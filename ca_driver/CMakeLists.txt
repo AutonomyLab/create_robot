@@ -6,6 +6,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   geometry_msgs
   nav_msgs
+  sensor_msgs
   tf
   ca_msgs
 )
@@ -15,13 +16,13 @@ find_package(Boost REQUIRED system thread)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES libcreate
-  CATKIN_DEPENDS roscpp std_msgs geometry_msgs nav_msgs tf ca_msgs ca_description
+  CATKIN_DEPENDS roscpp std_msgs geometry_msgs nav_msgs sensor_msgs tf ca_msgs ca_description
 )
 
 include(ExternalProject)
 ExternalProject_Add(libcreate
   GIT_REPOSITORY https://github.com/AutonomyLab/libcreate.git
-  GIT_TAG 1.2.1
+  GIT_TAG master
   PREFIX ${CATKIN_DEVEL_PREFIX}
   CONFIGURE_COMMAND cmake .
   BUILD_COMMAND make

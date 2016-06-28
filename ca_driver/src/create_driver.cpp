@@ -49,6 +49,12 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh) : nh_(nh), priv_nh_("~")
   tf_odom_.child_frame_id = str_base_footprint;
   odom_msg_.header.frame_id = "odom";
   odom_msg_.child_frame_id = str_base_footprint;
+  joint_state_msg_.name.resize(2);
+  joint_state_msg_.position.resize(2);
+  joint_state_msg_.velocity.resize(2);
+  joint_state_msg_.effort.resize(2);
+  joint_state_msg_.name[0] = "left_wheel_joint";
+  joint_state_msg_.name[1] = "right_wheel_joint";
 
   // Populate intial covariances
   for (int i = 0; i < 36; i++)
@@ -85,6 +91,7 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh) : nh_(nh), priv_nh_("~")
   mode_pub_ = nh.advertise<ca_msgs::Mode>("mode", 30);
   bumper_pub_ = nh.advertise<ca_msgs::Bumper>("bumper", 30);
   wheeldrop_pub_ = nh.advertise<std_msgs::Empty>("wheeldrop", 30);
+  wheel_joint_pub_ = nh.advertise<sensor_msgs::JointState>("joint_states", 10);
   ROS_INFO("[CREATE] Ready.");
 }
 
@@ -190,6 +197,7 @@ void CreateDriver::undockCallback(const std_msgs::EmptyConstPtr& msg)
 bool CreateDriver::update()
 {
   publishOdom();
+  publishJointState();
   publishBatteryInfo();
   publishButtonPresses();
   publishOmniChar();
@@ -253,6 +261,18 @@ void CreateDriver::publishOdom()
   }
 
   odom_pub_.publish(odom_msg_);
+}
+
+void CreateDriver::publishJointState() {
+    // Publish joint states
+    static float CREATE_2_WHEEL_RADIUS = create::util::CREATE_2_WHEEL_DIAMETER / 2.0;
+
+    joint_state_msg_.header.stamp = ros::Time::now();
+    joint_state_msg_.position[0] = robot_->getLeftWheelDistance() / CREATE_2_WHEEL_RADIUS;
+    joint_state_msg_.position[1] = robot_->getRightWheelDistance() / CREATE_2_WHEEL_RADIUS;
+    joint_state_msg_.velocity[0] = robot_->getRequestedLeftWheelVel() / CREATE_2_WHEEL_RADIUS;
+    joint_state_msg_.velocity[1] = robot_->getRequestedRightWheelVel() / CREATE_2_WHEEL_RADIUS;
+    wheel_joint_pub_.publish(joint_state_msg_);
 }
 
 void CreateDriver::publishBatteryInfo()
