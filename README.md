@@ -212,7 +212,11 @@ Contributing to the development and maintenance of _create\_autonomy_ is encoura
 
 ### Contributors
 
-* [Michael Browne](http://brownem.engineer/) - _Confirms driver works with Roomba 700 and 800 series._
+* [Michael Browne](http://brownem.engineer/)
+    - Confirms driver works with Roomba 700 and 800 series.
+* [Ben Wolsieffer](https://github.com/lopsided98) 
+    - Added JointState publisher for wheels ([#26](https://github.com/AutonomyLab/create_autonomy/pull/26)).
+    - Added Create 1 description ([#27](https://github.com/AutonomyLab/create_autonomy/pull/27)).
 
 [libcreate]:  https://github.com/AutonomyLab/libcreate
 [oi_spec]:  https://www.adafruit.com/datasheets/create_2_Open_Interface_Spec.pdf
