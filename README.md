@@ -19,8 +19,8 @@ TravisCI (Ubuntu _Trusty_, ROS _Indigo_ and _Jade_)
 |-----------|------------|
 | Create 1  |  Yes       |
 | Create 2  _(firmware >= 3.2.6)_ |  Yes       |
-| Roomba Original Series | No *     |
-| Roomba 400 Series |  Yes * |
+| Roomba Original Series | No  |
+| Roomba 400 Series |  No  |
 | Roomba 500 Series |  Yes *  |
 | Roomba 600 Series |  Yes * |
 | Roomba 700 Series |  Yes +  |
