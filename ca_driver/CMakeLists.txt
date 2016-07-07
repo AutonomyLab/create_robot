@@ -9,6 +9,8 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   tf
   ca_msgs
+  diagnostic_msgs
+  diagnostic_updater
 )
 
 find_package(Boost REQUIRED system thread)
@@ -16,7 +18,7 @@ find_package(Boost REQUIRED system thread)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES libcreate
-  CATKIN_DEPENDS roscpp std_msgs geometry_msgs nav_msgs sensor_msgs tf ca_msgs ca_description
+  CATKIN_DEPENDS roscpp std_msgs geometry_msgs nav_msgs sensor_msgs tf ca_msgs ca_description diagnostic_msgs diagnostic_updater
 )
 
 include(ExternalProject)

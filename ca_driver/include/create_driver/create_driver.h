@@ -13,6 +13,7 @@
 #include <geometry_msgs/TransformStamped.h>
 #include <nav_msgs/Odometry.h>
 #include <tf/transform_broadcaster.h>
+#include <diagnostic_updater/diagnostic_updater.h>
 
 #include "create/create.h"
 #include "ca_msgs/ChargingState.h"
@@ -32,11 +33,12 @@ class CreateDriver
 private:
   create::Create* robot_;
   create::RobotModel model_;
+  tf::TransformBroadcaster tf_broadcaster_;
+  diagnostic_updater::Updater diagnostics_;
   ca_msgs::Mode mode_msg_;
   ca_msgs::ChargingState charging_state_msg_;
   ca_msgs::Bumper bumper_msg_;
   nav_msgs::Odometry odom_msg_;
-  tf::TransformBroadcaster tf_broadcaster_;
   geometry_msgs::TransformStamped tf_odom_;
   ros::Time last_cmd_vel_time_;
   std_msgs::Empty empty_msg_;
@@ -44,6 +46,7 @@ private:
   std_msgs::UInt16 uint16_msg_;
   std_msgs::Int16 int16_msg_;
   sensor_msgs::JointState joint_state_msg_;
+  bool is_running_slowly_;
 
   // ROS params
   double loop_hz_;
@@ -63,6 +66,11 @@ private:
   void undockCallback(const std_msgs::EmptyConstPtr& msg);
 
   bool update();
+  void updateBatteryDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat);
+  void updateSafetyDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat);
+  void updateSerialDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat);
+  void updateModeDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat);
+  void updateDriverDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat);
   void publishOdom();
   void publishJointState();
   void publishBatteryInfo();

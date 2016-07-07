@@ -1,7 +1,12 @@
 #include <tf/transform_datatypes.h>
+
 #include "create_driver/create_driver.h"
 
-CreateDriver::CreateDriver(ros::NodeHandle& nh) : nh_(nh), priv_nh_("~")
+CreateDriver::CreateDriver(ros::NodeHandle& nh)
+  : nh_(nh),
+    priv_nh_("~"),
+    diagnostics_(),
+    is_running_slowly_(false)
 {
   bool create_one;
   priv_nh_.param<double>("loop_hz", loop_hz_, 10.0);
@@ -33,12 +38,11 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh) : nh_(nh), priv_nh_("~")
 
   ROS_INFO("[CREATE] Connection established.");
 
-  // Put into full control mode
-  // TODO: Make option to run in safe mode as parameter
+  // Start in full control mode
   robot_->setMode(create::MODE_FULL);
 
   // Show robot's battery level
-  ROS_INFO("[CREATE] Battery level %.2f %%", (robot_->getBatteryCharge() / (float)robot_->getBatteryCapacity()) * 100.0);
+  ROS_INFO("[CREATE] Battery level %.2f %%", (robot_->getBatteryCharge() / robot_->getBatteryCapacity()) * 100.0);
 
   // Set frame_id's
   const std::string str_base_footprint("base_footprint");
@@ -63,6 +67,7 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh) : nh_(nh), priv_nh_("~")
     odom_msg_.twist.covariance[i] = COVARIANCE[i];
   }
 
+  // Setup subscribers
   cmd_vel_sub_ = nh.subscribe("cmd_vel", 1, &CreateDriver::cmdVelCallback, this);
   debris_led_sub_ = nh.subscribe("debris_led", 10, &CreateDriver::debrisLEDCallback, this);
   spot_led_sub_ = nh.subscribe("spot_led", 10, &CreateDriver::spotLEDCallback, this);
@@ -73,6 +78,7 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh) : nh_(nh), priv_nh_("~")
   dock_sub_ = nh.subscribe("dock", 10, &CreateDriver::dockCallback, this);
   undock_sub_ = nh.subscribe("undock", 10, &CreateDriver::undockCallback, this);
 
+  // Setup publishers
   odom_pub_ = nh.advertise<nav_msgs::Odometry>("odom", 30);
   clean_btn_pub_ = nh.advertise<std_msgs::Empty>("clean_button", 30);
   day_btn_pub_ = nh.advertise<std_msgs::Empty>("day_button", 30);
@@ -92,6 +98,23 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh) : nh_(nh), priv_nh_("~")
   bumper_pub_ = nh.advertise<ca_msgs::Bumper>("bumper", 30);
   wheeldrop_pub_ = nh.advertise<std_msgs::Empty>("wheeldrop", 30);
   wheel_joint_pub_ = nh.advertise<sensor_msgs::JointState>("joint_states", 10);
+
+  // Setup diagnostics
+  diagnostics_.add("Battery Status", this, &CreateDriver::updateBatteryDiagnostics);
+  diagnostics_.add("Safety Status", this, &CreateDriver::updateSafetyDiagnostics);
+  diagnostics_.add("Serial Status", this, &CreateDriver::updateSerialDiagnostics);
+  diagnostics_.add("Base Mode", this, &CreateDriver::updateModeDiagnostics);
+  diagnostics_.add("Driver Status", this, &CreateDriver::updateDriverDiagnostics);
+
+  if (create_one)
+  {
+    diagnostics_.setHardwareID("Create-1");
+  }
+  else
+  {
+    diagnostics_.setHardwareID("Create-2");
+  }
+
   ROS_INFO("[CREATE] Ready.");
 }
 
@@ -214,6 +237,139 @@ bool CreateDriver::update()
   return true;
 }
 
+void CreateDriver::updateBatteryDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat)
+{
+  const float charge = robot_->getBatteryCharge();
+  const float capacity = robot_->getBatteryCapacity();
+  const create::ChargingState charging_state = robot_->getChargingState();
+  const float charge_ratio = charge / capacity;
+
+  if (charging_state == create::CHARGE_FAULT)
+  {
+    stat.summary(diagnostic_msgs::DiagnosticStatus::ERROR, "Charging fault reported by base");
+  }
+  else if (charge_ratio == 0)
+  {
+    stat.summary(diagnostic_msgs::DiagnosticStatus::ERROR, "Battery reports no charge");
+  }
+  else if (charge_ratio < 0.1)
+  {
+    stat.summary(diagnostic_msgs::DiagnosticStatus::WARN, "Battery reports less than 10% charge");
+  }
+  else
+  {
+    stat.summary(diagnostic_msgs::DiagnosticStatus::OK, "Battery is OK");
+  }
+
+  stat.add("Charge (Ah)", charge);
+  stat.add("Capacity (Ah)", capacity);
+  stat.add("Temperature (Celsius)", robot_->getTemperature());
+  stat.add("Current (A)", robot_->getCurrent());
+  stat.add("Voltage (V)", robot_->getVoltage());
+
+  switch (charging_state)
+  {
+    case create::CHARGE_NONE:
+      stat.add("Charging state", "Not charging");
+      break;
+    case create::CHARGE_RECONDITION:
+      stat.add("Charging state", "Reconditioning");
+      break;
+    case create::CHARGE_FULL:
+      stat.add("Charging state", "Full charge");
+      break;
+    case create::CHARGE_TRICKLE:
+      stat.add("Charging state", "Trickle charging");
+      break;
+    case create::CHARGE_WAITING:
+      stat.add("Charging state", "Waiting");
+      break;
+    case create::CHARGE_FAULT:
+      stat.add("Charging state", "Fault");
+      break;
+  }
+}
+
+void CreateDriver::updateSafetyDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat)
+{
+  const bool is_wheeldrop = robot_->isWheeldrop();
+  const bool is_cliff = robot_->isCliff();
+  if (is_wheeldrop)
+  {
+    stat.summary(diagnostic_msgs::DiagnosticStatus::WARN, "Wheeldrop detected");
+  }
+  else if (is_cliff)
+  {
+    stat.summary(diagnostic_msgs::DiagnosticStatus::WARN, "Cliff detected");
+  }
+  else
+  {
+    stat.summary(diagnostic_msgs::DiagnosticStatus::OK, "No safety issues detected");
+  }
+
+  stat.add("Wheeldrop", is_wheeldrop);
+  stat.add("Cliff", is_cliff);
+}
+
+void CreateDriver::updateSerialDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat)
+{
+  const bool is_connected = robot_->connected();
+  const uint64_t corrupt_packets = robot_->getNumCorruptPackets();
+  const uint64_t total_packets = robot_->getTotalPackets();
+
+  if (!is_connected)
+  {
+    stat.summary(diagnostic_msgs::DiagnosticStatus::ERROR, "Serial port to base not open");
+  }
+  else if (corrupt_packets)
+  {
+    stat.summary(diagnostic_msgs::DiagnosticStatus::WARN,
+                 "Corrupt packets detected. If the number of corrupt packets is increasing, data may be unreliable");
+  }
+  else
+  {
+    stat.summary(diagnostic_msgs::DiagnosticStatus::OK, "Serial connection is good");
+  }
+
+  stat.add("Corrupt packets", corrupt_packets);
+  stat.add("Total packets", total_packets);
+}
+
+void CreateDriver::updateModeDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat)
+{
+  const create::CreateMode mode = robot_->getMode();
+  switch (mode)
+  {
+    case create::MODE_UNAVAILABLE:
+      stat.summary(diagnostic_msgs::DiagnosticStatus::ERROR, "Unknown mode of operation");
+      break;
+    case create::MODE_OFF:
+      stat.summary(diagnostic_msgs::DiagnosticStatus::WARN, "Mode is set to OFF");
+      break;
+    case create::MODE_PASSIVE:
+      stat.summary(diagnostic_msgs::DiagnosticStatus::OK, "Mode is set to PASSIVE");
+      break;
+    case create::MODE_SAFE:
+      stat.summary(diagnostic_msgs::DiagnosticStatus::OK, "Mode is set to SAFE");
+      break;
+    case create::MODE_FULL:
+      stat.summary(diagnostic_msgs::DiagnosticStatus::OK, "Mode is set to FULL");
+      break;
+  }
+}
+
+void CreateDriver::updateDriverDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat)
+{
+  if (is_running_slowly_)
+  {
+    stat.summary(diagnostic_msgs::DiagnosticStatus::WARN, "Internal loop running slowly");
+  }
+  else
+  {
+    stat.summary(diagnostic_msgs::DiagnosticStatus::OK, "Maintaining loop frequency");
+  }
+}
+
 void CreateDriver::publishOdom()
 {
   create::Pose pose = robot_->getPose();
@@ -287,7 +443,7 @@ void CreateDriver::publishBatteryInfo()
   capacity_pub_.publish(float32_msg_);
   int16_msg_.data = robot_->getTemperature();
   temperature_pub_.publish(int16_msg_);
-  float32_msg_.data = (float)robot_->getBatteryCharge() / (float)robot_->getBatteryCapacity();
+  float32_msg_.data = robot_->getBatteryCharge() / robot_->getBatteryCapacity();
   charge_ratio_pub_.publish(float32_msg_);
 
   const create::ChargingState charging_state = robot_->getChargingState();
@@ -374,6 +530,9 @@ void CreateDriver::publishMode()
     case create::MODE_FULL:
       mode_msg_.mode = mode_msg_.MODE_FULL;
       break;
+    default:
+      ROS_ERROR("[CREATE] Unknown mode detected");
+      break;
   }
   mode_pub_.publish(mode_msg_);
 }
@@ -413,6 +572,7 @@ void CreateDriver::publishWheeldrop()
 void CreateDriver::spinOnce()
 {
   update();
+  diagnostics_.update();
   ros::spinOnce();
 }
 
@@ -422,7 +582,9 @@ void CreateDriver::spin()
   while (ros::ok())
   {
     spinOnce();
-    if (!rate.sleep())
+
+    is_running_slowly_ = !rate.sleep();
+    if (is_running_slowly_)
     {
       ROS_WARN("[CREATE] Loop running slowly.");
     }
