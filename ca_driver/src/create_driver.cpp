@@ -1,32 +1,35 @@
 #include <tf/transform_datatypes.h>
-
 #include "create_driver/create_driver.h"
 
 CreateDriver::CreateDriver(ros::NodeHandle& nh)
   : nh_(nh),
     priv_nh_("~"),
     diagnostics_(),
+    model_(create::RobotModel::CREATE_2),
     is_running_slowly_(false)
 {
   bool create_one;
+  std::string robot_model_name;
   priv_nh_.param<double>("loop_hz", loop_hz_, 10.0);
   priv_nh_.param<std::string>("dev", dev_, "/dev/ttyUSB0");
-  priv_nh_.param<bool>("create_1", create_one, false);
+  priv_nh_.param<std::string>("robot_model", robot_model_name, "CREATE_2");
   priv_nh_.param<double>("latch_cmd_duration", latch_duration_, 0.2);
   priv_nh_.param<bool>("publish_tf", publish_tf_, true);
 
-  if (create_one)
-  {
-    model_ = create::CREATE_1;
-    priv_nh_.param<int>("baud", baud_, 57600);
-    ROS_INFO("[CREATE] Create 1 model selected");
+  if (robot_model_name == "ROOMBA_400") {
+    model_ = create::RobotModel::ROOMBA_400;
+  } else if (robot_model_name == "CREATE_1") {
+    model_ = create::RobotModel::CREATE_1;
+  } else if (robot_model_name == "CREATE_2") {
+    model_ = create::RobotModel::CREATE_2;
+  } else {
+    ROS_FATAL_STREAM("[CREATE] Robot model \"" + robot_model_name + "\" is not known.");
+    ros::shutdown();
+    return;
   }
-  else
-  {
-    model_ = create::CREATE_2;
-    priv_nh_.param<int>("baud", baud_, 115200);
-    ROS_INFO("[CREATE] Create 2 model selected");
-  }
+  ROS_INFO_STREAM("[CREATE] \"" << robot_model_name << "\" selected");
+
+  priv_nh_.param<int>("baud", baud_, model_.getBaud());
 
   robot_ = new create::Create(model_);
 
@@ -106,14 +109,7 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh)
   diagnostics_.add("Base Mode", this, &CreateDriver::updateModeDiagnostics);
   diagnostics_.add("Driver Status", this, &CreateDriver::updateDriverDiagnostics);
 
-  if (create_one)
-  {
-    diagnostics_.setHardwareID("Create-1");
-  }
-  else
-  {
-    diagnostics_.setHardwareID("Create-2");
-  }
+  diagnostics_.setHardwareID(robot_model_name);
 
   ROS_INFO("[CREATE] Ready.");
 }
@@ -204,7 +200,7 @@ void CreateDriver::dockCallback(const std_msgs::EmptyConstPtr& msg)
 {
   robot_->setMode(create::MODE_PASSIVE);
 
-  if (model_ == create::CREATE_1)
+  if (model_.getVersion() <= create::V_2)
     usleep(1000000);  // Create 1 requires a delay (1 sec)
 
   // Call docking behaviour
@@ -421,13 +417,13 @@ void CreateDriver::publishOdom()
 
 void CreateDriver::publishJointState() {
     // Publish joint states
-    static float CREATE_2_WHEEL_RADIUS = create::util::CREATE_2_WHEEL_DIAMETER / 2.0;
+    float wheelRadius = model_.getWheelDiameter() / 2.0;
 
     joint_state_msg_.header.stamp = ros::Time::now();
-    joint_state_msg_.position[0] = robot_->getLeftWheelDistance() / CREATE_2_WHEEL_RADIUS;
-    joint_state_msg_.position[1] = robot_->getRightWheelDistance() / CREATE_2_WHEEL_RADIUS;
-    joint_state_msg_.velocity[0] = robot_->getRequestedLeftWheelVel() / CREATE_2_WHEEL_RADIUS;
-    joint_state_msg_.velocity[1] = robot_->getRequestedRightWheelVel() / CREATE_2_WHEEL_RADIUS;
+    joint_state_msg_.position[0] = robot_->getLeftWheelDistance() / wheelRadius;
+    joint_state_msg_.position[1] = robot_->getRightWheelDistance() / wheelRadius;
+    joint_state_msg_.velocity[0] = robot_->getRequestedLeftWheelVel() / wheelRadius;
+    joint_state_msg_.velocity[1] = robot_->getRequestedRightWheelVel() / wheelRadius;
     wheel_joint_pub_.publish(joint_state_msg_);
 }
 
@@ -543,7 +539,7 @@ void CreateDriver::publishBumperInfo()
   bumper_msg_.is_left_pressed = robot_->isLeftBumper();
   bumper_msg_.is_right_pressed = robot_->isRightBumper();
 
-  if (model_ == create::CREATE_2)
+  if (model_.getVersion() >= create::V_3)
   {
     bumper_msg_.is_light_left = robot_->isLightBumperLeft();
     bumper_msg_.is_light_front_left = robot_->isLightBumperFrontLeft();
