@@ -2,8 +2,8 @@
 Changelog for package create_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.0 (2016-07-23)
+------------------
 * Add diagnostics (Battery, Safety, Serial, Mode, Driver)
 * Refactor URDF to support differences between Create 1 and 2, while using a common base.
 * Include a mesh for the Create 1, borrowed from turtlebot_create.
