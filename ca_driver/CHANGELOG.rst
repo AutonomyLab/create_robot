@@ -2,6 +2,15 @@
 Changelog for package create_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add diagnostics (Battery, Safety, Serial, Mode, Driver)
+* Refactor URDF to support differences between Create 1 and 2, while using a common base.
+* Include a mesh for the Create 1, borrowed from turtlebot_create.
+* Update launch files to support Create 1.
+* Publish JointState messages for the wheels.
+* Contributors: Ben Wolsieffer, Jacob Perron
+
 1.0.1 (2016-05-24)
 ------------------
 * Get pose covariance from underlying library
