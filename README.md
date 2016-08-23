@@ -20,7 +20,7 @@ TravisCI (Ubuntu _Trusty_, ROS _Indigo_ and _Jade_)
 | Create 1  |  Yes       |
 | Create 2  _(firmware >= 3.2.6)_ |  Yes       |
 | Roomba Original Series | No  |
-| Roomba 400 Series |  No  |
+| Roomba 400 Series |  Yes  |
 | Roomba 500 Series |  Yes *  |
 | Roomba 600 Series |  Yes * |
 | Roomba 700 Series |  Yes +  |
@@ -138,7 +138,7 @@ $ roslaunch ca_driver create_1.launch [publish_tf:=true]
 `loop_hz`   |  Frequency of internal update loop |  `10.0`
 `dev`       |  Serial port |  `/dev/ttyUSB0`
 `publish_tf`|  Publish the transform between `odom` and `base_footprint` frames | `true`  
-`create_1`  |  Is robot model Create 1 (Roomba 400 series)?  | `false`
+`robot_model` |  The name of the robot being controlled (supported values: `ROOMBA_400`, `CREATE_1` and `CREATE_2`) | `CREATE_2`
 `latch_cmd_duration` | If this many seconds passes without receiving a velocity command the robot stops | `0.2`
 
 
