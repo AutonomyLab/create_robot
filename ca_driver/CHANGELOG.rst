@@ -2,8 +2,8 @@
 Changelog for package create_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.0 (2016-10-07)
+------------------
 * Add support for more than two robot models and fix compiling with latest changes from libcreate.
 * Contributors: Ben Wolsieffer
 
