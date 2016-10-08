@@ -2,6 +2,9 @@
 Changelog for package create_autonomy
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 1.1.0 (2016-07-23)
 ------------------
 

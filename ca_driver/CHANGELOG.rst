@@ -2,6 +2,11 @@
 Changelog for package create_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add support for more than two robot models and fix compiling with latest changes from libcreate.
+* Contributors: Ben Wolsieffer
+
 1.1.0 (2016-07-23)
 ------------------
 * Add diagnostics (Battery, Safety, Serial, Mode, Driver)
