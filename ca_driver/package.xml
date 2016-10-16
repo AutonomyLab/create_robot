@@ -18,7 +18,7 @@
   <build_depend>diagnostic_msgs</build_depend>
   <build_depend>diagnostic_updater</build_depend>
   <build_depend>geometry_msgs</build_depend>
-  <build_depend>git</build_depend>
+  <build_depend>libcreate</build_depend>
   <build_depend>nav_msgs</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>sensor_msgs</build_depend>
@@ -30,6 +30,7 @@
   <run_depend>diagnostic_msgs</run_depend>
   <run_depend>diagnostic_updater</run_depend>
   <run_depend>geometry_msgs</run_depend>
+  <run_depend>libcreate</run_depend>
   <run_depend>nav_msgs</run_depend>
   <run_depend>roscpp</run_depend>
   <run_depend>sensor_msgs</run_depend>
