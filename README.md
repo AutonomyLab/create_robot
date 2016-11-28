@@ -27,7 +27,7 @@ TravisCI (Ubuntu _Trusty_, ROS _Indigo_ and _Jade_)
 | Roomba 800 Series |  Yes + |
 | Roomba 900 Series |  No *  |
 
-_+ Verified by third-party._  
+_+ Verified by third-party. Please note [Odometry Issue #28](https://github.com/AutonomyLab/create_autonomy/issues/32)_  
 _* Not verified. Anyone who is able to verify that this driver works or not is encouraged to contact [Jacob](https://jacobperron.ca) with their findings or open an issue._
 
 ## Features
