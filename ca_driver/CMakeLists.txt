@@ -2,15 +2,15 @@ cmake_minimum_required(VERSION 2.8.3)
 project(ca_driver)
 
 find_package(catkin REQUIRED COMPONENTS
-  roscpp
-  std_msgs
-  geometry_msgs
-  nav_msgs
-  sensor_msgs
-  tf
   ca_msgs
   diagnostic_msgs
   diagnostic_updater
+  geometry_msgs
+  nav_msgs
+  roscpp
+  sensor_msgs
+  std_msgs
+  tf
 )
 
 find_package(Boost REQUIRED system thread)
@@ -18,7 +18,17 @@ find_package(Boost REQUIRED system thread)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES libcreate
-  CATKIN_DEPENDS roscpp std_msgs geometry_msgs nav_msgs sensor_msgs tf ca_msgs ca_description diagnostic_msgs diagnostic_updater
+  CATKIN_DEPENDS
+    ca_description
+    ca_msgs
+    diagnostic_msgs
+    diagnostic_updater
+    geometry_msgs
+    nav_msgs
+    roscpp
+    sensor_msgs
+    std_msgs
+    tf
 )
 
 include(ExternalProject)
@@ -43,11 +53,28 @@ include_directories(
 
 link_directories(${libcreate_PATH})
 
-add_executable(ca_driver src/create_driver.cpp)
+add_executable(${PROJECT_NAME} src/create_driver.cpp)
 
-target_link_libraries(ca_driver
+target_link_libraries(${PROJECT_NAME}
   create
   ${catkin_LIBRARIES}
   ${Boost_LIBRARIES}
 )
-add_dependencies(ca_driver libcreate)
+add_dependencies(${PROJECT_NAME} libcreate)
+
+install(TARGETS ${PROJECT_NAME}
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+install(DIRECTORY include
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  FILES_MATCHING PATTERN "*.h"
+  PATTERN ".svn" EXCLUDE
+)
+
+install(DIRECTORY launch/
+    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
+    PATTERN ".svn" EXCLUDE
+)

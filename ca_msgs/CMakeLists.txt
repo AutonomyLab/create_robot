@@ -8,9 +8,9 @@ find_package(catkin REQUIRED COMPONENTS
 
 add_message_files(
   FILES
+  Bumper.msg
   ChargingState.msg
   Mode.msg
-  Bumper.msg
 )
 
 generate_messages(
