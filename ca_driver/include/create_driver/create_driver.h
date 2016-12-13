@@ -49,11 +49,13 @@ private:
   bool is_running_slowly_;
 
   // ROS params
-  double loop_hz_;
   std::string dev_;
-  int baud_;
+  std::string base_frame_;
+  std::string odom_frame_;
   double latch_duration_;
+  double loop_hz_;
   bool publish_tf_;
+  int baud_;
 
   void cmdVelCallback(const geometry_msgs::TwistConstPtr& msg);
   void debrisLEDCallback(const std_msgs::BoolConstPtr& msg);

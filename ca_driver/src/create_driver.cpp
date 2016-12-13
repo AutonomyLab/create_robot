@@ -10,23 +10,33 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh)
 {
   bool create_one;
   std::string robot_model_name;
-  priv_nh_.param<double>("loop_hz", loop_hz_, 10.0);
   priv_nh_.param<std::string>("dev", dev_, "/dev/ttyUSB0");
   priv_nh_.param<std::string>("robot_model", robot_model_name, "CREATE_2");
+  priv_nh_.param<std::string>("base_frame", base_frame_, "base_footprint");
+  priv_nh_.param<std::string>("odom_frame", odom_frame_, "odom");
   priv_nh_.param<double>("latch_cmd_duration", latch_duration_, 0.2);
+  priv_nh_.param<double>("loop_hz", loop_hz_, 10.0);
   priv_nh_.param<bool>("publish_tf", publish_tf_, true);
 
-  if (robot_model_name == "ROOMBA_400") {
+  if (robot_model_name == "ROOMBA_400")
+  {
     model_ = create::RobotModel::ROOMBA_400;
-  } else if (robot_model_name == "CREATE_1") {
+  }
+  else if (robot_model_name == "CREATE_1")
+  {
     model_ = create::RobotModel::CREATE_1;
-  } else if (robot_model_name == "CREATE_2") {
+  }
+  else if (robot_model_name == "CREATE_2")
+  {
     model_ = create::RobotModel::CREATE_2;
-  } else {
+  }
+  else
+  {
     ROS_FATAL_STREAM("[CREATE] Robot model \"" + robot_model_name + "\" is not known.");
     ros::shutdown();
     return;
   }
+
   ROS_INFO_STREAM("[CREATE] \"" << robot_model_name << "\" selected");
 
   priv_nh_.param<int>("baud", baud_, model_.getBaud());
@@ -48,14 +58,13 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh)
   ROS_INFO("[CREATE] Battery level %.2f %%", (robot_->getBatteryCharge() / robot_->getBatteryCapacity()) * 100.0);
 
   // Set frame_id's
-  const std::string str_base_footprint("base_footprint");
-  mode_msg_.header.frame_id = str_base_footprint;
-  bumper_msg_.header.frame_id = str_base_footprint;
-  charging_state_msg_.header.frame_id = str_base_footprint;
-  tf_odom_.header.frame_id = "odom";
-  tf_odom_.child_frame_id = str_base_footprint;
-  odom_msg_.header.frame_id = "odom";
-  odom_msg_.child_frame_id = str_base_footprint;
+  mode_msg_.header.frame_id = base_frame_;
+  bumper_msg_.header.frame_id = base_frame_;
+  charging_state_msg_.header.frame_id = base_frame_;
+  tf_odom_.header.frame_id = odom_frame_;
+  tf_odom_.child_frame_id = base_frame_;
+  odom_msg_.header.frame_id = odom_frame_;
+  odom_msg_.child_frame_id = base_frame_;
   joint_state_msg_.name.resize(2);
   joint_state_msg_.position.resize(2);
   joint_state_msg_.velocity.resize(2);

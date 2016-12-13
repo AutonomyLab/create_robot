@@ -1,0 +1,20 @@
+# The device path for the robot
+dev: "/dev/ttyUSB0"
+
+# Baud rate. Passing this parameter overwrites the inferred value based on the robot_model
+# baud: 115200
+
+# Base frame ID
+base_frame: "base_footprint"
+
+# Odometry frame ID
+odom_frame: "odom"
+
+# Time (s) without receiving a velocity command before stopping the robot
+latch_cmd_duration: 0.2
+
+# Internal loop update rate (Hz)
+loop_hz: 10.0
+
+# Whether to publish the transform between odom_frame and base_frame
+publish_tf: true
