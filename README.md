@@ -118,29 +118,44 @@ $ sudo apt-get install python-rosdep python-catkin-tools
 
 ### Launch files
 
-For Create 2 (Roomba 600 series):
+For Create 2 (Roomba 600/700 series):
 ``` bash
-$ roslaunch ca_driver create_2.launch [desc:=true] [publish_tf:=true]
+$ roslaunch ca_driver create_2.launch
 ```
 
-For Create 1 (Roomba 400 series):
+For Create 1 (Roomba 500 series):
 ``` bash
-$ roslaunch ca_driver create_1.launch [publish_tf:=true]
+$ roslaunch ca_driver create_1.launch
 ```
 
-`desc` determines if the robot description (URDF model and TF tree) is launched.  
-`publish_tf` detemines if the transform between the odometry frame (`odom`) and base frame (`base_footprint`) is published.
+For Roomba 400 series:
+``` bash
+$ roslaunch ca_driver roomba_400.launch
+```
+
+#### Launch file arguments
+
+* **config** - Absolute path to a configuration file (YAML). Default: `ca_driver/config/default.yaml`
+* **desc** - Enable robot description (URDF/mesh). Default: `true`
+
+For example, if you would like to disable the robot description and provide a custom configuration file:
+
+```bash
+$ roslaunch ca_driver create_2.launch config:=/abs/path/to/config.yaml desc:=false
+```
 
 ### Parameters
 
- Name       |  Description |  Default
-------------|--------------|----------
-`loop_hz`   |  Frequency of internal update loop |  `10.0`
-`dev`       |  Serial port |  `/dev/ttyUSB0`
-`publish_tf`|  Publish the transform between `odom` and `base_footprint` frames | `true`  
-`robot_model` |  The name of the robot being controlled (supported values: `ROOMBA_400`, `CREATE_1` and `CREATE_2`) | `CREATE_2`
+ Name         |  Description |  Default
+--------------|--------------|----------
+`dev`         |  Device path of robot |  `/dev/ttyUSB0`
+`base_frame`  |  The robot's base frame ID | `base_footprint`
+`odom_frame`  |  The robot's odometry frame ID | `odom`
 `latch_cmd_duration` | If this many seconds passes without receiving a velocity command the robot stops | `0.2`
-
+`loop_hz`     |  Frequency of internal update loop |  `10.0`
+`publish_tf`  |  Publish the transform from `odom_frame` to `base_frame` | `true`  
+`robot_model` |  The type of robot being controlled (supported values: `ROOMBA_400`, `CREATE_1` and `CREATE_2`) | `CREATE_2`
+`baud`        |  Serial baud rate | Inferred based on robot model, but is overwritten upon providing a value
 
 ### Publishers
 
