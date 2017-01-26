@@ -9,6 +9,8 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
   FILES
   Bumper.msg
+  Cliff.msg
+  Wheeldrop.msg
   ChargingState.msg
   Mode.msg
 )
