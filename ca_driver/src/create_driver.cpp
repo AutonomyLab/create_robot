@@ -91,6 +91,8 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh)
   set_ascii_sub_ = nh.subscribe("set_ascii", 10, &CreateDriver::setASCIICallback, this);
   dock_sub_ = nh.subscribe("dock", 10, &CreateDriver::dockCallback, this);
   undock_sub_ = nh.subscribe("undock", 10, &CreateDriver::undockCallback, this);
+  main_motor_sub_ = nh.subscribe("main_motor", 10, &CreateDriver::mainMotorCallback, this);
+
 
   // Setup publishers
   odom_pub_ = nh.advertise<nav_msgs::Odometry>("odom", 30);
@@ -223,6 +225,11 @@ void CreateDriver::undockCallback(const std_msgs::EmptyConstPtr& msg)
 {
   // Switch robot back to FULL mode
   robot_->setMode(create::MODE_FULL);
+}
+
+void CreateDriver::mainMotorCallback(const std_msgs::Float32ConstPtr& msg)
+{
+  robot_->setMainMotor(msg->data);
 }
 
 bool CreateDriver::update()
