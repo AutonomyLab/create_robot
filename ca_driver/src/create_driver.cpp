@@ -60,6 +60,8 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh)
   // Set frame_id's
   mode_msg_.header.frame_id = base_frame_;
   bumper_msg_.header.frame_id = base_frame_;
+  cliff_msg_.header.frame_id = base_frame_;
+  wheeldrop_msg_.header.frame_id = base_frame_;
   charging_state_msg_.header.frame_id = base_frame_;
   tf_odom_.header.frame_id = odom_frame_;
   tf_odom_.child_frame_id = base_frame_;
@@ -108,7 +110,8 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh)
   omni_char_pub_ = nh.advertise<std_msgs::UInt16>("ir_omni", 30);
   mode_pub_ = nh.advertise<ca_msgs::Mode>("mode", 30);
   bumper_pub_ = nh.advertise<ca_msgs::Bumper>("bumper", 30);
-  wheeldrop_pub_ = nh.advertise<std_msgs::Empty>("wheeldrop", 30);
+  cliff_pub_ = nh.advertise<ca_msgs::Cliff>("cliff", 30);
+  wheeldrop_pub_ = nh.advertise<ca_msgs::Wheeldrop>("wheeldrop", 30);
   wheel_joint_pub_ = nh.advertise<sensor_msgs::JointState>("joint_states", 10);
 
   // Setup diagnostics
@@ -297,8 +300,8 @@ void CreateDriver::updateBatteryDiagnostics(diagnostic_updater::DiagnosticStatus
 
 void CreateDriver::updateSafetyDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat)
 {
-  const bool is_wheeldrop = robot_->isWheeldrop();
-  const bool is_cliff = robot_->isCliff();
+  const bool is_wheeldrop = robot_->isLeftWheel() || robot_->isRightWheel();
+  const bool is_cliff = robot_->isCliffLeft() || robot_->isCliffFrontLeft() || robot_->isCliffFrontRight() || robot_->isCliffRight();
   if (is_wheeldrop)
   {
     stat.summary(diagnostic_msgs::DiagnosticStatus::WARN, "Wheeldrop detected");
@@ -392,7 +395,7 @@ void CreateDriver::publishOdom()
   odom_msg_.twist.twist.linear.y = vel.y;
   odom_msg_.twist.twist.angular.z = vel.yaw;
 
-  // Update covariances
+  // covariances
   odom_msg_.pose.covariance[0] = (double) pose.covariance[0];
   odom_msg_.pose.covariance[1] = pose.covariance[1];
   odom_msg_.pose.covariance[5] = pose.covariance[2];
@@ -568,10 +571,33 @@ void CreateDriver::publishBumperInfo()
   bumper_pub_.publish(bumper_msg_);
 }
 
+void CreateDriver::publishCliffInfo()
+{
+  cliff_msg_.header.stamp = ros::Time::now();
+
+  if (model_.getVersion() >= create::V_3)
+  {
+    cliff_msg_.is_cliff_left = robot_->isCliffLeft();
+    cliff_msg_.is_cliff_front_left = robot_->isCliffFrontLeft();
+    cliff_msg_.is_cliff_front_right = robot_->isCliffFrontRight();
+    cliff_msg_.is_cliff_right = robot_->isCliffRight();
+
+    cliff_msg_.cliff_signal_left = robot_->getCliffSignalLeft();
+    cliff_msg_.cliff_signal_front_left = robot_->getCliffSignalFrontLeft();
+    cliff_msg_.cliff_signal_front_right = robot_->getCliffSignalFrontRight();
+    cliff_msg_.cliff_signal_right = robot_->getCliffSignalRight();
+  }
+
+  cliff_pub_.publish(cliff_msg_);
+}
+
 void CreateDriver::publishWheeldrop()
 {
-  if (robot_->isWheeldrop())
-    wheeldrop_pub_.publish(empty_msg_);
+    wheeldrop_msg_.header.stamp = ros::Time::now();
+    wheeldrop_msg_.is_left_dropped = robot_->isLeftWheel();
+    wheeldrop_msg_.is_right_dropped = robot_->isRightWheel();
+
+    wheeldrop_pub_.publish(wheeldrop_msg_);
 }
 
 void CreateDriver::spinOnce()
