@@ -10,7 +10,9 @@ add_message_files(
   FILES
   Bumper.msg
   ChargingState.msg
+  DefineSong.msg
   Mode.msg
+  PlaySong.msg
 )
 
 generate_messages(

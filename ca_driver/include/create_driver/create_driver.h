@@ -19,6 +19,8 @@
 #include "ca_msgs/ChargingState.h"
 #include "ca_msgs/Mode.h"
 #include "ca_msgs/Bumper.h"
+#include "ca_msgs/DefineSong.h"
+#include "ca_msgs/PlaySong.h"
 
 static const double MAX_DBL = std::numeric_limits<double>::max();
 static const double COVARIANCE[36] = {1e-5, 1e-5, 0.0,     0.0,     0.0,     1e-5,
@@ -66,6 +68,8 @@ private:
   void setASCIICallback(const std_msgs::UInt8MultiArrayConstPtr& msg);
   void dockCallback(const std_msgs::EmptyConstPtr& msg);
   void undockCallback(const std_msgs::EmptyConstPtr& msg);
+  void defineSongCallback(const ca_msgs::DefineSongConstPtr& msg);
+  void playSongCallback(const ca_msgs::PlaySongConstPtr& msg);
 
   bool update();
   void updateBatteryDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat);
@@ -94,6 +98,8 @@ protected:
   ros::Subscriber set_ascii_sub_;
   ros::Subscriber dock_sub_;
   ros::Subscriber undock_sub_;
+  ros::Subscriber define_song_sub_;
+  ros::Subscriber play_song_sub_;
 
   ros::Publisher odom_pub_;
   ros::Publisher clean_btn_pub_;
