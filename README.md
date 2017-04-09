@@ -43,7 +43,7 @@ _* Not verified. Anyone who is able to verify that this driver works or not is e
 |  Brush motors     | Planned [#15](https://github.com/AutonomyLab/create_autonomy/issues/15) |
 |  LEDs             | Available     |
 |  Digit LEDs       | Available     |
-|  Sound            | Planned [#5](https://github.com/AutonomyLab/create_autonomy/issues/5) |
+|  Sound            | Available     |
 |  Wheeldrop        | Available     |
 |  Bumpers          | Available     |
 |  Cliff sensor     | Planned [#22](https://github.com/AutonomyLab/create_autonomy/issues/22)      |
@@ -196,6 +196,8 @@ Topic       | Description   | Type
 `set_ascii` | Sets the 4 digit LEDs. Accepts 1 to 4 bytes, each representing an ASCII character to be displayed from left to right | [std_msgs/UInt8MultiArray][uint8multiarray]
 `dock` | Activates the demo docking behaviour. Robot enters _Passive_ mode meaning the user loses control (See [OI Spec][oi_spec]) | [std_msgs/Empty][empty]
 `undock` | Switches robot to _Full_ mode giving control back to the user | [std_msgs/Empty][empty]
+`define_song` | Define a song with up to 16 notes. Each note is described by a MIDI note number and a float32 duration in seconds. The longest duration is 255/64 seconds. You can define up to 4 songs (See [OI Spec][oi_spec]) | [ca_msgs/DefineSong][definesong_msg]
+`play_song` | Play a predefined song | [ca_msgs/PlaySong][playsong_msg]
 
 ## Commanding your Create
 
@@ -229,6 +231,8 @@ Contributing to the development and maintenance of _create\_autonomy_ is encoura
 
 * [Michael Browne](http://brownem.engineer/)
     - Confirms driver works with Roomba 700 and 800 series.
+* [Clyde McQueen](https://github.com/clydemcqueen)
+    - Added support for sound ([#37](https://github.com/AutonomyLab/create_autonomy/pull/37)).
 * [Ben Wolsieffer](https://github.com/lopsided98) 
     - Added JointState publisher for wheels ([#26](https://github.com/AutonomyLab/create_autonomy/pull/26)).
     - Added Create 1 description ([#27](https://github.com/AutonomyLab/create_autonomy/pull/27)).
@@ -248,3 +252,6 @@ Contributing to the development and maintenance of _create\_autonomy_ is encoura
 [mode_msg]:  https://github.com/AutonomyLab/create_autonomy/blob/indigo-devel/ca_msgs/msg/Mode.msg
 [chargingstate_msg]:  https://github.com/AutonomyLab/create_autonomy/blob/indigo-devel/ca_msgs/msg/ChargingState.msg
 [jointstate_msg]:  http://docs.ros.org/api/sensor_msgs/html/msg/JointState.html
+[definesong_msg]:  https://github.com/AutonomyLab/create_autonomy/blob/indigo-devel/ca_msgs/msg/DefineSong.msg
+[playsong_msg]:  https://github.com/AutonomyLab/create_autonomy/blob/indigo-devel/ca_msgs/msg/PlaySong.msg
+
