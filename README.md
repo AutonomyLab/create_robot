@@ -74,6 +74,7 @@ $ sudo apt-get install python-rosdep python-catkin-tools
 
 1. Create a catkin workspace  
     ``` bash
+    $ cd ~
     $ mkdir -p create_ws/src  
     $ cd create_ws  
     $ catkin init  
@@ -81,17 +82,20 @@ $ sudo apt-get install python-rosdep python-catkin-tools
 
 2. Clone this repo  
     ``` bash
+    $ cd ~/create_ws/src
     $ git clone https://github.com/AutonomyLab/create_autonomy.git  
     ```
   
 3. Install dependencies  
     ``` bash
+    $ cd ~/create_ws
     $ rosdep update  
     $ rosdep install --from-paths src -i  
     ```
 
 4. Build  
     ``` bash
+    $ cd ~/create_ws
     $ catkin build
     ```
 #### USB Permissions
