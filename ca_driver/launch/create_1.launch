@@ -6,6 +6,7 @@
   <node name="ca_driver" pkg="ca_driver" type="ca_driver" output="screen">
     <rosparam command="load" file="$(arg config)" />
     <param name="robot_model" value="CREATE_1" />
+    <param name="estimate_odom_with_cmd_vel" value="true" />
   </node>
 
   <!-- Robot description -->
