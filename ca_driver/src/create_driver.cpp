@@ -1,5 +1,35 @@
-#include <tf/transform_datatypes.h>
+/**
+Software License Agreement (BSD)
+\file      create_driver.cpp
+\authors   Jacob Perron <jacobmperron@gmail.com>
+\copyright Copyright (c) 2015, Autonomy Lab (Simon Fraser University), All rights reserved.
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+ * Redistributions of source code must retain the above copyright notice,
+   this list of conditions and the following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+ * Neither the name of Autonomy Lab nor the names of its contributors may
+   be used to endorse or promote products derived from this software without
+   specific prior written permission.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+*/
 #include "create_driver/create_driver.h"
+
+#include <tf/transform_datatypes.h>
+
+#include <string>
 
 CreateDriver::CreateDriver(ros::NodeHandle& nh)
   : nh_(nh),
@@ -411,7 +441,7 @@ void CreateDriver::publishOdom()
   odom_msg_.twist.twist.angular.z = vel.yaw;
 
   // Update covariances
-  odom_msg_.pose.covariance[0] = (double) pose.covariance[0];
+  odom_msg_.pose.covariance[0] = static_cast<double>(pose.covariance[0]);
   odom_msg_.pose.covariance[1] = pose.covariance[1];
   odom_msg_.pose.covariance[5] = pose.covariance[2];
   odom_msg_.pose.covariance[6] = pose.covariance[3];
@@ -442,16 +472,17 @@ void CreateDriver::publishOdom()
   odom_pub_.publish(odom_msg_);
 }
 
-void CreateDriver::publishJointState() {
-    // Publish joint states
-    float wheelRadius = model_.getWheelDiameter() / 2.0;
+void CreateDriver::publishJointState()
+{
+  // Publish joint states
+  float wheelRadius = model_.getWheelDiameter() / 2.0;
 
-    joint_state_msg_.header.stamp = ros::Time::now();
-    joint_state_msg_.position[0] = robot_->getLeftWheelDistance() / wheelRadius;
-    joint_state_msg_.position[1] = robot_->getRightWheelDistance() / wheelRadius;
-    joint_state_msg_.velocity[0] = robot_->getRequestedLeftWheelVel() / wheelRadius;
-    joint_state_msg_.velocity[1] = robot_->getRequestedRightWheelVel() / wheelRadius;
-    wheel_joint_pub_.publish(joint_state_msg_);
+  joint_state_msg_.header.stamp = ros::Time::now();
+  joint_state_msg_.position[0] = robot_->getLeftWheelDistance() / wheelRadius;
+  joint_state_msg_.position[1] = robot_->getRightWheelDistance() / wheelRadius;
+  joint_state_msg_.velocity[0] = robot_->getRequestedLeftWheelVel() / wheelRadius;
+  joint_state_msg_.velocity[1] = robot_->getRequestedRightWheelVel() / wheelRadius;
+  wheel_joint_pub_.publish(joint_state_msg_);
 }
 
 void CreateDriver::publishBatteryInfo()
@@ -532,7 +563,7 @@ void CreateDriver::publishOmniChar()
   uint8_t ir_char = robot_->getIROmni();
   uint16_msg_.data = ir_char;
   omni_char_pub_.publish(uint16_msg_);
-  // TODO: Publish info based on character, such as dock in sight
+  // TODO(jacobperron): Publish info based on character, such as dock in sight
 }
 
 void CreateDriver::publishMode()
