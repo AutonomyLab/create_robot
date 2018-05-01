@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<package>
+<package format="2">
   <name>ca_tools</name>
   <version>1.2.0</version>
-  <description>Miscellaneous tools for create_autonomy metapackage</description>
+  <description>Launch and configuration files for common accessories when working with Create/Roomba platforms.</description>
 
   <maintainer email="jperron@sfu.ca">Jacob Perron</maintainer>
 
@@ -14,7 +14,8 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <run_depend>joy_teleop</run_depend>
+  <exec_depend>joy</exec_depend>
+  <exec_depend>joy_teleop</exec_depend>
 
   <export>
   </export>

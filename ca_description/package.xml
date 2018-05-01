@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package>
+<package format="2">
   <name>ca_description</name>
   <version>1.2.0</version>
   <description>Robot URDF descriptions for create_autonomy</description>
@@ -16,9 +16,9 @@
 
   <build_depend>roslaunch</build_depend>
 
-  <run_depend>robot_state_publisher</run_depend>
-  <run_depend>urdf</run_depend>
-  <run_depend>xacro</run_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>urdf</exec_depend>
+  <exec_depend>xacro</exec_depend>
 
   <export>
   </export>

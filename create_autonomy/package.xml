@@ -1,10 +1,11 @@
 <?xml version="1.0"?>
-<package>
+<package format="2">
   <name>create_autonomy</name>
   <version>1.2.0</version>
-  <description>create_autonomy is a ROS driver for iRobot's Create 1 and 2, based on the libcreate C++ library</description>
+  <description>ROS driver for iRobot's Create 1 and 2, based on the libcreate C++ library</description>
 
   <maintainer email="jperron@sfu.ca">Jacob Perron</maintainer>
+
   <license>BSD</license>
 
   <url type="website">http://wiki.ros.org/create_autonomy</url>
@@ -14,10 +15,10 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <run_depend>ca_driver</run_depend>
-  <run_depend>ca_tools</run_depend>
-  <run_depend>ca_msgs</run_depend>
-  <run_depend>ca_description</run_depend>
+  <exec_depend>ca_description</exec_depend>
+  <exec_depend>ca_driver</exec_depend>
+  <exec_depend>ca_msgs</exec_depend>
+  <exec_depend>ca_tools</exec_depend>
 
   <export>
     <metapackage/>

@@ -19,7 +19,6 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
   INCLUDE_DIRS include
   CATKIN_DEPENDS
-    ca_description
     ca_msgs
     diagnostic_msgs
     diagnostic_updater
