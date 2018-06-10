@@ -2,6 +2,12 @@
 Changelog for package create_autonomy
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Migrate to package.xml format 2
+    * Minor linting to package files.
+* Contributors: Jacob Perron
+
 1.2.0 (2016-10-07)
 ------------------
 
