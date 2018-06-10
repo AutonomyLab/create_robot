@@ -2,8 +2,8 @@
 Changelog for package ca_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.0 (2018-06-10)
+------------------
 * Migrate to package.xml format 2
     * Minor linting to package files.
 * Update install rules

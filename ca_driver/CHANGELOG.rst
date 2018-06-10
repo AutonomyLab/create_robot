@@ -2,8 +2,8 @@
 Changelog for package create_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.0 (2018-06-10)
+------------------
 * Add explicit dependency on catkin_EXPORTED_TARGETS
     * This ensures ca_msgs is built before ca_driver.
 * Migrate to package.xml format 2
