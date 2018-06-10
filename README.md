@@ -137,6 +137,11 @@ For Roomba 400 series:
 $ roslaunch ca_driver roomba_400.launch
 ```
 
+For Create 2 Gazebo simulation:
+``` bash
+$ roslaunch ca_gazebo create_2.launch
+```
+
 #### Launch file arguments
 
 * **config** - Absolute path to a configuration file (YAML). Default: `ca_driver/config/default.yaml`
