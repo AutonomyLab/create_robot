@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <launch>
-  <param name="robot_description" command="$(find xacro)/xacro.py '$(find ca_description)/urdf/create_2.urdf.xacro'" />
+  <arg name="cmd_vel" default="/cmd_vel" />
+  <remap from="/cmd_vel" to="$(arg cmd_vel)"/>
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find ca_description)/urdf/create_2.urdf.xacro'" />
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen" />
   <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">

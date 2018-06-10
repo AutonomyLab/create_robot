@@ -1,6 +1,11 @@
 <?xml version="1.0" ?>
 <sdf version="1.4">
   <world name="default">
+    <!-- <gui>
+    <camera name="gzclient_camera">
+      <pose>-7.0 0 7.0 1.5 1.5 0</pose>
+    </camera>
+    </gui> -->
     <include>
       <uri>model://ground_plane</uri>
     </include>
@@ -8,9 +13,10 @@
       <uri>model://sun</uri>
     </include>
     <include>
-      <uri>model://gas_station</uri>
-      <name>gas_station</name>
-      <pose>-2.0 7.0 0 0 0 0</pose>
+      <uri>model://willowgarage</uri>
+      <name>willowgarage</name>
+      <!--<pose>-2.0 7.0 0 0 0 0</pose>-->
     </include>
   </world>
+
 </sdf>
