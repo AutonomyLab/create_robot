@@ -2,7 +2,7 @@
 <package format="2">
   <name>ca_gazebo</name>
   <version>0.0.1</version>
-  <description>Gazebo Simulations for iRobot Create 2</description>
+  <description>Gazebo simulations for iRobot Create platforms</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
