@@ -2,6 +2,20 @@
 Changelog for package create_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.3.0 (2018-06-10)
+------------------
+* Add explicit dependency on catkin_EXPORTED_TARGETS
+    * This ensures ca_msgs is built before ca_driver.
+* Migrate to package.xml format 2
+    * Minor linting to package files.
+* Add roslint test and fix lint issues
+* find_package libcreate instead of downloading as external project
+* Add support for defining and playing songs
+* Update install rules
+* Refactor launch files and expose robot base and odometry frame IDs as parameters
+* Refactor CMakeLists.txt and package.xml files and add missing install rules
+* Contributors: Clyde McQueen, Jacob Perron
+
 1.2.0 (2016-10-07)
 ------------------
 * Add support for more than two robot models and fix compiling with latest changes from libcreate.

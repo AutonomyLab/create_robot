@@ -2,6 +2,15 @@
 Changelog for package ca_description
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.3.0 (2018-06-10)
+------------------
+* Migrate to package.xml format 2
+    * Minor linting to package files.
+* Update install rules
+* Refactor launch files and expose robot base and odometry frame IDs as parameters
+* Refactor CMakeLists.txt and package.xml files and add missing install rules
+* Contributors: Jacob Perron
+
 1.2.0 (2016-10-07)
 ------------------
 * Add support for more than two robot models and fix compiling with latest changes from libcreate.
