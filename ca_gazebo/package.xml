@@ -11,6 +11,10 @@
   <author email="frankjoshua@gmail.com">Joshua Frank</author>
 
   <buildtool_depend>catkin</buildtool_depend>
+  
+  <exec_depend>ca_description</exec_depend>
+  <exec_depend>gazebo</exec_depend>
+  <exec_depend>gazebo_ros</exec_depend>
 
   <export></export>
 </package>
