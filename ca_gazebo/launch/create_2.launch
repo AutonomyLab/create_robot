@@ -3,7 +3,7 @@
   <arg name="use_sim_time" default="true" />
   <arg name="gui" default="true" />
   <arg name="headless" default="false" />
-  <arg name="world_name" default="$(find gazebo_ros)/launch/empty_world.launch" />
+  <arg name="world_name" default="$(find ca_gazebo)/worlds/willowgarage.world" />
   <arg name="include_model" default="$(find ca_description)/launch/create_2.launch"/>
 
   <!-- Inlcude the robot description -->
