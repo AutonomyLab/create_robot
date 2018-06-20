@@ -47,6 +47,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <std_msgs/Int16.h>
 #include <std_msgs/UInt16.h>
 #include <std_msgs/UInt8MultiArray.h>
+#include <sensor_msgs/LaserScan.h>
 #include <tf/transform_broadcaster.h>
 
 #include <limits>
@@ -152,6 +153,7 @@ protected:
   ros::Publisher bumper_pub_;
   ros::Publisher wheeldrop_pub_;
   ros::Publisher wheel_joint_pub_;
+  ros::Publisher laser_sim_pub_;
 
 public:
   explicit CreateDriver(ros::NodeHandle& nh);

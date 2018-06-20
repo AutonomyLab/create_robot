@@ -143,6 +143,7 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh)
   bumper_pub_ = nh.advertise<ca_msgs::Bumper>("bumper", 30);
   wheeldrop_pub_ = nh.advertise<std_msgs::Empty>("wheeldrop", 30);
   wheel_joint_pub_ = nh.advertise<sensor_msgs::JointState>("joint_states", 10);
+  laser_sim_pub_ = nh.advertise<sensor_msgs::LaserScan>("laser_sim", 30);
 
   // Setup diagnostics
   diagnostics_.add("Battery Status", this, &CreateDriver::updateBatteryDiagnostics);
@@ -241,7 +242,6 @@ void CreateDriver::setASCIICallback(const std_msgs::UInt8MultiArrayConstPtr& msg
 void CreateDriver::dockCallback(const std_msgs::EmptyConstPtr& msg)
 {
   robot_->setMode(create::MODE_PASSIVE);
-
   if (model_.getVersion() <= create::V_2)
     usleep(1000000);  // Create 1 requires a delay (1 sec)
 
@@ -627,6 +627,43 @@ void CreateDriver::publishBumperInfo()
   }
 
   bumper_pub_.publish(bumper_msg_);
+
+  //Create a simulated laser scan based on bumper and ir info
+  int num_readings = 120;
+  int laser_frequency = 30;
+  double out_of_range = -1;
+  double ranges[num_readings];
+  int resolution = num_readings / 12;
+  for(unsigned int i = 0; i < resolution; ++i){
+    ranges[11 * resolution + i] = robot_->isLeftBumper() ? 0.15 : out_of_range;
+    ranges[10 * resolution + i] = robot_->isLightBumperLeft() ? 0.25 : out_of_range;
+    ranges[9 * resolution + i] = robot_->isLeftBumper() ? 0.15 : out_of_range;
+    ranges[8 * resolution + i] = robot_->isLightBumperFrontLeft() ? 0.25 : out_of_range;
+    ranges[7 * resolution + i] = robot_->isLeftBumper() ? 0.15 : out_of_range;
+    ranges[6 * resolution + i] = robot_->isLightBumperCenterLeft() ? 0.25 : out_of_range;
+    ranges[5 * resolution + i] = robot_->isLightBumperCenterRight() ? 0.25 : out_of_range;
+    ranges[4 * resolution + i] = robot_->isRightBumper() ? 0.15 : out_of_range;
+    ranges[3 * resolution + i] = robot_->isLightBumperFrontRight() ? 0.25 : out_of_range;
+    ranges[2 * resolution + i] = robot_->isRightBumper() ? 0.15 : out_of_range;
+    ranges[resolution + i] = robot_->isLightBumperRight() ? 0.25 : out_of_range;
+    ranges[i] = robot_->isRightBumper() ? 0.15 : 0.0;
+  }
+  sensor_msgs::LaserScan scan;
+  scan.header.stamp = ros::Time::now();
+  scan.header.frame_id = base_frame_;
+  scan.angle_min = -1.57;
+  scan.angle_max = 1.57;
+  scan.angle_increment = 3.14 / (num_readings - 1);
+  scan.time_increment = (1 / laser_frequency) / (num_readings);
+  scan.range_min = 0.14;
+  scan.range_max = 0.26;
+
+  scan.ranges.resize(num_readings);
+  for(unsigned int i = 0; i < num_readings; ++i){
+    scan.ranges[i] = ranges[i];
+  }
+
+  laser_sim_pub_.publish(scan);
 }
 
 void CreateDriver::publishWheeldrop()
