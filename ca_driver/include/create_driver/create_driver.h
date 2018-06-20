@@ -98,6 +98,7 @@ private:
   void setASCIICallback(const std_msgs::UInt8MultiArrayConstPtr& msg);
   void dockCallback(const std_msgs::EmptyConstPtr& msg);
   void undockCallback(const std_msgs::EmptyConstPtr& msg);
+  void mainMotorCallback(const std_msgs::Float32ConstPtr& msg);
   void defineSongCallback(const ca_msgs::DefineSongConstPtr& msg);
   void playSongCallback(const ca_msgs::PlaySongConstPtr& msg);
 
@@ -128,6 +129,7 @@ protected:
   ros::Subscriber set_ascii_sub_;
   ros::Subscriber dock_sub_;
   ros::Subscriber undock_sub_;
+  ros::Subscriber main_motor_sub_;
   ros::Subscriber define_song_sub_;
   ros::Subscriber play_song_sub_;
 

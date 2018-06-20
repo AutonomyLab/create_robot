@@ -118,6 +118,7 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh)
   power_led_sub_ = nh.subscribe("power_led", 10, &CreateDriver::powerLEDCallback, this);
   set_ascii_sub_ = nh.subscribe("set_ascii", 10, &CreateDriver::setASCIICallback, this);
   dock_sub_ = nh.subscribe("dock", 10, &CreateDriver::dockCallback, this);
+  main_motor_sub_ = nh.subscribe("main_motor", 10, &CreateDriver::mainMotorCallback, this);
   undock_sub_ = nh.subscribe("undock", 10, &CreateDriver::undockCallback, this);
   define_song_sub_ = nh.subscribe("define_song", 10, &CreateDriver::defineSongCallback, this);
   play_song_sub_ = nh.subscribe("play_song", 10, &CreateDriver::playSongCallback, this);
@@ -252,6 +253,17 @@ void CreateDriver::undockCallback(const std_msgs::EmptyConstPtr& msg)
 {
   // Switch robot back to FULL mode
   robot_->setMode(create::MODE_FULL);
+}
+
+void CreateDriver::mainMotorCallback(const std_msgs::Float32ConstPtr& msg)
+{
+  if(msg->data < -1.0 || msg->data > 1.0){
+    ROS_ERROR_STREAM("[CREATE] Main motor only accepts values from -1.0 to 1.0");
+  } else {
+    if(!robot_->setMainMotor(msg->data)){
+      ROS_ERROR_STREAM("[CREATE] Error seting motor voltage");
+    }
+  }
 }
 
 void CreateDriver::defineSongCallback(const ca_msgs::DefineSongConstPtr& msg)
