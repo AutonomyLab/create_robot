@@ -1,0 +1,8 @@
+<library path="lib/libca_safety_controller_nodelet">
+  <class name="ca_safety_controller/SafetyControllerNodelet" type="ca::SafetyControllerNodelet" base_class_type="nodelet::Nodelet">
+    <description>
+      Nodelet for Create's safety controller
+    </description>
+  </class>
+</library>
+

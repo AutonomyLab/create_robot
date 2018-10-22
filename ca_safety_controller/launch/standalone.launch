@@ -1,0 +1,14 @@
+<!-- Example/standalone launcher for Create's safety controller -->
+
+<launch>
+  <node pkg="nodelet" type="nodelet" name="nodelet_manager"  args="manager"/>
+  <node pkg="nodelet" type="nodelet" name="ca_safety_controller" args="load ca_safety_controller/SafetyControllerNodelet nodelet_manager">
+    <remap from="ca_safety_controller/enable" to="enable"/>
+    <remap from="ca_safety_controller/disable" to="disable"/>
+    <remap from="ca_safety_controller/reset" to="reset"/>
+    <remap from="ca_safety_controller/cmd_vel" to="cmd_vel"/>
+    <remap from="ca_safety_controller/bumper" to="bumper"/>
+    <remap from="ca_safety_controller/cliff" to="cliff"/>
+    <remap from="ca_safety_controller/wheeldrop" to="wheeldrop"/>
+  </node>
+</launch>
