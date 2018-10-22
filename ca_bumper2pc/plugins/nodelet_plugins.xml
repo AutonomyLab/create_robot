@@ -1,0 +1,8 @@
+<library path="lib/libca_bumper2pc_nodelet">
+  <class name="ca_bumper2pc/Bumper2PcNodelet" type="create_bumper2pc::Bumper2PcNodelet" base_class_type="nodelet::Nodelet">
+    <description>
+      Implementation for the bumper/cliff to pointcloud relay as a nodelet.
+    </description>
+  </class>
+</library>
+
