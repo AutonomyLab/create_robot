@@ -1,72 +1,36 @@
-/**
-Software License Agreement (BSD)
-\file      create_driver.cpp
-\authors   Jacob Perron <jacobmperron@gmail.com>
-\copyright Copyright (c) 2015, Autonomy Lab (Simon Fraser University), All rights reserved.
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
- * Redistributions of source code must retain the above copyright notice,
-   this list of conditions and the following disclaimer.
- * Redistributions in binary form must reproduce the above copyright notice,
-   this list of conditions and the following disclaimer in the
-   documentation and/or other materials provided with the distribution.
- * Neither the name of Autonomy Lab nor the names of its contributors may
-   be used to endorse or promote products derived from this software without
-   specific prior written permission.
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-POSSIBILITY OF SUCH DAMAGE.
-*/
-#include "create_driver/create_driver.h"
-
 #include <tf/transform_datatypes.h>
+#include <create_driver/create_driver.h>
+#include <unistd.h>
 
-#include <string>
+namespace create
+{
 
-CreateDriver::CreateDriver(ros::NodeHandle& nh)
+CreateDriver::CreateDriver(ros::NodeHandle& nh, ros::NodeHandle& ph)
   : nh_(nh),
-    priv_nh_("~"),
+    priv_nh_(ph),
     diagnostics_(),
     model_(create::RobotModel::CREATE_2),
     is_running_slowly_(false)
 {
   bool create_one;
   std::string robot_model_name;
+  priv_nh_.param<double>("loop_hz", loop_hz_, 10.0);
   priv_nh_.param<std::string>("dev", dev_, "/dev/ttyUSB0");
   priv_nh_.param<std::string>("robot_model", robot_model_name, "CREATE_2");
-  priv_nh_.param<std::string>("base_frame", base_frame_, "base_footprint");
-  priv_nh_.param<std::string>("odom_frame", odom_frame_, "odom");
   priv_nh_.param<double>("latch_cmd_duration", latch_duration_, 0.2);
-  priv_nh_.param<double>("loop_hz", loop_hz_, 10.0);
   priv_nh_.param<bool>("publish_tf", publish_tf_, true);
 
-  if (robot_model_name == "ROOMBA_400")
-  {
+  if (robot_model_name == "ROOMBA_400") {
     model_ = create::RobotModel::ROOMBA_400;
-  }
-  else if (robot_model_name == "CREATE_1")
-  {
+  } else if (robot_model_name == "CREATE_1") {
     model_ = create::RobotModel::CREATE_1;
-  }
-  else if (robot_model_name == "CREATE_2")
-  {
+  } else if (robot_model_name == "CREATE_2") {
     model_ = create::RobotModel::CREATE_2;
-  }
-  else
-  {
+  } else {
     ROS_FATAL_STREAM("[CREATE] Robot model \"" + robot_model_name + "\" is not known.");
     ros::shutdown();
     return;
   }
-
   ROS_INFO_STREAM("[CREATE] \"" << robot_model_name << "\" selected");
 
   priv_nh_.param<int>("baud", baud_, model_.getBaud());
@@ -88,13 +52,16 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh)
   ROS_INFO("[CREATE] Battery level %.2f %%", (robot_->getBatteryCharge() / robot_->getBatteryCapacity()) * 100.0);
 
   // Set frame_id's
-  mode_msg_.header.frame_id = base_frame_;
-  bumper_msg_.header.frame_id = base_frame_;
-  charging_state_msg_.header.frame_id = base_frame_;
-  tf_odom_.header.frame_id = odom_frame_;
-  tf_odom_.child_frame_id = base_frame_;
-  odom_msg_.header.frame_id = odom_frame_;
-  odom_msg_.child_frame_id = base_frame_;
+  const std::string str_base_footprint("base_footprint");
+  mode_msg_.header.frame_id = str_base_footprint;
+  bumper_msg_.header.frame_id = str_base_footprint;
+  cliff_msg_.header.frame_id = str_base_footprint;
+  wheeldrop_msg_.header.frame_id = str_base_footprint;
+  charging_state_msg_.header.frame_id = str_base_footprint;
+  tf_odom_.header.frame_id = "odom";
+  tf_odom_.child_frame_id = str_base_footprint;
+  odom_msg_.header.frame_id = "odom";
+  odom_msg_.child_frame_id = str_base_footprint;
   joint_state_msg_.name.resize(2);
   joint_state_msg_.position.resize(2);
   joint_state_msg_.velocity.resize(2);
@@ -117,10 +84,10 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh)
   check_led_sub_ = nh.subscribe("check_led", 10, &CreateDriver::checkLEDCallback, this);
   power_led_sub_ = nh.subscribe("power_led", 10, &CreateDriver::powerLEDCallback, this);
   set_ascii_sub_ = nh.subscribe("set_ascii", 10, &CreateDriver::setASCIICallback, this);
+  play_song_sub_ = nh.subscribe("song", 10, &CreateDriver::playSongCallback, this);
   dock_sub_ = nh.subscribe("dock", 10, &CreateDriver::dockCallback, this);
   undock_sub_ = nh.subscribe("undock", 10, &CreateDriver::undockCallback, this);
-  define_song_sub_ = nh.subscribe("define_song", 10, &CreateDriver::defineSongCallback, this);
-  play_song_sub_ = nh.subscribe("play_song", 10, &CreateDriver::playSongCallback, this);
+  main_motor_sub_ = nh.subscribe("main_motor", 10, &CreateDriver::mainMotorCallback, this);
 
   // Setup publishers
   odom_pub_ = nh.advertise<nav_msgs::Odometry>("odom", 30);
@@ -140,7 +107,8 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh)
   omni_char_pub_ = nh.advertise<std_msgs::UInt16>("ir_omni", 30);
   mode_pub_ = nh.advertise<ca_msgs::Mode>("mode", 30);
   bumper_pub_ = nh.advertise<ca_msgs::Bumper>("bumper", 30);
-  wheeldrop_pub_ = nh.advertise<std_msgs::Empty>("wheeldrop", 30);
+  cliff_pub_ = nh.advertise<ca_msgs::Cliff>("cliff", 30);
+  wheeldrop_pub_ = nh.advertise<ca_msgs::Wheeldrop>("wheeldrop", 30);
   wheel_joint_pub_ = nh.advertise<sensor_msgs::JointState>("joint_states", 10);
 
   // Setup diagnostics
@@ -153,6 +121,35 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh)
   diagnostics_.setHardwareID(robot_model_name);
 
   ROS_INFO("[CREATE] Ready.");
+//  uint8_t notes_0 [] = {59,59,59,59,62,61,61,59,59,59,59};
+//  float durations_0 [] = {1.0,0.75,0.25,1.0,0.75,0.25,0.7,0.25,0.7,0.25,1.0};
+
+
+//  uint8_t notes_1 [] = {79,86,84,83,81,91,86,84,83,81,91,86,84,83,84,81};
+//  float durations_1 [] = {0.9,0.8,0.2,0.2,0.2,0.8,0.7,0.2,0.2,0.2,0.8,0.7,0.2,0.2,0.2,0.9}; 
+//{1.0,1.0,0.25,0.25,0.25,1.0,1.0,0.25,0.25,0.25,1.0,1.0,0.25,0.25,0.25,1.0};
+// {1.0,1.0,0.25,0.25,0.25,1.0,0.75,0.25,0.25,0.25,1.0,0.75,0.25,0.25,0.25,0.75}; 
+
+
+// uint8_t notes_2 [] = {105,103,100,96,98,107,101,108,105,103,100,96,98,107,103,108};
+//  float durations_2 [] = {0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1};
+
+
+//  uint8_t notes_3 [] = {84,107,84,107,84,107,84,107,84,107,84,107,84,107,84,107};
+//  float durations_3 [] = {0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1};
+
+
+//  uint8_t notes_4 [] = {64,54};
+//  float durations_4 [] = {1.0,1.0};
+
+
+
+
+  robot_->defineSong(0, SONG_0_LENGTH, SONG_0_NOTES, SONG_0_DURATIONS);
+  robot_->defineSong(1, SONG_1_LENGTH, SONG_1_NOTES, SONG_1_DURATIONS);
+  robot_->defineSong(2, SONG_2_LENGTH, SONG_2_NOTES, SONG_2_DURATIONS);
+
+//usleep(1000000);
 }
 
 CreateDriver::~CreateDriver()
@@ -237,6 +234,24 @@ void CreateDriver::setASCIICallback(const std_msgs::UInt8MultiArrayConstPtr& msg
   }
 }
 
+void CreateDriver::playSongCallback(const std_msgs::UInt8ConstPtr& msg)
+{
+	if (msg->data == 4){
+		robot_->defineSong(3, SONG_4_LENGTH, SONG_4_NOTES, SONG_4_DURATIONS);
+		robot_->playSong(3);
+	}
+
+	else if (msg->data == 3){
+		robot_->defineSong(3, SONG_3_LENGTH, SONG_3_NOTES, SONG_3_DURATIONS);
+		robot_->playSong(3);
+	}
+
+	else{
+		robot_->playSong(msg->data);
+	}
+
+}
+
 void CreateDriver::dockCallback(const std_msgs::EmptyConstPtr& msg)
 {
   robot_->setMode(create::MODE_PASSIVE);
@@ -254,20 +269,9 @@ void CreateDriver::undockCallback(const std_msgs::EmptyConstPtr& msg)
   robot_->setMode(create::MODE_FULL);
 }
 
-void CreateDriver::defineSongCallback(const ca_msgs::DefineSongConstPtr& msg)
+void CreateDriver::mainMotorCallback(const std_msgs::Float32ConstPtr& msg)
 {
-  if (!robot_->defineSong(msg->song, msg->length, &(msg->notes.front()), &(msg->durations.front())))
-  {
-    ROS_ERROR_STREAM("[CREATE] Failed to define song " << msg->song << " of length " << msg->length);
-  }
-}
-
-void CreateDriver::playSongCallback(const ca_msgs::PlaySongConstPtr& msg)
-{
-  if (!robot_->playSong(msg->song))
-  {
-    ROS_ERROR_STREAM("[CREATE] Failed to play song " << msg->song);
-  }
+  robot_->setMainMotor(msg->data);
 }
 
 bool CreateDriver::update()
@@ -279,6 +283,7 @@ bool CreateDriver::update()
   publishOmniChar();
   publishMode();
   publishBumperInfo();
+  publishCliffInfo();
   publishWheeldrop();
 
   // If last velocity command was sent longer than latch duration, stop robot
@@ -316,9 +321,11 @@ void CreateDriver::updateBatteryDiagnostics(diagnostic_updater::DiagnosticStatus
 
   stat.add("Charge (Ah)", charge);
   stat.add("Capacity (Ah)", capacity);
+  stat.add("Percent", charge_ratio);
   stat.add("Temperature (Celsius)", robot_->getTemperature());
   stat.add("Current (A)", robot_->getCurrent());
   stat.add("Voltage (V)", robot_->getVoltage());
+  
 
   switch (charging_state)
   {
@@ -329,7 +336,7 @@ void CreateDriver::updateBatteryDiagnostics(diagnostic_updater::DiagnosticStatus
       stat.add("Charging state", "Reconditioning");
       break;
     case create::CHARGE_FULL:
-      stat.add("Charging state", "Full charge");
+      stat.add("Charging state", "Full charging");
       break;
     case create::CHARGE_TRICKLE:
       stat.add("Charging state", "Trickle charging");
@@ -345,8 +352,8 @@ void CreateDriver::updateBatteryDiagnostics(diagnostic_updater::DiagnosticStatus
 
 void CreateDriver::updateSafetyDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat)
 {
-  const bool is_wheeldrop = robot_->isWheeldrop();
-  const bool is_cliff = robot_->isCliff();
+  const bool is_wheeldrop = robot_->isLeftWheel() || robot_->isRightWheel();
+  const bool is_cliff = robot_->isCliffLeft() || robot_->isCliffFrontLeft() || robot_->isCliffFrontRight() || robot_->isCliffRight();
   if (is_wheeldrop)
   {
     stat.summary(diagnostic_msgs::DiagnosticStatus::WARN, "Wheeldrop detected");
@@ -474,15 +481,15 @@ void CreateDriver::publishOdom()
 
 void CreateDriver::publishJointState()
 {
-  // Publish joint states
-  float wheelRadius = model_.getWheelDiameter() / 2.0;
+    // Publish joint states
+    float wheelRadius = model_.getWheelDiameter() / 2.0;
 
-  joint_state_msg_.header.stamp = ros::Time::now();
-  joint_state_msg_.position[0] = robot_->getLeftWheelDistance() / wheelRadius;
-  joint_state_msg_.position[1] = robot_->getRightWheelDistance() / wheelRadius;
-  joint_state_msg_.velocity[0] = robot_->getRequestedLeftWheelVel() / wheelRadius;
-  joint_state_msg_.velocity[1] = robot_->getRequestedRightWheelVel() / wheelRadius;
-  wheel_joint_pub_.publish(joint_state_msg_);
+    joint_state_msg_.header.stamp = ros::Time::now();
+    joint_state_msg_.position[0] = robot_->getLeftWheelDistance() / wheelRadius;
+    joint_state_msg_.position[1] = robot_->getRightWheelDistance() / wheelRadius;
+    joint_state_msg_.velocity[0] = robot_->getRequestedLeftWheelVel() / wheelRadius;
+    joint_state_msg_.velocity[1] = robot_->getRequestedRightWheelVel() / wheelRadius;
+    wheel_joint_pub_.publish(joint_state_msg_);
 }
 
 void CreateDriver::publishBatteryInfo()
@@ -563,7 +570,7 @@ void CreateDriver::publishOmniChar()
   uint8_t ir_char = robot_->getIROmni();
   uint16_msg_.data = ir_char;
   omni_char_pub_.publish(uint16_msg_);
-  // TODO(jacobperron): Publish info based on character, such as dock in sight
+  // TODO: Publish info based on character, such as dock in sight
 }
 
 void CreateDriver::publishMode()
@@ -617,10 +624,39 @@ void CreateDriver::publishBumperInfo()
   bumper_pub_.publish(bumper_msg_);
 }
 
+
+void CreateDriver::publishCliffInfo()
+{
+  cliff_msg_.header.stamp = ros::Time::now();
+
+  if (model_.getVersion() >= create::V_3)
+  {
+    cliff_msg_.is_cliff_left = robot_->isCliffLeft();
+    cliff_msg_.is_cliff_front_left = robot_->isCliffFrontLeft();
+    cliff_msg_.is_cliff_front_right = robot_->isCliffFrontRight();
+    cliff_msg_.is_cliff_right = robot_->isCliffRight();
+
+//    cliff_msg_.cliff_signal_left = robot_->getCliffSignalLeft();
+//    cliff_msg_.cliff_signal_front_left = robot_->getCliffSignalFrontLeft();
+//    cliff_msg_.cliff_signal_front_right = robot_->getCliffSignalFrontRight();
+//    cliff_msg_.cliff_signal_right = robot_->getCliffSignalRight();
+  }
+
+  cliff_pub_.publish(cliff_msg_);
+}
+
+
+
+
+
+
 void CreateDriver::publishWheeldrop()
 {
-  if (robot_->isWheeldrop())
-    wheeldrop_pub_.publish(empty_msg_);
+    wheeldrop_msg_.header.stamp = ros::Time::now();
+    wheeldrop_msg_.is_left_dropped = robot_->isLeftWheel();
+    wheeldrop_msg_.is_right_dropped = robot_->isRightWheel();
+
+    wheeldrop_pub_.publish(wheeldrop_msg_);
 }
 
 void CreateDriver::spinOnce()
@@ -632,6 +668,8 @@ void CreateDriver::spinOnce()
 
 void CreateDriver::spin()
 {
+
+try{
   ros::Rate rate(loop_hz_);
   while (ros::ok())
   {
@@ -645,12 +683,24 @@ void CreateDriver::spin()
   }
 }
 
+
+  catch (std::runtime_error& ex)
+  {
+    ROS_FATAL_STREAM("[CREATE] Runtime error: " << ex.what());
+  }
+
+
+}
+
+}//create namespace
+
 int main(int argc, char** argv)
 {
   ros::init(argc, argv, "ca_driver");
   ros::NodeHandle nh;
+  ros::NodeHandle pnh("~");
 
-  CreateDriver create_driver(nh);
+  create::CreateDriver create_driver(nh, pnh);
 
   try
   {
@@ -663,3 +713,4 @@ int main(int argc, char** argv)
   }
   return 0;
 }
+

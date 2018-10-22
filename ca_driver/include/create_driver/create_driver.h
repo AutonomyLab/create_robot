@@ -1,59 +1,55 @@
-/**
-Software License Agreement (BSD)
-\file      create_driver.h
-\authors   Jacob Perron <jacobmperron@gmail.com>
-\copyright Copyright (c) 2015, Autonomy Lab (Simon Fraser University), All rights reserved.
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
- * Redistributions of source code must retain the above copyright notice,
-   this list of conditions and the following disclaimer.
- * Redistributions in binary form must reproduce the above copyright notice,
-   this list of conditions and the following disclaimer in the
-   documentation and/or other materials provided with the distribution.
- * Neither the name of Autonomy Lab nor the names of its contributors may
-   be used to endorse or promote products derived from this software without
-   specific prior written permission.
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-POSSIBILITY OF SUCH DAMAGE.
-*/
-#ifndef CREATE_DRIVER_CREATE_DRIVER_H
-#define CREATE_DRIVER_CREATE_DRIVER_H
+#ifndef CREATE_AUTONOMY_CREATE_DRIVER_H
+#define CREATE_AUTONOMY_CREATE_DRIVER_H
+
+#include <ros/ros.h>
+#include <std_msgs/Empty.h>
+#include <std_msgs/Bool.h>
+#include <std_msgs/Float32.h>
+#include <std_msgs/UInt8.h>
+#include <std_msgs/UInt16.h>
+#include <std_msgs/Int16.h>
+#include <std_msgs/UInt8MultiArray.h>
+#include <sensor_msgs/JointState.h>
+#include <geometry_msgs/Twist.h>
+#include <geometry_msgs/TransformStamped.h>
+#include <nav_msgs/Odometry.h>
+#include <tf/transform_broadcaster.h>
+#include <diagnostic_updater/diagnostic_updater.h>
+
+#include "create/create.h"
 #include "ca_msgs/ChargingState.h"
 #include "ca_msgs/Mode.h"
 #include "ca_msgs/Bumper.h"
-#include "ca_msgs/DefineSong.h"
-#include "ca_msgs/PlaySong.h"
+#include "ca_msgs/Wheeldrop.h"
+#include "ca_msgs/Cliff.h"
 
-#include "create/create.h"
 
-#include <diagnostic_updater/diagnostic_updater.h>
-#include <geometry_msgs/TransformStamped.h>
-#include <geometry_msgs/Twist.h>
-#include <nav_msgs/Odometry.h>
-#include <ros/ros.h>
-#include <sensor_msgs/JointState.h>
-#include <std_msgs/Bool.h>
-#include <std_msgs/Empty.h>
-#include <std_msgs/Float32.h>
-#include <std_msgs/Int16.h>
-#include <std_msgs/UInt16.h>
-#include <std_msgs/UInt8MultiArray.h>
-#include <tf/transform_broadcaster.h>
+namespace create
+{
 
-#include <limits>
-#include <string>
+static const uint8_t SONG_0_LENGTH = 2;
+static const uint8_t SONG_0_NOTES [] = {64,54};
+static const float SONG_0_DURATIONS [] = {1.0,1.0};
+
+static const uint8_t SONG_1_LENGTH = 16;
+static const uint8_t SONG_1_NOTES [] = {105,103,100,96,98,107,101,108,105,103,100,96,98,107,103,108};
+static const float SONG_1_DURATIONS [] = {0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1};
+
+static const uint8_t SONG_2_LENGTH = 16;
+static const uint8_t SONG_2_NOTES [] = {84,107,84,107,84,107,84,107,84,107,84,107,84,107,84,107};
+static const float SONG_2_DURATIONS [] = {0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1};
+
+static const uint8_t SONG_3_LENGTH = 11;
+static const uint8_t SONG_3_NOTES [] = {59,59,59,59,62,61,61,59,59,59,59};
+static const float SONG_3_DURATIONS [] = {1.0,0.75,0.25,1.0,0.75,0.25,0.7,0.25,0.7,0.25,1.0};
+
+static const uint8_t SONG_4_LENGTH = 16;
+static const uint8_t SONG_4_NOTES [] = {79,86,84,83,81,91,86,84,83,81,91,86,84,83,84,81};
+static const float SONG_4_DURATIONS [] = {0.9,0.8,0.2,0.2,0.2,0.8,0.7,0.2,0.2,0.2,0.8,0.7,0.2,0.2,0.2,0.9};
+
 
 static const double MAX_DBL = std::numeric_limits<double>::max();
-static const double COVARIANCE[36] = {1e-5, 1e-5, 0.0,     0.0,     0.0,     1e-5,  // NOLINT(whitespace/braces)
+static const double COVARIANCE[36] = {1e-5, 1e-5, 0.0,     0.0,     0.0,     1e-5,
                                       1e-5, 1e-5, 0.0,     0.0,     0.0,     1e-5,
                                       0.0,  0.0,  MAX_DBL, 0.0,     0.0,     0.0,
                                       0.0,  0.0,  0.0,     MAX_DBL, 0.0,     0.0,
@@ -70,6 +66,8 @@ private:
   ca_msgs::Mode mode_msg_;
   ca_msgs::ChargingState charging_state_msg_;
   ca_msgs::Bumper bumper_msg_;
+  ca_msgs::Cliff cliff_msg_;
+  ca_msgs::Wheeldrop wheeldrop_msg_;
   nav_msgs::Odometry odom_msg_;
   geometry_msgs::TransformStamped tf_odom_;
   ros::Time last_cmd_vel_time_;
@@ -81,13 +79,11 @@ private:
   bool is_running_slowly_;
 
   // ROS params
-  std::string dev_;
-  std::string base_frame_;
-  std::string odom_frame_;
-  double latch_duration_;
   double loop_hz_;
-  bool publish_tf_;
+  std::string dev_;
   int baud_;
+  double latch_duration_;
+  bool publish_tf_;
 
   void cmdVelCallback(const geometry_msgs::TwistConstPtr& msg);
   void debrisLEDCallback(const std_msgs::BoolConstPtr& msg);
@@ -96,10 +92,10 @@ private:
   void checkLEDCallback(const std_msgs::BoolConstPtr& msg);
   void powerLEDCallback(const std_msgs::UInt8MultiArrayConstPtr& msg);
   void setASCIICallback(const std_msgs::UInt8MultiArrayConstPtr& msg);
+  void playSongCallback(const std_msgs::UInt8ConstPtr& msg);
   void dockCallback(const std_msgs::EmptyConstPtr& msg);
   void undockCallback(const std_msgs::EmptyConstPtr& msg);
-  void defineSongCallback(const ca_msgs::DefineSongConstPtr& msg);
-  void playSongCallback(const ca_msgs::PlaySongConstPtr& msg);
+  void mainMotorCallback(const std_msgs::Float32ConstPtr& msg);
 
   bool update();
   void updateBatteryDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat);
@@ -114,6 +110,7 @@ private:
   void publishOmniChar();
   void publishMode();
   void publishBumperInfo();
+  void publishCliffInfo();
   void publishWheeldrop();
 
 protected:
@@ -126,10 +123,10 @@ protected:
   ros::Subscriber check_led_sub_;
   ros::Subscriber power_led_sub_;
   ros::Subscriber set_ascii_sub_;
+  ros::Subscriber play_song_sub_;
   ros::Subscriber dock_sub_;
   ros::Subscriber undock_sub_;
-  ros::Subscriber define_song_sub_;
-  ros::Subscriber play_song_sub_;
+  ros::Subscriber main_motor_sub_;
 
   ros::Publisher odom_pub_;
   ros::Publisher clean_btn_pub_;
@@ -148,14 +145,19 @@ protected:
   ros::Publisher omni_char_pub_;
   ros::Publisher mode_pub_;
   ros::Publisher bumper_pub_;
+  ros::Publisher cliff_pub_;
   ros::Publisher wheeldrop_pub_;
   ros::Publisher wheel_joint_pub_;
 
 public:
-  explicit CreateDriver(ros::NodeHandle& nh);
+  CreateDriver(ros::NodeHandle& nh, ros::NodeHandle& ph);
   ~CreateDriver();
+
   virtual void spin();
   virtual void spinOnce();
+
 };  // class CreateDriver
 
-#endif  // CREATE_DRIVER_CREATE_DRIVER_H
+} //namespace ccreate
+
+#endif  // CREATE_AUTONOMY_CREATE_DRIVER_H
