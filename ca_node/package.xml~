@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<package>
+  <name>ca_node</name>
+  <version>1.1.0</version>
+  <description>ROS driver for iRobot's Create 1 and 2, based on libcreate</description>
+
+  <maintainer email="jperron@sfu.ca">Jacob Perron</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">http://wiki.ros.org/ca_driver</url>
+  
+  <author email="jperron@sfu.ca">Jacob Perron</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>git</build_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>nav_msgs</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>tf</build_depend>
+  <build_depend>ca_msgs</build_depend>
+  <build_depend>diagnostic_msgs</build_depend>
+  <build_depend>diagnostic_updater</build_depend>
+  <build_depend>libcreate</build_depend>
+  <build_depend>nodelet</build_depend>
+  <build_depend>pluginlib</build_depend>
+
+  <run_depend>roscpp</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>nav_msgs</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>tf</run_depend>
+  <run_depend>ca_msgs</run_depend>
+  <run_depend>ca_description</run_depend>
+  <run_depend>diagnostic_msgs</run_depend>
+  <run_depend>diagnostic_updater</run_depend>
+  <run_depend>libcreate</run_depend>
+  <run_depend>nodelet</run_depend>
+  <run_depend>pluginlib</run_depend>
+
+  <export>
+    <nodelet plugin="${prefix}/plugins/nodelet_plugins.xml" />
+  </export>
+</package>

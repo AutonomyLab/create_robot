@@ -1,0 +1,8 @@
+<library path="lib/libca_nodelet">
+  <class name="ca_node/CreateNodelet" type="create::CreateNodelet" base_class_type="nodelet::Nodelet">
+    <description>
+      Nodelet version of the Create node
+    </description>
+  </class>
+</library>
+

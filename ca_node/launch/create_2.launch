@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="desc" default="true"/>
+  <arg name="publish_tf" default="true"/>
+  <node name="ca_driver" pkg="ca_driver" type="ca_driver" output="screen">
+    <param name="~loop_hz" value="30" />
+    <param name="~dev" value="/dev/ttyUSB0" />
+    <param name="~publish_tf" value="$(arg publish_tf)"/>
+    <param name="~create_1" value="false" />
+  </node>
+
+  <!-- Robot description -->
+  <include if="$(arg desc)" file="$(find ca_description)/launch/create_2.launch"/>
+</launch>
