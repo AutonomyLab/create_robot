@@ -15,10 +15,11 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <exec_depend>ca_description</exec_depend>
-  <exec_depend>ca_driver</exec_depend>
-  <exec_depend>ca_msgs</exec_depend>
+  <exec_depend>ca_node</exec_depend>
   <exec_depend>ca_tools</exec_depend>
+  <exec_depend>ca_msgs</exec_depend>
+  <exec_depend>ca_description</exec_depend>
+  <exec_depend>ca_bumper2pc</exec_depend>
 
   <export>
     <metapackage/>
