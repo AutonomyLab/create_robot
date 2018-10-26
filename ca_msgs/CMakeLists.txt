@@ -13,6 +13,7 @@ add_message_files(
   Cliff.msg
   DefineSong.msg
   Mode.msg
+  Overcurrent.msg
   PlaySong.msg
   Wheeldrop.msg
 )

@@ -110,6 +110,8 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh, ros::NodeHandle& ph)
   cliff_pub_ = nh.advertise<ca_msgs::Cliff>("cliff", 30);
   wheeldrop_pub_ = nh.advertise<ca_msgs::Wheeldrop>("wheeldrop", 30);
   wheel_joint_pub_ = nh.advertise<sensor_msgs::JointState>("joint_states", 10);
+  wall_pub_ = nh.advertise<std_msgs::Bool>("wall", 30);
+  //overcurrent_pub_ = nh.advertise<ca_msgs::Overcurrent>("overcurrent", 30);
 
   // Setup diagnostics
   diagnostics_.add("Battery Status", this, &CreateDriver::updateBatteryDiagnostics);
@@ -285,6 +287,8 @@ bool CreateDriver::update()
   publishBumperInfo();
   publishCliffInfo();
   publishWheeldrop();
+  publishIsWall();
+  //publishOvercurrent();
 
   // If last velocity command was sent longer than latch duration, stop robot
   if (ros::Time::now() - last_cmd_vel_time_ >= ros::Duration(latch_duration_))
@@ -645,11 +649,6 @@ void CreateDriver::publishCliffInfo()
   cliff_pub_.publish(cliff_msg_);
 }
 
-
-
-
-
-
 void CreateDriver::publishWheeldrop()
 {
     wheeldrop_msg_.header.stamp = ros::Time::now();
@@ -657,6 +656,23 @@ void CreateDriver::publishWheeldrop()
     wheeldrop_msg_.is_right_dropped = robot_->isRightWheel();
 
     wheeldrop_pub_.publish(wheeldrop_msg_);
+}
+
+void CreateDriver::publishIsWall()
+{
+    is_wall_msg_.data = robot_->isWall();
+
+    wall_pub_.publish(is_wall_msg_);
+}
+
+void CreateDriver::publishOvercurrent()
+{
+    is_overcurrent_msg_.is_left_wheel_overcurrent = robot_->isLeftWheelOvercurrent();
+    is_overcurrent_msg_.is_right_wheel_overcurrent = robot_->isRightWheelOvercurrent();
+    is_overcurrent_msg_.is_main_brush_overcurrent = robot_->isMainBrushOvercurrent();
+    is_overcurrent_msg_.is_side_brush_overcurrent = robot_->isSideBrushOvercurrent();
+
+    overcurrent_pub_.publish(is_overcurrent_msg_);
 }
 
 void CreateDriver::spinOnce()

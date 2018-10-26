@@ -22,7 +22,7 @@
 #include "ca_msgs/Bumper.h"
 #include "ca_msgs/Wheeldrop.h"
 #include "ca_msgs/Cliff.h"
-
+#include "ca_msgs/Overcurrent.h"
 
 namespace create
 {
@@ -76,6 +76,8 @@ private:
   std_msgs::UInt16 uint16_msg_;
   std_msgs::Int16 int16_msg_;
   sensor_msgs::JointState joint_state_msg_;
+  std_msgs::Bool is_wall_msg_;
+  ca_msgs::Overcurrent is_overcurrent_msg_;
   bool is_running_slowly_;
 
   // ROS params
@@ -112,6 +114,8 @@ private:
   void publishBumperInfo();
   void publishCliffInfo();
   void publishWheeldrop();
+  void publishIsWall();
+  void publishOvercurrent();
 
 protected:
   ros::NodeHandle nh_;
@@ -148,6 +152,8 @@ protected:
   ros::Publisher cliff_pub_;
   ros::Publisher wheeldrop_pub_;
   ros::Publisher wheel_joint_pub_;
+  ros::Publisher wall_pub_;
+  ros::Publisher overcurrent_pub_;
 
 public:
   CreateDriver(ros::NodeHandle& nh, ros::NodeHandle& ph);
