@@ -5,5 +5,5 @@ footprint_padding: 0.01
 inflation_radius: 0.5
 max_obstacle_height: 1.0
 min_obstacle_height: 0.0
-observation_sources: point_cloud_sensor
-scan: {data_type: PointCloud, topic: /mobile_base/sensors/bumper_pointcloud , marking: true, clearing: true}
+observation_sources: bump
+bump: {data_type: PointCloud2, topic: /mobile_base/sensors/bumper_pointcloud , marking: true, clearing: false}
