@@ -1,0 +1,6 @@
+<launch>
+    
+    <include file="$(find realsense_camera)/launch/r200_nodelet_rgbd.launch" />
+    
+    <node type="rviz" name="rviz" pkg="rviz" args="-d $(find ca_realsense)/rviz/realsense.rviz" />
+</launch>
