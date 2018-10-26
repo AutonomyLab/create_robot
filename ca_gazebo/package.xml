@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package>
+  <name>ca_gazebo</name>
+  <version>0.0.1</version>
+  <description>The ca_gazebo package</description>
+
+  <maintainer email="emiliano.borghi@gmail.com">Emiliano Borghi</maintainer>
+
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>gazebo</build_depend>
+  
+  <run_depend>gazebo</run_depend>
+  <run_depend>gazebo_plugins</run_depend>
+  <run_depend>gazebo_ros</run_depend>
+  <run_depend>ca_description</run_depend>
+  <run_depend>xacro</run_depend>
+
+  <export>
+  </export>
+</package>
