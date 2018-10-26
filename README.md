@@ -1,9 +1,8 @@
 # create_autonomy
 
-[ROS](http://ros.org) driver for iRobot [Create 1 and 2](http://www.irobot.com/About-iRobot/STEM/Create-2.aspx).
+[ROS](http://ros.org) driver for iRobot [Create 2](http://www.irobot.com/About-iRobot/STEM/Create-2.aspx).
 This package wraps the C++ library [libcreate][libcreate], which uses iRobot's [Open Interface Specification][oi_spec].
 
-<!--[](* Documentation: TODO)-->
 * ROS wiki page: http://wiki.ros.org/create_autonomy
 * Support: [ROS Answers (tag: create_autonomy)](http://answers.ros.org/questions/scope:all/sort:activity-desc/tags:create_autonomy/page:1/)
 * Author: [Jacob Perron](http://jacobperron.ca) ([Autonomy Lab](http://autonomylab.org), [Simon Fraser University](http://www.sfu.ca))
@@ -22,9 +21,6 @@ This package wraps the C++ library [libcreate][libcreate], which uses iRobot's [
 | Roomba 800 Series |  Yes + |
 | Roomba 900 Series |  No *  |
 
-_+ Verified by third-party. Please note [Odometry Issue #28](https://github.com/AutonomyLab/create_autonomy/issues/32)_  
-_* Not verified. Anyone who is able to verify that this driver works or not is encouraged to contact [Jacob](https://jacobperron.ca) with their findings or open an issue._
-
 ## Features
 
 |  Feature          |  Status       |
@@ -41,7 +37,7 @@ _* Not verified. Anyone who is able to verify that this driver works or not is e
 |  Sound            | Available     |
 |  Wheeldrop        | Available     |
 |  Bumpers          | Available     |
-|  Cliff sensor     | Planned [#22](https://github.com/AutonomyLab/create_autonomy/issues/22)      |
+|  Cliff sensor     | Available     |
 |  Dirt detect      | N/A           |
 |  Omni IR sensor   | Available     |
 |  Left IR sensor   | N/A           |
@@ -51,14 +47,14 @@ _* Not verified. Anyone who is able to verify that this driver works or not is e
 | **_Diagnostics_** |               |
 |  Corrupt packets  | Planned       |
 |  Physical tests   | Planned       |
-|  Overcurrent info | Planned       |
+|  Overcurrent info | N/A           |
 
 ## Install
 
 #### Prerequisites
 
 * Internet connection
-* [ROS](http://wiki.ros.org/ROS/Installation) _Indigo_ or _Jade_
+* [ROS](http://wiki.ros.org/ROS/Installation) _Kinetic_
 * Ubuntu packages: `python-rosdep`, `python-catkin-tools`
 
 ``` bash
@@ -78,7 +74,7 @@ $ sudo apt-get install python-rosdep python-catkin-tools
 2. Clone this repo  
     ``` bash
     $ cd ~/create_ws/src
-    $ git clone https://github.com/AutonomyLab/create_autonomy.git  
+    $ git clone https://github.com/eborghi10/create_autonomy.git  
     ```
   
 3. Install dependencies  
@@ -91,7 +87,7 @@ $ sudo apt-get install python-rosdep python-catkin-tools
 4. Build  
     ``` bash
     $ cd ~/create_ws
-    $ catkin build
+    $ catkin_make
     ```
 #### USB Permissions
 5. In order to connect to Create over USB, ensure your user is in the dialout group
@@ -120,16 +116,6 @@ $ sudo apt-get install python-rosdep python-catkin-tools
 For Create 2 (Roomba 600/700 series):
 ``` bash
 $ roslaunch ca_driver create_2.launch
-```
-
-For Create 1 (Roomba 500 series):
-``` bash
-$ roslaunch ca_driver create_1.launch
-```
-
-For Roomba 400 series:
-``` bash
-$ roslaunch ca_driver roomba_400.launch
 ```
 
 #### Launch file arguments
