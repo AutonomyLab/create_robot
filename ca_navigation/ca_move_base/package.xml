@@ -60,6 +60,7 @@
   <build_export_depend>roscpp</build_export_depend>
   <build_export_depend>tf</build_export_depend>
   <exec_depend>actionlib</exec_depend>
+  <exec_depend>dwa_local_planner</exec_depend>
   <exec_depend>move_base</exec_depend>
   <exec_depend>move_base_msgs</exec_depend>
   <exec_depend>roscpp</exec_depend>
