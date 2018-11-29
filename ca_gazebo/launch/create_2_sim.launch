@@ -4,7 +4,7 @@
 	<arg name="gui" default="true"/>
 	<arg name="debug" default="false"/>
 	<!--arg name="world" default="$(find turtlebot_gazebo)/worlds/corridor.world"/-->
-	<arg name="model" default="$(find ca_description)/urdf/create_2_gazebo.urdf.xacro"/>
+	<arg name="model" default="$(find ca_description)/urdf/create_2.urdf.xacro"/>
     
   	<param name="irobot_description" command="$(find xacro)/xacro --inorder $(arg model)" />
 
