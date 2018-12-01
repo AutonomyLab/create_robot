@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!--
+Block on top of the Create 2 that contains a Raspicam and an RPLidar
+-->
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="$(find ca_description)/urdf/roomblock_gazebo.urdf.xacro"/>
+
+  <xacro:property name="block_z_offset" value="0.061"/>
+  <xacro:property name="laser_z_offset" value="0.1308"/>
+  <xacro:property name="camera_x_offset" value="0.04"/>
+  <xacro:property name="camera_z_offset" value="0.1"/>
+
+  <material name="Grey">
+    <color rgba="0.2 0.2 0.2 1.0"/>
+  </material>
+
+  <xacro:macro name="roomblock">
+
+    <joint name="block_joint" type="fixed">
+      <origin xyz="0 0 ${block_z_offset}" rpy="0 0 0" />
+      <parent link="base_link"/>
+      <child link="block_link" />
+    </joint>
+    <link name="block_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+  	<mesh filename="package://ca_description/meshes/block.dae"/>
+        </geometry>
+        <material name="Grey" />
+      </visual>
+    </link>
+    <joint name="laser_joint" type="fixed">
+      <origin xyz="0 0 ${laser_z_offset}" rpy="0 0 ${pi}" />
+      <parent link="block_link" />
+      <child link="laser_link" />
+    </joint>
+    <link name="laser_link"/>
+    <joint name="camera_joint" type="fixed">
+      <origin xyz="${camera_x_offset} 0 ${camera_z_offset}" rpy="0 ${pi/2} 0" />
+      <parent link="block_link" />
+      <child link="raspicam_link" />
+    </joint>
+    <link name="raspicam_link"/>
+
+    <!-- Gazebo properties -->
+    <xacro:roomblock_gazebo/>
+
+  </xacro:macro>
+
+</robot>

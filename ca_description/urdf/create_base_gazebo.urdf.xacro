@@ -20,7 +20,7 @@
         <publishOdomTF>true</publishOdomTF>
         <publishWheelJointState>true</publishWheelJointState>
         <legacyMode>true</legacyMode>
-        <odometrySource>1</odometrySource>
+        <odometrySource>world</odometrySource>
         <publishTf>1</publishTf>
       </plugin>
 
@@ -54,6 +54,7 @@
       <minDepth>0.001</minDepth>
       <maxVel>1.0</maxVel>
     </gazebo>
+    
     <gazebo reference="rear_wheel_link">
       <mu1>0.0</mu1>
       <mu2>0.0</mu2>
