@@ -37,7 +37,7 @@ Block on top of the Create 2 that contains a Raspicam and an RPLidar
     </joint>
     <link name="laser_link"/>
     <joint name="camera_joint" type="fixed">
-      <origin xyz="${camera_x_offset} 0 ${camera_z_offset}" rpy="0 ${pi/2} 0" />
+      <origin xyz="${camera_x_offset} 0 ${camera_z_offset}" rpy="0 0 0" />
       <parent link="block_link" />
       <child link="raspicam_link" />
     </joint>
