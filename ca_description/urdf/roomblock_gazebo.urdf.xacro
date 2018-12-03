@@ -8,7 +8,7 @@
 
     <gazebo reference="laser_link">
       <material>Gazebo/Black</material>
-      <sensor type="gpu_ray" name="rplidar_sensor">
+      <sensor type="ray" name="rplidar_sensor">
         <pose>0 0 0 0 0 0</pose>
         <visualize>false</visualize>
         <update_rate>40</update_rate>
@@ -36,7 +36,7 @@
             <stddev>0.01</stddev>
           </noise>
         </ray>
-        <plugin name="gazebo_ros_rplidar_controller" filename="libgazebo_ros_gpu_laser.so">
+        <plugin name="gazebo_ros_rplidar_controller" filename="libgazebo_ros_laser.so">
           <topicName>laser/scan</topicName>
           <frameName>laser_link</frameName>
         </plugin>
