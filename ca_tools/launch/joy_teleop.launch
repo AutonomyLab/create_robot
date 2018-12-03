@@ -12,6 +12,5 @@
     <param name="autorepeat_rate" value="20" />
   </node>
 
-  <node pkg="joy_teleop" type="joy_teleop.py" name="joy_teleop">
-  </node>
+  <node pkg="joy_teleop" type="joy_teleop.py" name="joy_teleop"/>
 </launch>
