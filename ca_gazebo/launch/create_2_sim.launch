@@ -4,8 +4,12 @@
 	<arg name="gui" default="true"/>
 	<arg name="debug" default="false"/>
 
+	<arg name="visualize" default="false"/>
+
 	<!-- Create 2 description -->
-	<include file="$(find ca_description)/launch/create_2.launch"/>
+	<include file="$(find ca_description)/launch/create_2.launch">
+		<arg name="visualize" value="$(arg visualize)"/>
+	</include>
 
 	<!-- Launch Gazebo world -->
 	<include file="$(find gazebo_ros)/launch/empty_world.launch">

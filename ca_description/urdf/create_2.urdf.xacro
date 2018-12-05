@@ -3,10 +3,10 @@
   <xacro:include filename="$(find ca_description)/urdf/create_base.urdf.xacro"/>
   <xacro:include filename="$(find ca_description)/urdf/roomblock.urdf.xacro"/>
 
-  <xacro:create_base wheel_separation="0.235" base_diameter="0.3485">
+  <xacro:create_base wheel_separation="0.235" base_diameter="0.3485" visualize="$(arg visualize)">
     <mesh filename="package://ca_description/meshes/create_2.dae" />
   </xacro:create_base>
 
   <!-- Roomblock -->
-  <xacro:roomblock/>
+  <xacro:roomblock visualize="$(arg visualize)"/>
 </robot>

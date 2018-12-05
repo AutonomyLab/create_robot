@@ -3,7 +3,9 @@
   <arg name="model" default="$(find ca_description)/urdf/create_2.urdf.xacro"/>
   <arg name="rviz_config_file" value="robot_description"/>
 
-	<param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)" />
+  <arg name="visualize" default="false"/>
+
+	<param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model) visualize:=$(arg visualize)" />
   <!-- Robot state publisher-->
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen" />
 

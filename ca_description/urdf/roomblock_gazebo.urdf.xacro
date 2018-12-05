@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-  <xacro:macro name="roomblock_gazebo">
+  <xacro:macro name="roomblock_gazebo" params="visualize:=false">
 
     <gazebo reference="block_link">
       <material>Gazebo/Grey</material>
@@ -10,7 +10,7 @@
       <material>Gazebo/Black</material>
       <sensor type="ray" name="rplidar_sensor">
         <pose>0 0 0 0 0 0</pose>
-        <visualize>false</visualize>
+        <visualize>${visualize}</visualize>
         <update_rate>40</update_rate>
         <ray>
           <scan>

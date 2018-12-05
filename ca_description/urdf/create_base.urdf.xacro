@@ -32,7 +32,7 @@
     </joint>
   </xacro:macro>
 
-  <xacro:macro name="create_base" params="diffdrive_update_rate:=40 wheel_separation wheel_radius:=0.036 wheel_width:=0.024 wheel_torque:=1.0 wheel_accel:=1.8 mass_kg:=3.5 base_diameter *mesh">
+  <xacro:macro name="create_base" params="diffdrive_update_rate:=40 wheel_separation wheel_radius:=0.036 wheel_width:=0.024 wheel_torque:=1.0 wheel_accel:=1.8 mass_kg:=3.5 base_diameter *mesh visualize:=false">
     <xacro:include filename="$(find ca_description)/urdf/create_base_gazebo.urdf.xacro" />
 
     <link name="base_footprint">
@@ -199,8 +199,8 @@
 
     <!-- Simulation sensors -->
     <xacro:sim_create_base/>
-    <xacro:sim_create_wall_sensor/>
-    <xacro:sim_create_cliff_sensors/>
+    <xacro:sim_create_wall_sensor visualize="${visualize}"/>
+    <xacro:sim_create_cliff_sensors visualize="${visualize}"/>
     <xacro:sim_imu/>
   </xacro:macro>
 </robot>
