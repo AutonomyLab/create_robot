@@ -5,10 +5,12 @@
 	<arg name="debug" default="false"/>
 
 	<arg name="visualize" default="false"/>
+	<arg name="rviz" default="false"/>
 
 	<!-- Create 2 description -->
 	<include file="$(find ca_description)/launch/spawn_create_2.launch">
 		<arg name="visualize" value="$(arg visualize)"/>
+		<arg name="rviz" value="$(arg rviz)"/>
 	</include>
 
 	<!-- Launch Gazebo world -->

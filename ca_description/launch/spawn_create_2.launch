@@ -4,11 +4,14 @@
   <arg name="rviz_config_file" value="robot_description"/>
 
   <arg name="visualize" default="false"/>
+  <arg name="rviz" default="false"/>
 
 	<param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model) visualize:=$(arg visualize)" />
   <!-- Robot state publisher-->
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen" />
 
   <!-- RViz -->
-  <node type="rviz" name="rviz" pkg="rviz" args="-d $(find ca_description)/rviz/$(arg rviz_config_file).rviz" />
+  <group if="$(arg rviz)">
+    <node type="rviz" name="rviz" pkg="rviz" args="-d $(find ca_description)/rviz/$(arg rviz_config_file).rviz" />
+  </group>
 </launch>
