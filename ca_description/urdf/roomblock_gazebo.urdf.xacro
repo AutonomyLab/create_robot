@@ -2,6 +2,14 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:macro name="roomblock_gazebo" params="visualize:=false">
 
+    <xacro:property name="rplidar_a2_rate_hz" value="10"/>
+    <xacro:property name="rplidar_a2_min_range_m" value="0.15"/>
+    <xacro:property name="rplidar_a2_max_range_m" value="12.0"/>
+    <xacro:property name="rplidar_a2_samples" value="360.0/0.9"/> <!-- samples = range / resolution -->
+    <xacro:property name="rplidar_a2_resolution_mm" value="0.5"/>
+    <xacro:property name="rplidar_a2_min_angle_rad" value="${-pi}"/>
+    <xacro:property name="rplidar_a2_max_angle_rad" value="${pi}"/>
+
     <gazebo reference="block_link">
       <material>Gazebo/Grey</material>
     </gazebo>
@@ -11,20 +19,20 @@
       <sensor type="ray" name="rplidar_sensor">
         <pose>0 0 0 0 0 0</pose>
         <visualize>${visualize}</visualize>
-        <update_rate>40</update_rate>
+        <update_rate>${rplidar_a2_rate_hz}</update_rate>
         <ray>
           <scan>
             <horizontal>
-              <samples>720</samples>
+              <samples>${rplidar_a2_samples}</samples>
               <resolution>1</resolution>
-              <min_angle>-1.570796</min_angle>
-              <max_angle>1.570796</max_angle>
+              <min_angle>${rplidar_a2_min_angle_rad}</min_angle>
+              <max_angle>${rplidar_a2_max_angle_rad}</max_angle>
             </horizontal>
           </scan>
           <range>
-            <min>0.10</min>
-            <max>30.0</max>
-            <resolution>0.01</resolution>
+            <min>${rplidar_a2_min_range_m}</min>
+            <max>${rplidar_a2_max_range_m}</max>
+            <resolution>${rplidar_a2_resolution_mm / 1000.0}</resolution>
           </range>
           <noise>
             <type>gaussian</type>
