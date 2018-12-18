@@ -28,9 +28,9 @@
         <alwaysOn>true</alwaysOn>
         <updateRate>100.0</updateRate>
         <bodyName>base_link</bodyName>
-        <topicName>simple_controller/absolute_position</topicName>
+        <topicName>gts</topicName>
         <gaussianNoise>0</gaussianNoise>
-        <frameName>map</frameName>
+        <frameName>world</frameName>
         <xyzOffsets>0 0 0</xyzOffsets>
         <rpyOffsets>0 0 0</rpyOffsets>
         <!--<interface:position name="p3d_base_position"/>-->
@@ -111,6 +111,10 @@
             <resolution>0.1</resolution>
           </range>
         </ray>
+        <plugin name="gazebo_ros_wall_sensor" filename="libgazebo_ros_laser.so">
+          <topicName>/wall_sensor/scan</topicName>
+          <frameName>wall_sensor_link</frameName>
+        </plugin>
       </sensor>
     </gazebo>
   </xacro:macro>
@@ -137,6 +141,10 @@
             <resolution>0.1</resolution>
           </range>
         </ray>
+        <plugin name="gazebo_ros_left_side_cliff_sensor" filename="libgazebo_ros_laser.so">
+          <topicName>/left_side_cliff_sensor/scan</topicName>
+          <frameName>left_side_cliff_sensor_link</frameName>
+        </plugin>
       </sensor>
     </gazebo>
 
@@ -161,6 +169,10 @@
             <resolution>0.1</resolution>
           </range>
         </ray>
+        <plugin name="gazebo_ros_right_side_cliff_sensor" filename="libgazebo_ros_laser.so">
+          <topicName>/right_side_cliff_sensor/scan</topicName>
+          <frameName>right_side_cliff_sensor_link</frameName>
+        </plugin>
       </sensor>
     </gazebo>
 
@@ -185,6 +197,10 @@
             <resolution>0.1</resolution>
           </range>
         </ray>
+        <plugin name="gazebo_ros_left_front_cliff_sensor" filename="libgazebo_ros_laser.so">
+          <topicName>/left_front_cliff_sensor/scan</topicName>
+          <frameName>leftfront_cliff_sensor</frameName>
+        </plugin>
       </sensor>
     </gazebo>
 
@@ -209,6 +225,10 @@
             <resolution>0.1</resolution>
           </range>
         </ray>
+        <plugin name="gazebo_ros_right_front_cliff_sensor" filename="libgazebo_ros_laser.so">
+          <topicName>/right_front_cliff_sensor/scan</topicName>
+          <frameName>rightfront_cliff_sensor</frameName>
+        </plugin>
       </sensor>
     </gazebo>
   </xacro:macro>
