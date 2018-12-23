@@ -4,7 +4,10 @@ project(ca_tools)
 find_package(catkin REQUIRED)
 
 catkin_package(
-  CATKIN_DEPENDS joy_teleop
+  CATKIN_DEPENDS
+    joy_teleop
+    rospy
+    geometry_msgs
 )
 
 install(DIRECTORY config launch
