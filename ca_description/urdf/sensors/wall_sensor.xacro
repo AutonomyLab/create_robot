@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+<xacro:macro name="wall_sensor" params="visualize:=false">
+
+  <xacro:include filename="$(find ca_description)/urdf/common_properties.xacro"/>
+  <xacro:include filename="$(find ca_description)/urdf/sensors/wall_sensor_gazebo.xacro"/>
+
+  <xacro:property name="x" value="0.09"/>
+  <xacro:property name="y" value="-0.120"/>
+  <xacro:property name="z" value="0.042"/>
+  <xacro:property name="R" value="0"/>
+  <xacro:property name="P" value="0"/>
+  <xacro:property name="Y" value="-1.0"/>
+
+  <xacro:property name="parent_link" value="base_link"/>
+
+  <joint name="base_wall_sensor_joint" type="fixed">
+    <origin xyz="${x} ${y} ${z}" rpy="${R} ${P} ${Y}" />
+    <parent link="${parent_link}" />
+    <child link="wall_sensor_link" />
+  </joint>
+
+  <link name="wall_sensor_link">
+    <xacro:dummy_inertia/>
+  </link>
+
+  <xacro:sim_create_wall_sensor visualize="${visualize}"/>
+
+</xacro:macro>
+
+</robot>

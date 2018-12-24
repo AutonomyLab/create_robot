@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+<xacro:macro name="imu_sensor">
+
+  <xacro:include filename="$(find ca_description)/urdf/common_properties.xacro"/>
+  <xacro:include filename="$(find ca_description)/urdf/sensors/imu_sensor_gazebo.xacro"/>
+
+  <xacro:property name="parent_link" value="base_link"/>
+  <xacro:property name="link_name" value="gyro_link"/>
+
+  <xacro:property name="x" value="0"/>
+  <xacro:property name="y" value="0"/>
+  <xacro:property name="z" value="0.04"/>
+  <xacro:property name="R" value="0"/>
+  <xacro:property name="P" value="0"/>
+  <xacro:property name="Y" value="0"/>
+
+  <joint name="gyro_joint" type="fixed">
+    <axis xyz="0 1 0" />
+    <origin xyz="${x} ${y} ${z}" rpy="${R} ${P} ${Y}"/>
+    <parent link="${parent_link}" />
+    <child link="${link_name}" />
+  </joint>
+
+  <link name="${link_name}">
+    <xacro:dummy_inertia/>
+  </link>
+
+  <xacro:sim_imu/>
+
+</xacro:macro>
+
+</robot>

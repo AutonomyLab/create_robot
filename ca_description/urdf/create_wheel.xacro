@@ -1,0 +1,41 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+<xacro:macro name="create_wheel" params="prefix y_offset wheel_radius wheel_width">
+
+  <xacro:include filename="$(find ca_description)/urdf/common_properties.xacro"/>
+
+  <xacro:property name="x" value="0"/>
+  <xacro:property name="y" value="${y_offset}"/>
+  <xacro:property name="z" value="0.015"/>
+  <xacro:property name="R" value="0"/>
+  <xacro:property name="P" value="${pi/2}"/>
+  <xacro:property name="Y" value="${pi/2}"/>
+
+  <link name="${prefix}_wheel_link">
+    <xacro:dummy_inertia/>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="${R} ${P} ${Y}" />
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_width}" />
+      </geometry>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="${R} ${P} ${Y}" />
+      <geometry>
+        <cylinder radius="${wheel_radius}" length="${wheel_width}" />
+      </geometry>
+    </collision>
+  </link>
+
+ <joint name="${prefix}_wheel_joint" type="continuous">
+    <origin xyz="${x} ${y} ${z}" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="${prefix}_wheel_link" />
+    <axis xyz="0 1 0" />
+  </joint>
+</xacro:macro>
+
+</robot>

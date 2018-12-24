@@ -1,0 +1,125 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+<xacro:macro name="sim_create_cliff_sensors" params="visualize:=false">
+
+  <xacro:property name="min_range_m" value="0.01"/>
+  <xacro:property name="max_range_m" value="0.04"/>
+
+  <xacro:property name="rate_hz" value="20.0"/>
+
+  <gazebo reference="${name_side_left}_cliff_sensor_link">
+    <sensor type="ray" name="${name_side_left}_cliff_sensor">
+      <always_on>true</always_on>
+      <update_rate>${rate_hz}</update_rate>
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>${visualize}</visualize>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>1</samples>
+            <resolution>1</resolution>
+            <min_angle>0</min_angle>
+            <max_angle>0</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>${min_range_m}</min>
+          <max>${max_range_m}</max>
+          <resolution>0.1</resolution>
+        </range>
+      </ray>
+      <plugin name="gazebo_ros_${name_side_left}_cliff_sensor" filename="libgazebo_ros_laser.so">
+        <topicName>${name_side_left}_cliff_sensor/scan</topicName>
+        <frameName>${name_side_left}_cliff_sensor_link</frameName>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+  <gazebo reference="${name_side_right}_cliff_sensor_link">
+    <sensor type="ray" name="${name_side_right}_cliff_sensor">
+      <always_on>true</always_on>
+      <update_rate>${rate_hz}</update_rate>
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>${visualize}</visualize>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>1</samples>
+            <resolution>1</resolution>
+            <min_angle>0</min_angle>
+            <max_angle>0</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>${min_range_m}</min>
+          <max>${max_range_m}</max>
+          <resolution>0.1</resolution>
+        </range>
+      </ray>
+      <plugin name="gazebo_ros_${name_side_right}_cliff_sensor" filename="libgazebo_ros_laser.so">
+        <topicName>${name_side_right}_cliff_sensor/scan</topicName>
+        <frameName>${name_side_right}_cliff_sensor_link</frameName>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+  <gazebo reference="${name_front_left}_cliff_sensor_link">
+    <sensor type="ray" name="${name_front_left}_cliff_sensor">
+      <always_on>true</always_on>
+      <update_rate>${rate_hz}</update_rate>
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>${visualize}</visualize>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>1</samples>
+            <resolution>1</resolution>
+            <min_angle>0</min_angle>
+            <max_angle>0</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>${min_range_m}</min>
+          <max>${max_range_m}</max>
+          <resolution>0.1</resolution>
+        </range>
+      </ray>
+      <plugin name="gazebo_ros_${name_front_left}_cliff_sensor" filename="libgazebo_ros_laser.so">
+        <topicName>${name_front_left}_cliff_sensor/scan</topicName>
+        <frameName>${name_front_left}_cliff_sensor</frameName>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+  <gazebo reference="${name_front_right}_cliff_sensor_link">
+    <sensor type="ray" name="${name_front_right}_cliff_sensor">
+      <always_on>true</always_on>
+      <update_rate>${rate_hz}</update_rate>
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>${visualize}</visualize>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>1</samples>
+            <resolution>1</resolution>
+            <min_angle>0</min_angle>
+            <max_angle>0</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>${min_range_m}</min>
+          <max>${max_range_m}</max>
+          <resolution>0.1</resolution>
+        </range>
+      </ray>
+      <plugin name="gazebo_ros_${name_front_right}_cliff_sensor" filename="libgazebo_ros_laser.so">
+        <topicName>${name_front_right}_cliff_sensor/scan</topicName>
+        <frameName>${name_front_right}_cliff_sensor</frameName>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+</xacro:macro>
+
+</robot>

@@ -1,0 +1,41 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+<xacro:macro name="sim_create_wall_sensor" params="visualize:=false">
+
+  <xacro:property name="link_name" value="wall_sensor_link"/>
+  <xacro:property name="rate_hz" value="20.0"/>
+  <xacro:property name="min_range_m" value="0.0160"/>
+  <xacro:property name="max_range_m" value="0.04"/>
+
+  <gazebo reference="${link_name}">
+    <sensor type="ray" name="wall_sensor">
+      <always_on>true</always_on>
+      <update_rate>${rate_hz}</update_rate>
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>${visualize}</visualize>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>1</samples>
+            <resolution>1</resolution>
+            <min_angle>0</min_angle>
+            <max_angle>0</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>${min_range_m}</min>
+          <max>${max_range_m}</max>
+          <resolution>0.1</resolution>
+        </range>
+      </ray>
+      <plugin name="gazebo_ros_wall_sensor" filename="libgazebo_ros_laser.so">
+        <topicName>/wall_sensor/scan</topicName>
+        <frameName>${link_name}</frameName>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+</xacro:macro>
+
+</robot>

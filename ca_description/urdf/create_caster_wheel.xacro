@@ -1,0 +1,48 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+<xacro:macro name="caster_wheel">
+
+  <xacro:include filename="$(find ca_description)/urdf/common_properties.xacro"/>
+
+  <xacro:property name="link_name" value="caster_wheel_link"/>
+  <xacro:property name="parent_link" value="base_link"/>
+
+  <xacro:property name="x" value="0.13"/>
+  <xacro:property name="y" value="0"/>
+  <xacro:property name="z" value="0"/>
+  <xacro:property name="R" value="0"/>
+  <xacro:property name="P" value="${pi/2}"/>
+  <xacro:property name="Y" value="${pi/2}"/>
+
+  <xacro:property name="radius" value="0.018"/>
+
+  <link name="${link_name}">
+    <xacro:dummy_inertia/>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="${R} ${P} ${Y}" />
+      <geometry>
+        <sphere radius="${radius}" />
+      </geometry>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="${R} ${P} ${Y}" />
+      <geometry>
+        <sphere radius="${radius}" />
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- fixed because there's no transmission -->
+  <joint name="front_castor_joint" type="fixed">
+    <origin xyz="${x} ${y} ${z}" rpy="0 0 0" />
+    <parent link="${parent_link}" />
+    <child link="${link_name}" />
+    <axis xyz="0 1 0" />
+  </joint>
+
+</xacro:macro>
+
+</robot>
