@@ -6,7 +6,6 @@
 
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp/time.hpp>
-//#include <diagnostic_updater/diagnostic_updater.h>
 #include <geometry_msgs/msg/transform_stamped.hpp>
 #include <geometry_msgs/msg/twist.hpp>
 #include <nav_msgs/msg/odometry.hpp>
@@ -40,7 +39,6 @@ private:
   std::unique_ptr<create::Create> robot_;
   create::RobotModel model_;
   std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
-//  diagnostic_updater::Updater diagnostics_;
   ca_msgs::msg::Mode mode_msg_;
   ca_msgs::msg::ChargingState charging_state_msg_;
   ca_msgs::msg::Bumper bumper_msg_;
@@ -76,11 +74,6 @@ private:
   void playSongCallback(const ca_msgs::msg::PlaySong::ConstSharedPtr & msg);
 
   bool update();
-//  void updateBatteryDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat);
-//  void updateSafetyDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat);
-//  void updateSerialDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat);
-//  void updateModeDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat);
-//  void updateDriverDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat);
   void publishOdom();
   void publishJointState();
   void publishBatteryInfo();
