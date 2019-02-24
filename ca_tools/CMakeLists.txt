@@ -1,11 +1,15 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(ca_tools)
 
-find_package(catkin REQUIRED)
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 14)
+endif()
 
-catkin_package()
+find_package(ament_cmake REQUIRED)
+find_package(urdf REQUIRED)
 
-install(DIRECTORY config launch
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-  PATTERN ".svn" EXCLUDE
-)
+install(DIRECTORY config
+  DESTINATION config
+  )
+
+ament_package()
