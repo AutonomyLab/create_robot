@@ -1,25 +1,20 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(ca_description)
 
-find_package(catkin REQUIRED COMPONENTS
-  roslaunch
-)
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 14)
+endif()
 
-catkin_package()
+find_package(ament_cmake REQUIRED)
+find_package(urdf REQUIRED)
+# find_package(xacro REQUIRED)
 
-roslaunch_add_file_check(launch)
+install(DIRECTORY urdf
+  DESTINATION urdf
+  )
 
-install(DIRECTORY launch/
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
-  PATTERN ".svn" EXCLUDE
-)
+install(DIRECTORY meshes
+  DESTINATION meshes
+  )
 
-install(DIRECTORY meshes/
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes
-  PATTERN ".svn" EXCLUDE
-)
-
-install(DIRECTORY urdf/
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/urdf
-  PATTERN ".svn" EXCLUDE
-)
+ament_package()
