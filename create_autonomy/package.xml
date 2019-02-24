@@ -1,10 +1,11 @@
 <?xml version="1.0"?>
-<package format="2">
+<package format="3">
   <name>create_autonomy</name>
-  <version>1.3.0</version>
-  <description>ROS driver for iRobot's Create 1 and 2, based on the libcreate C++ library</description>
+  <version>2.0.0</version>
+  <description>ROS 2 driver for iRobot's Create 1 and 2, based on the libcreate C++ library</description>
 
   <maintainer email="jperron@sfu.ca">Jacob Perron</maintainer>
+  <maintainer email="yutaka.kondo@youtalk.jp">Yutaka Kondo</maintainer>
 
   <license>BSD</license>
 
@@ -13,14 +14,14 @@
 
   <author email="jperron@sfu.ca">Jacob Perron</author>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <exec_depend>ca_description</exec_depend>
-  <exec_depend>ca_driver</exec_depend>
-  <exec_depend>ca_msgs</exec_depend>
-  <exec_depend>ca_tools</exec_depend>
+  <!-- <depend>ca_description</depend> -->
+  <!-- <depend>ca_driver</depend> -->
+  <depend>ca_msgs</depend>
+  <!-- <depend>ca_tools</depend> -->
 
   <export>
-    <metapackage/>
+    <build_type>ament_cmake</build_type>
   </export>
 </package>
