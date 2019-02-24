@@ -1,4 +1,4 @@
-Header header
+std_msgs/Header header
 
 # Contact sensors
 bool is_left_pressed

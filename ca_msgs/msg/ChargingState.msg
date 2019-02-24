@@ -5,5 +5,5 @@ uint8 CHARGE_TRICKLE=3
 uint8 CHARGE_WAITING=4
 uint8 CHARGE_FAULT=5
 
-Header header
+std_msgs/Header header
 uint8 state
