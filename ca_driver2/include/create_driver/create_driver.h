@@ -39,7 +39,7 @@ class CreateDriver : public rclcpp::Node
 private:
   std::unique_ptr<create::Create> robot_;
   create::RobotModel model_;
-  tf2_ros::TransformBroadcaster tf_broadcaster_;
+  std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
 //  diagnostic_updater::Updater diagnostics_;
   ca_msgs::msg::Mode mode_msg_;
   ca_msgs::msg::ChargingState charging_state_msg_;

@@ -1,13 +1,9 @@
+#include <tf2/transform_datatypes.h>
 #include "create_driver/create_driver.h"
 
-#include <tf/transform_datatypes.h>
-
-#include <string>
-
-CreateDriver::CreateDriver(ros::NodeHandle& nh)
-  : nh_(nh),
-    priv_nh_("~"),
-    diagnostics_(),
+CreateDriver::CreateDriver(const std::string & name)
+  : Node(name),
+//    diagnostics_(),
     model_(create::RobotModel::CREATE_2),
     is_running_slowly_(false)
 {
@@ -263,138 +259,138 @@ bool CreateDriver::update()
   return true;
 }
 
-void CreateDriver::updateBatteryDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat)
-{
-  const float charge = robot_->getBatteryCharge();
-  const float capacity = robot_->getBatteryCapacity();
-  const create::ChargingState charging_state = robot_->getChargingState();
-  const float charge_ratio = charge / capacity;
-
-  if (charging_state == create::CHARGE_FAULT)
-  {
-    stat.summary(diagnostic_msgs::DiagnosticStatus::ERROR, "Charging fault reported by base");
-  }
-  else if (charge_ratio == 0)
-  {
-    stat.summary(diagnostic_msgs::DiagnosticStatus::ERROR, "Battery reports no charge");
-  }
-  else if (charge_ratio < 0.1)
-  {
-    stat.summary(diagnostic_msgs::DiagnosticStatus::WARN, "Battery reports less than 10% charge");
-  }
-  else
-  {
-    stat.summary(diagnostic_msgs::DiagnosticStatus::OK, "Battery is OK");
-  }
-
-  stat.add("Charge (Ah)", charge);
-  stat.add("Capacity (Ah)", capacity);
-  stat.add("Temperature (Celsius)", robot_->getTemperature());
-  stat.add("Current (A)", robot_->getCurrent());
-  stat.add("Voltage (V)", robot_->getVoltage());
-
-  switch (charging_state)
-  {
-    case create::CHARGE_NONE:
-      stat.add("Charging state", "Not charging");
-      break;
-    case create::CHARGE_RECONDITION:
-      stat.add("Charging state", "Reconditioning");
-      break;
-    case create::CHARGE_FULL:
-      stat.add("Charging state", "Full charge");
-      break;
-    case create::CHARGE_TRICKLE:
-      stat.add("Charging state", "Trickle charging");
-      break;
-    case create::CHARGE_WAITING:
-      stat.add("Charging state", "Waiting");
-      break;
-    case create::CHARGE_FAULT:
-      stat.add("Charging state", "Fault");
-      break;
-  }
-}
-
-void CreateDriver::updateSafetyDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat)
-{
-  const bool is_wheeldrop = robot_->isWheeldrop();
-  const bool is_cliff = robot_->isCliff();
-  if (is_wheeldrop)
-  {
-    stat.summary(diagnostic_msgs::DiagnosticStatus::WARN, "Wheeldrop detected");
-  }
-  else if (is_cliff)
-  {
-    stat.summary(diagnostic_msgs::DiagnosticStatus::WARN, "Cliff detected");
-  }
-  else
-  {
-    stat.summary(diagnostic_msgs::DiagnosticStatus::OK, "No safety issues detected");
-  }
-
-  stat.add("Wheeldrop", is_wheeldrop);
-  stat.add("Cliff", is_cliff);
-}
-
-void CreateDriver::updateSerialDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat)
-{
-  const bool is_connected = robot_->connected();
-  const uint64_t corrupt_packets = robot_->getNumCorruptPackets();
-  const uint64_t total_packets = robot_->getTotalPackets();
-
-  if (!is_connected)
-  {
-    stat.summary(diagnostic_msgs::DiagnosticStatus::ERROR, "Serial port to base not open");
-  }
-  else if (corrupt_packets)
-  {
-    stat.summary(diagnostic_msgs::DiagnosticStatus::WARN,
-                 "Corrupt packets detected. If the number of corrupt packets is increasing, data may be unreliable");
-  }
-  else
-  {
-    stat.summary(diagnostic_msgs::DiagnosticStatus::OK, "Serial connection is good");
-  }
-
-  stat.add("Corrupt packets", corrupt_packets);
-  stat.add("Total packets", total_packets);
-}
-
-void CreateDriver::updateModeDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat)
-{
-  const create::CreateMode mode = robot_->getMode();
-  switch (mode)
-  {
-    case create::MODE_UNAVAILABLE:
-      stat.summary(diagnostic_msgs::DiagnosticStatus::ERROR, "Unknown mode of operation");
-      break;
-    case create::MODE_OFF:
-      stat.summary(diagnostic_msgs::DiagnosticStatus::WARN, "Mode is set to OFF");
-      break;
-    case create::MODE_PASSIVE:
-      stat.summary(diagnostic_msgs::DiagnosticStatus::OK, "Mode is set to PASSIVE");
-      break;
-    case create::MODE_SAFE:
-      stat.summary(diagnostic_msgs::DiagnosticStatus::OK, "Mode is set to SAFE");
-      break;
-    case create::MODE_FULL:
-      stat.summary(diagnostic_msgs::DiagnosticStatus::OK, "Mode is set to FULL");
-      break;
-  }
-}
-
-void CreateDriver::updateDriverDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat)
-{
-  if (is_running_slowly_)
-  {
-    stat.summary(diagnostic_msgs::DiagnosticStatus::WARN, "Internal loop running slowly");
-  }
-  else
-  {
-    stat.summary(diagnostic_msgs::DiagnosticStatus::OK, "Maintaining loop frequency");
-  }
-}
+//void CreateDriver::updateBatteryDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat)
+//{
+//  const float charge = robot_->getBatteryCharge();
+//  const float capacity = robot_->getBatteryCapacity();
+//  const create::ChargingState charging_state = robot_->getChargingState();
+//  const float charge_ratio = charge / capacity;
+//
+//  if (charging_state == create::CHARGE_FAULT)
+//  {
+//    stat.summary(diagnostic_msgs::DiagnosticStatus::ERROR, "Charging fault reported by base");
+//  }
+//  else if (charge_ratio == 0)
+//  {
+//    stat.summary(diagnostic_msgs::DiagnosticStatus::ERROR, "Battery reports no charge");
+//  }
+//  else if (charge_ratio < 0.1)
+//  {
+//    stat.summary(diagnostic_msgs::DiagnosticStatus::WARN, "Battery reports less than 10% charge");
+//  }
+//  else
+//  {
+//    stat.summary(diagnostic_msgs::DiagnosticStatus::OK, "Battery is OK");
+//  }
+//
+//  stat.add("Charge (Ah)", charge);
+//  stat.add("Capacity (Ah)", capacity);
+//  stat.add("Temperature (Celsius)", robot_->getTemperature());
+//  stat.add("Current (A)", robot_->getCurrent());
+//  stat.add("Voltage (V)", robot_->getVoltage());
+//
+//  switch (charging_state)
+//  {
+//    case create::CHARGE_NONE:
+//      stat.add("Charging state", "Not charging");
+//      break;
+//    case create::CHARGE_RECONDITION:
+//      stat.add("Charging state", "Reconditioning");
+//      break;
+//    case create::CHARGE_FULL:
+//      stat.add("Charging state", "Full charge");
+//      break;
+//    case create::CHARGE_TRICKLE:
+//      stat.add("Charging state", "Trickle charging");
+//      break;
+//    case create::CHARGE_WAITING:
+//      stat.add("Charging state", "Waiting");
+//      break;
+//    case create::CHARGE_FAULT:
+//      stat.add("Charging state", "Fault");
+//      break;
+//  }
+//}
+//
+//void CreateDriver::updateSafetyDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat)
+//{
+//  const bool is_wheeldrop = robot_->isWheeldrop();
+//  const bool is_cliff = robot_->isCliff();
+//  if (is_wheeldrop)
+//  {
+//    stat.summary(diagnostic_msgs::DiagnosticStatus::WARN, "Wheeldrop detected");
+//  }
+//  else if (is_cliff)
+//  {
+//    stat.summary(diagnostic_msgs::DiagnosticStatus::WARN, "Cliff detected");
+//  }
+//  else
+//  {
+//    stat.summary(diagnostic_msgs::DiagnosticStatus::OK, "No safety issues detected");
+//  }
+//
+//  stat.add("Wheeldrop", is_wheeldrop);
+//  stat.add("Cliff", is_cliff);
+//}
+//
+//void CreateDriver::updateSerialDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat)
+//{
+//  const bool is_connected = robot_->connected();
+//  const uint64_t corrupt_packets = robot_->getNumCorruptPackets();
+//  const uint64_t total_packets = robot_->getTotalPackets();
+//
+//  if (!is_connected)
+//  {
+//    stat.summary(diagnostic_msgs::DiagnosticStatus::ERROR, "Serial port to base not open");
+//  }
+//  else if (corrupt_packets)
+//  {
+//    stat.summary(diagnostic_msgs::DiagnosticStatus::WARN,
+//                 "Corrupt packets detected. If the number of corrupt packets is increasing, data may be unreliable");
+//  }
+//  else
+//  {
+//    stat.summary(diagnostic_msgs::DiagnosticStatus::OK, "Serial connection is good");
+//  }
+//
+//  stat.add("Corrupt packets", corrupt_packets);
+//  stat.add("Total packets", total_packets);
+//}
+//
+//void CreateDriver::updateModeDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat)
+//{
+//  const create::CreateMode mode = robot_->getMode();
+//  switch (mode)
+//  {
+//    case create::MODE_UNAVAILABLE:
+//      stat.summary(diagnostic_msgs::DiagnosticStatus::ERROR, "Unknown mode of operation");
+//      break;
+//    case create::MODE_OFF:
+//      stat.summary(diagnostic_msgs::DiagnosticStatus::WARN, "Mode is set to OFF");
+//      break;
+//    case create::MODE_PASSIVE:
+//      stat.summary(diagnostic_msgs::DiagnosticStatus::OK, "Mode is set to PASSIVE");
+//      break;
+//    case create::MODE_SAFE:
+//      stat.summary(diagnostic_msgs::DiagnosticStatus::OK, "Mode is set to SAFE");
+//      break;
+//    case create::MODE_FULL:
+//      stat.summary(diagnostic_msgs::DiagnosticStatus::OK, "Mode is set to FULL");
+//      break;
+//  }
+//}
+//
+//void CreateDriver::updateDriverDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat)
+//{
+//  if (is_running_slowly_)
+//  {
+//    stat.summary(diagnostic_msgs::DiagnosticStatus::WARN, "Internal loop running slowly");
+//  }
+//  else
+//  {
+//    stat.summary(diagnostic_msgs::DiagnosticStatus::OK, "Maintaining loop frequency");
+//  }
+//}
 
 void CreateDriver::publishOdom()
 {
