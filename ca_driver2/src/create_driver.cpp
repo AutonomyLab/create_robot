@@ -4,6 +4,7 @@
 CreateDriver::CreateDriver(const std::string & name)
   : Node(name),
     model_(create::RobotModel::CREATE_2),
+    ros_clock_(RCL_ROS_TIME),
     is_running_slowly_(false)
 {
   std::string robot_model_name;
@@ -137,7 +138,7 @@ CreateDriver::~CreateDriver()
 void CreateDriver::cmdVelCallback(const geometry_msgs::msg::Twist::ConstSharedPtr& msg)
 {
   robot_->drive(msg->linear.x, msg->angular.z);
-  last_cmd_vel_time_ = rclcpp::Clock()::now();
+  last_cmd_vel_time_ = ros_clock_.now();
 }
 
 void CreateDriver::debrisLEDCallback(const std_msgs::msg::Bool::ConstSharedPtr& msg)
@@ -254,7 +255,7 @@ bool CreateDriver::update()
   publishWheeldrop();
 
   // If last velocity command was sent longer than latch duration, stop robot
-  if (rclcpp::Clock()::now() - last_cmd_vel_time_ >= ros::Duration(latch_duration_))
+  if (ros_clock_.now() - last_cmd_vel_time_ >= ros::Duration(latch_duration_))
   {
     robot_->drive(0, 0);
   }
@@ -270,7 +271,7 @@ void CreateDriver::publishOdom()
   // Populate position info
   geometry_msgs::msg::Quaternion quat =
       tf2::createQuaternionMsgFromRollPitchYaw(0, 0, pose.yaw);
-  odom_msg_.header.stamp = rclcpp::Clock()::now();
+  odom_msg_.header.stamp = ros_clock_.now();
   odom_msg_.pose.pose.position.x = pose.x;
   odom_msg_.pose.pose.position.y = pose.y;
   odom_msg_.pose.pose.orientation = quat;
@@ -302,7 +303,7 @@ void CreateDriver::publishOdom()
 
   if (publish_tf_)
   {
-    tf_odom_.header.stamp = rclcpp::Clock()::now();
+    tf_odom_.header.stamp = ros_clock_.now();
     tf_odom_.transform.translation.x = pose.x;
     tf_odom_.transform.translation.y = pose.y;
     tf_odom_.transform.rotation = quat;
@@ -317,7 +318,7 @@ void CreateDriver::publishJointState()
   // Publish joint states
   double wheelRadius = model_.getWheelDiameter() / 2.0;
 
-  joint_state_msg_.header.stamp = rclcpp::Clock()::now();
+  joint_state_msg_.header.stamp = ros_clock_.now();
   joint_state_msg_.position[0] = robot_->getLeftWheelDistance() / wheelRadius;
   joint_state_msg_.position[1] = robot_->getRightWheelDistance() / wheelRadius;
   joint_state_msg_.velocity[0] = robot_->getRequestedLeftWheelVel() / wheelRadius;
@@ -341,7 +342,7 @@ void CreateDriver::publishBatteryInfo()
   charge_ratio_pub_.publish(float32_msg_);
 
   const create::ChargingState charging_state = robot_->getChargingState();
-  charging_state_msg_.header.stamp = rclcpp::Clock()::now();
+  charging_state_msg_.header.stamp = ros_clock_.now();
   switch (charging_state)
   {
     case create::CHARGE_NONE:
@@ -409,7 +410,7 @@ void CreateDriver::publishOmniChar()
 void CreateDriver::publishMode()
 {
   const create::CreateMode mode = robot_->getMode();
-  mode_msg_.header.stamp = rclcpp::Clock()::now();
+  mode_msg_.header.stamp = ros_clock_.now();
   switch (mode)
   {
     case create::MODE_OFF:
@@ -433,7 +434,7 @@ void CreateDriver::publishMode()
 
 void CreateDriver::publishBumperInfo()
 {
-  bumper_msg_.header.stamp = rclcpp::Clock()::now();
+  bumper_msg_.header.stamp = ros_clock_.now();
   bumper_msg_.is_left_pressed = robot_->isLeftBumper();
   bumper_msg_.is_right_pressed = robot_->isRightBumper();
 

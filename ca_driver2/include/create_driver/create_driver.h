@@ -44,6 +44,7 @@ private:
   ca_msgs::msg::Bumper bumper_msg_;
   nav_msgs::msg::Odometry odom_msg_;
   geometry_msgs::msg::TransformStamped tf_odom_;
+  rclcpp::Clock ros_clock_;
   rclcpp::Time last_cmd_vel_time_;
   std_msgs::msg::Empty empty_msg_;
   std_msgs::msg::Float32 float32_msg_;
