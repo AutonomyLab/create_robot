@@ -6,7 +6,6 @@ CreateDriver::CreateDriver(const std::string & name)
     model_(create::RobotModel::CREATE_2),
     is_running_slowly_(false)
 {
-  bool create_one;
   std::string robot_model_name;
   get_parameter_or<std::string>("dev", dev_, "/dev/ttyUSB0");
   get_parameter_or<std::string>("robot_model", robot_model_name, "CREATE_2");
@@ -163,7 +162,7 @@ void CreateDriver::checkLEDCallback(const std_msgs::msg::Bool::ConstSharedPtr& m
 
 void CreateDriver::powerLEDCallback(const std_msgs::msg::UInt8MultiArray::ConstSharedPtr& msg)
 {
-  if (msg->data.size() < 1)
+  if (msg->data.empty())
   {
     RCLCPP_ERROR(get_logger(), "[CREATE] No values provided to set power LED");
   }
@@ -183,7 +182,7 @@ void CreateDriver::powerLEDCallback(const std_msgs::msg::UInt8MultiArray::ConstS
 void CreateDriver::setASCIICallback(const std_msgs::msg::UInt8MultiArray::ConstSharedPtr& msg)
 {
   bool result;
-  if (msg->data.size() < 1)
+  if (msg->data.empty())
   {
     RCLCPP_ERROR(get_logger(), "[CREATE] No ASCII digits provided");
   }
@@ -316,7 +315,7 @@ void CreateDriver::publishOdom()
 void CreateDriver::publishJointState()
 {
   // Publish joint states
-  float wheelRadius = model_.getWheelDiameter() / 2.0;
+  double wheelRadius = model_.getWheelDiameter() / 2.0;
 
   joint_state_msg_.header.stamp = rclcpp::Clock()::now();
   joint_state_msg_.position[0] = robot_->getLeftWheelDistance() / wheelRadius;
@@ -346,26 +345,26 @@ void CreateDriver::publishBatteryInfo()
   switch (charging_state)
   {
     case create::CHARGE_NONE:
-      charging_state_msg_.state = charging_state_msg_.CHARGE_NONE;
+      charging_state_msg_.state = ca_msgs::msg::ChargingState::CHARGE_NONE;
       break;
     case create::CHARGE_RECONDITION:
-      charging_state_msg_.state = charging_state_msg_.CHARGE_RECONDITION;
+      charging_state_msg_.state = ca_msgs::msg::ChargingState::CHARGE_RECONDITION;
       break;
 
     case create::CHARGE_FULL:
-      charging_state_msg_.state = charging_state_msg_.CHARGE_FULL;
+      charging_state_msg_.state = ca_msgs::msg::ChargingState::CHARGE_FULL;
       break;
 
     case create::CHARGE_TRICKLE:
-      charging_state_msg_.state = charging_state_msg_.CHARGE_TRICKLE;
+      charging_state_msg_.state = ca_msgs::msg::ChargingState::CHARGE_TRICKLE;
       break;
 
     case create::CHARGE_WAITING:
-      charging_state_msg_.state = charging_state_msg_.CHARGE_WAITING;
+      charging_state_msg_.state = ca_msgs::msg::ChargingState::CHARGE_WAITING;
       break;
 
     case create::CHARGE_FAULT:
-      charging_state_msg_.state = charging_state_msg_.CHARGE_FAULT;
+      charging_state_msg_.state = ca_msgs::msg::ChargingState::CHARGE_FAULT;
       break;
   }
   charging_state_pub_.publish(charging_state_msg_);
