@@ -1,11 +1,11 @@
+#include <chrono>
 #include <tf2/transform_datatypes.h>
 #include "create_driver/create_driver.h"
 
 CreateDriver::CreateDriver(const std::string & name)
   : Node(name),
     model_(create::RobotModel::CREATE_2),
-    ros_clock_(RCL_ROS_TIME),
-    is_running_slowly_(false)
+    ros_clock_(RCL_ROS_TIME)
 {
   std::string robot_model_name;
   get_parameter_or<std::string>("dev", dev_, "/dev/ttyUSB0");
@@ -126,6 +126,11 @@ CreateDriver::CreateDriver(const std::string & name)
   wheeldrop_pub_ = create_publisher<std_msgs::msg::Empty>("wheeldrop");
   wheel_joint_pub_ = create_publisher<sensor_msgs::msg::JointState>("joint_states");
 
+  timer_ = create_wall_timer(1.0 / loop_hz_,
+      std::bind(&CreateDriver::update, [this]() -> void {
+        this->update();
+      }));
+
   RCLCPP_INFO(get_logger(), "[CREATE] Ready.");
 }
 
@@ -182,7 +187,7 @@ void CreateDriver::powerLEDCallback(const std_msgs::msg::UInt8MultiArray::ConstS
 
 void CreateDriver::setASCIICallback(const std_msgs::msg::UInt8MultiArray::ConstSharedPtr& msg)
 {
-  bool result;
+  bool result = false;
   if (msg->data.empty())
   {
     RCLCPP_ERROR(get_logger(), "[CREATE] No ASCII digits provided");
@@ -243,7 +248,7 @@ void CreateDriver::playSongCallback(const ca_msgs::msg::PlaySong::ConstSharedPtr
   }
 }
 
-bool CreateDriver::update()
+void CreateDriver::update()
 {
   publishOdom();
   publishJointState();
@@ -255,12 +260,10 @@ bool CreateDriver::update()
   publishWheeldrop();
 
   // If last velocity command was sent longer than latch duration, stop robot
-  if (ros_clock_.now() - last_cmd_vel_time_ >= ros::Duration(latch_duration_))
+  if (ros_clock_.now() - last_cmd_vel_time_ >= rclcpp::Duration(latch_duration_))
   {
     robot_->drive(0, 0);
   }
-
-  return true;
 }
 
 void CreateDriver::publishOdom()
@@ -462,27 +465,6 @@ void CreateDriver::publishWheeldrop()
 {
   if (robot_->isWheeldrop())
     wheeldrop_pub_.publish(empty_msg_);
-}
-
-void CreateDriver::spinOnce()
-{
-  update();
-  ros::spinOnce();
-}
-
-void CreateDriver::spin()
-{
-  ros::Rate rate(loop_hz_);
-  while (ros::ok())
-  {
-    spinOnce();
-
-    is_running_slowly_ = !rate.sleep();
-    if (is_running_slowly_)
-    {
-      RCLCPP_WARN(get_logger(), "[CREATE] Loop running slowly.");
-    }
-  }
 }
 
 int main(int argc, char** argv)

@@ -38,6 +38,7 @@ class CreateDriver : public rclcpp::Node
 private:
   std::unique_ptr<create::Create> robot_;
   create::RobotModel model_;
+  rclcpp::TimerBase::SharedPtr timer_;
   std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
   ca_msgs::msg::Mode mode_msg_;
   ca_msgs::msg::ChargingState charging_state_msg_;
@@ -51,7 +52,6 @@ private:
   std_msgs::msg::UInt16 uint16_msg_;
   std_msgs::msg::Int16 int16_msg_;
   sensor_msgs::msg::JointState joint_state_msg_;
-  bool is_running_slowly_;
 
   // ROS params
   std::string dev_;
@@ -74,7 +74,7 @@ private:
   void defineSongCallback(const ca_msgs::msg::DefineSong::ConstSharedPtr & msg);
   void playSongCallback(const ca_msgs::msg::PlaySong::ConstSharedPtr & msg);
 
-  bool update();
+  void update();
   void publishOdom();
   void publishJointState();
   void publishBatteryInfo();
@@ -120,4 +120,4 @@ protected:
 public:
   explicit CreateDriver(const std::string & name);
   ~CreateDriver();
-};  // class CreateDriver
+};
