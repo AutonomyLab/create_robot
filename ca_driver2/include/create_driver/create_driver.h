@@ -62,17 +62,17 @@ private:
   bool publish_tf_;
   int baud_;
 
-  void cmdVelCallback(const geometry_msgs::msg::Twist::ConstSharedPtr & msg);
-  void debrisLEDCallback(const std_msgs::msg::Bool::ConstSharedPtr & msg);
-  void spotLEDCallback(const std_msgs::msg::Bool::ConstSharedPtr & msg);
-  void dockLEDCallback(const std_msgs::msg::Bool::ConstSharedPtr & msg);
-  void checkLEDCallback(const std_msgs::msg::Bool::ConstSharedPtr & msg);
-  void powerLEDCallback(const std_msgs::msg::UInt8MultiArray::ConstSharedPtr & msg);
-  void setASCIICallback(const std_msgs::msg::UInt8MultiArray::ConstSharedPtr & msg);
-  void dockCallback(const std_msgs::msg::Empty::ConstSharedPtr & msg);
-  void undockCallback(const std_msgs::msg::Empty::ConstSharedPtr & msg);
-  void defineSongCallback(const ca_msgs::msg::DefineSong::ConstSharedPtr & msg);
-  void playSongCallback(const ca_msgs::msg::PlaySong::ConstSharedPtr & msg);
+  void cmdVelCallback(const geometry_msgs::msg::Twist::SharedPtr msg);
+  void debrisLEDCallback(const std_msgs::msg::Bool::SharedPtr msg);
+  void spotLEDCallback(const std_msgs::msg::Bool::SharedPtr msg);
+  void dockLEDCallback(const std_msgs::msg::Bool::SharedPtr msg);
+  void checkLEDCallback(const std_msgs::msg::Bool::SharedPtr msg);
+  void powerLEDCallback(const std_msgs::msg::UInt8MultiArray::SharedPtr msg);
+  void setASCIICallback(const std_msgs::msg::UInt8MultiArray::SharedPtr msg);
+  void dockCallback(const std_msgs::msg::Empty::SharedPtr msg);
+  void undockCallback(const std_msgs::msg::Empty::SharedPtr msg);
+  void defineSongCallback(const ca_msgs::msg::DefineSong::SharedPtr msg);
+  void playSongCallback(const ca_msgs::msg::PlaySong::SharedPtr msg);
 
   void update();
   void publishOdom();
