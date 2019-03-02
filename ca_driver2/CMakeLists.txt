@@ -44,6 +44,7 @@ ament_target_dependencies(${PROJECT_NAME}
   "sensor_msgs"
   "std_msgs"
   "tf2"
+  "tf2_ros"
   )
 install(TARGETS ${PROJECT_NAME}
   DESTINATION lib/${PROJECT_NAME}
