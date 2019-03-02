@@ -10,7 +10,7 @@ This package wraps the C++ library [libcreate][libcreate], which uses iRobot's [
 
 ## Build Status
 
-TravisCI (Ubuntu _Trusty_, ROS _Indigo_ and _Jade_)  
+TravisCI (Ubuntu _Trusty_, ROS _Indigo_ and _Jade_)
 ![Build Status](https://api.travis-ci.org/AutonomyLab/create_autonomy.svg?branch=indigo-devel)
 
 ## Supported Robots
@@ -27,7 +27,7 @@ TravisCI (Ubuntu _Trusty_, ROS _Indigo_ and _Jade_)
 | Roomba 800 Series |  Yes + |
 | Roomba 900 Series |  No *  |
 
-_+ Verified by third-party. Please note [Odometry Issue #28](https://github.com/AutonomyLab/create_autonomy/issues/32)_  
+_+ Verified by third-party. Please note [Odometry Issue #28](https://github.com/AutonomyLab/create_autonomy/issues/32)_
 _* Not verified. Anyone who is able to verify that this driver works or not is encouraged to contact [Jacob](https://jacobperron.ca) with their findings or open an issue._
 
 ## Features
@@ -63,40 +63,35 @@ _* Not verified. Anyone who is able to verify that this driver works or not is e
 #### Prerequisites
 
 * Internet connection
-* [ROS](http://wiki.ros.org/ROS/Installation) _Indigo_ or _Jade_
-* Ubuntu packages: `python-rosdep`, `python-catkin-tools`
-
-``` bash
-$ sudo apt-get install python-rosdep python-catkin-tools
-```
+* [ROS 2](https://index.ros.org/doc/ros2/Installation/) _Crystal_
 
 #### Compiling
 
-1. Create a catkin workspace  
+1. Create a colcon workspace
     ``` bash
     $ cd ~
-    $ mkdir -p create_ws/src  
-    $ cd create_ws  
-    $ catkin init  
+    $ mkdir -p create_ws/src
+    $ cd create_ws
+    $ colcon build
     ```
 
-2. Clone this repo  
+2. Clone this repo
     ``` bash
     $ cd ~/create_ws/src
-    $ git clone https://github.com/AutonomyLab/create_autonomy.git  
-    ```
-  
-3. Install dependencies  
-    ``` bash
-    $ cd ~/create_ws
-    $ rosdep update  
-    $ rosdep install --from-paths src -i  
+    $ git clone https://github.com/AutonomyLab/create_autonomy.git
     ```
 
-4. Build  
+3. Install dependencies
     ``` bash
     $ cd ~/create_ws
-    $ catkin build
+    $ rosdep update
+    $ rosdep install --from-paths src -i
+    ```
+
+4. Build
+    ``` bash
+    $ cd ~/create_ws
+    $ colcon build
     ```
 #### USB Permissions
 5. In order to connect to Create over USB, ensure your user is in the dialout group
@@ -110,9 +105,9 @@ $ sudo apt-get install python-rosdep python-catkin-tools
 
 ### Setup
 
-1. After compiling from source, don't forget to source your workspace:  
+1. After compiling from source, don't forget to source your workspace:
     ``` bash
-    $ source ~/create_ws/devel/setup.bash
+    $ source ~/create_ws/install/local_setup.bash
     ```
 
 2. Connect computer to Create's 7-pin serial port
@@ -124,17 +119,17 @@ $ sudo apt-get install python-rosdep python-catkin-tools
 
 For Create 2 (Roomba 600/700 series):
 ``` bash
-$ roslaunch ca_driver create_2.launch
+$ ros2 launch ca_driver2 create_2.launch.py
 ```
 
 For Create 1 (Roomba 500 series):
 ``` bash
-$ roslaunch ca_driver create_1.launch
+$ ros2 launch ca_driver2 create_1.launch.py
 ```
 
 For Roomba 400 series:
 ``` bash
-$ roslaunch ca_driver roomba_400.launch
+$ ros2 launch ca_driver2 roomba_400.launch.ph
 ```
 
 #### Launch file arguments
@@ -145,7 +140,7 @@ $ roslaunch ca_driver roomba_400.launch
 For example, if you would like to disable the robot description and provide a custom configuration file:
 
 ```bash
-$ roslaunch ca_driver create_2.launch config:=/abs/path/to/config.yaml desc:=false
+$ ros2 launch ca_driver2 create_2.launch config:=/abs/path/to/config.yaml desc:=false
 ```
 
 ### Parameters
@@ -157,7 +152,7 @@ $ roslaunch ca_driver create_2.launch config:=/abs/path/to/config.yaml desc:=fal
 `odom_frame`  |  The robot's odometry frame ID | `odom`
 `latch_cmd_duration` | If this many seconds passes without receiving a velocity command the robot stops | `0.2`
 `loop_hz`     |  Frequency of internal update loop |  `10.0`
-`publish_tf`  |  Publish the transform from `odom_frame` to `base_frame` | `true`  
+`publish_tf`  |  Publish the transform from `odom_frame` to `base_frame` | `true`
 `robot_model` |  The type of robot being controlled (supported values: `ROOMBA_400`, `CREATE_1` and `CREATE_2`) | `CREATE_2`
 `baud`        |  Serial baud rate | Inferred based on robot model, but is overwritten upon providing a value
 
@@ -237,7 +232,7 @@ Contributing to the development and maintenance of _create\_autonomy_ is encoura
     - Confirms driver works with Roomba 700 and 800 series.
 * [Clyde McQueen](https://github.com/clydemcqueen)
     - Added support for sound ([#37](https://github.com/AutonomyLab/create_autonomy/pull/37)).
-* [Ben Wolsieffer](https://github.com/lopsided98) 
+* [Ben Wolsieffer](https://github.com/lopsided98)
     - Added JointState publisher for wheels ([#26](https://github.com/AutonomyLab/create_autonomy/pull/26)).
     - Added Create 1 description ([#27](https://github.com/AutonomyLab/create_autonomy/pull/27)).
 
@@ -258,4 +253,3 @@ Contributing to the development and maintenance of _create\_autonomy_ is encoura
 [jointstate_msg]:  http://docs.ros.org/api/sensor_msgs/html/msg/JointState.html
 [definesong_msg]:  https://github.com/AutonomyLab/create_autonomy/blob/indigo-devel/ca_msgs/msg/DefineSong.msg
 [playsong_msg]:  https://github.com/AutonomyLab/create_autonomy/blob/indigo-devel/ca_msgs/msg/PlaySong.msg
-
