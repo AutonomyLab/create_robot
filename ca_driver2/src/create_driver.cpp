@@ -236,7 +236,8 @@ void CreateDriver::defineSongCallback(const ca_msgs::msg::DefineSong::ConstShare
 {
   if (!robot_->defineSong(msg->song, msg->length, &(msg->notes.front()), &(msg->durations.front())))
   {
-    ROS_ERROR_STREAM("[CREATE] Failed to define song " << msg->song << " of length " << msg->length);
+    RCLCPP_ERROR(get_logger(), "[CREATE] Failed to define song %d of length %d",
+                 msg->song, msg->length);
   }
 }
 
@@ -244,7 +245,7 @@ void CreateDriver::playSongCallback(const ca_msgs::msg::PlaySong::ConstSharedPtr
 {
   if (!robot_->playSong(msg->song))
   {
-    ROS_ERROR_STREAM("[CREATE] Failed to play song " << msg->song);
+    RCLCPP_ERROR(get_logger(), "[CREATE] Failed to play song %d", msg->song);
   }
 }
 
@@ -469,19 +470,12 @@ void CreateDriver::publishWheeldrop()
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "ca_driver");
-  ros::NodeHandle nh;
+  setvbuf(stdout, NULL, _IONBF, BUFSIZ);
+  rclcpp::init(argc, argv);
 
-  CreateDriver create_driver(nh);
+  auto node = std::make_shared<CreateDriver>("ca_driver");
+  rclcpp::spin(node);
+  rclcpp::shutdown();
 
-  try
-  {
-    create_driver.spin();
-  }
-  catch (std::runtime_error& ex)
-  {
-    ROS_FATAL_STREAM("[CREATE] Runtime error: " << ex.what());
-    return 1;
-  }
   return 0;
 }
