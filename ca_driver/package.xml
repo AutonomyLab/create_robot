@@ -4,13 +4,14 @@
   <version>2.0.0</version>
   <description>ROS 2 driver for iRobot's Create and Roomba platforms, based on libcreate</description>
 
+  <maintainer email="jperron@sfu.ca">Jacob Perron</maintainer>
   <maintainer email="yutaka.kondo@youtalk.jp">Yutaka Kondo</maintainer>
 
-  <license>Apache License 2.0</license>
+  <license>BSD</license>
 
   <url type="website">http://wiki.ros.org/ca_driver</url>
 
-  <author email="yutaka.kondo@youtalk.jp">Yutaka Kondo</author>
+  <author email="jperron@sfu.ca">Jacob Perron</author>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
