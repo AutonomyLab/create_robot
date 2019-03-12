@@ -119,17 +119,17 @@ _* Not verified. Anyone who is able to verify that this driver works or not is e
 
 For Create 2 (Roomba 600/700 series):
 ``` bash
-$ ros2 launch ca_driver2 create_2.launch.py
+$ ros2 launch ca_driver create_2.launch.py
 ```
 
 For Create 1 (Roomba 500 series):
 ``` bash
-$ ros2 launch ca_driver2 create_1.launch.py
+$ ros2 launch ca_driver create_1.launch.py
 ```
 
 For Roomba 400 series:
 ``` bash
-$ ros2 launch ca_driver2 roomba_400.launch.ph
+$ ros2 launch ca_driver roomba_400.launch.py
 ```
 
 #### Launch file arguments
@@ -140,7 +140,7 @@ $ ros2 launch ca_driver2 roomba_400.launch.ph
 For example, if you would like to disable the robot description and provide a custom configuration file:
 
 ```bash
-$ ros2 launch ca_driver2 create_2.launch config:=/abs/path/to/config.yaml desc:=false
+$ ros2 launch ca_driver create_2.launch.py config:=/abs/path/to/config.yaml desc:=false
 ```
 
 ### Parameters
