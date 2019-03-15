@@ -16,10 +16,10 @@
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <!-- <depend>ca_description</depend> -->
-  <!-- <depend>ca_driver</depend> -->
+  <depend>ca_description</depend>
+  <depend>ca_driver</depend>
   <depend>ca_msgs</depend>
-  <!-- <depend>ca_tools</depend> -->
+  <depend>ca_tools</depend>
 
   <export>
     <build_type>ament_cmake</build_type>
