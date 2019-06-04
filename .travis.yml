@@ -1,35 +1,47 @@
 sudo: required
-dist: trusty
+
 # Force travis to use its minimal image with default Python settings
 language: generic
-compiler:
-  - gcc
+
+services:
+  - docker
+
 env:
   global:
     - CATKIN_WS=~/catkin_ws
     - CATKIN_WS_SRC=${CATKIN_WS}/src
-    - CI_ROS_DISTRO="indigo"
-install:
-  - sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu trusty main" > /etc/apt/sources.list.d/ros-latest.list'
-  - wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq -y python-rosdep python-catkin-tools
-  - sudo rosdep init
-  - rosdep update
-  # Use rosdep to install all dependencies (including ROS itself)
-  - rosdep install --from-paths ./ -i -y --rosdistro $CI_ROS_DISTRO
-script:
-  - source /opt/ros/$CI_ROS_DISTRO/setup.bash
-  - mkdir -p $CATKIN_WS_SRC
-  - ln -s $TRAVIS_BUILD_DIR $CATKIN_WS_SRC
-  - cd $CATKIN_WS
-  - catkin init
-  - catkin config --install
-  # Build [and Install] packages
-  - catkin build --limit-status-rate 0.1 --no-notify -DCMAKE_BUILD_TYPE=Release
-  # Run tests
-  - catkin run_tests
-  - catkin_test_results build
-  # Lint package files
-  - sudo apt-get install python-catkin-lint
-  - catkin lint -W2 --strict --explain src
+    - CI_ROS_DISTRO="melodic"
+
+install: true
+
+script: |
+  sudo docker run -it --rm -v ${TRAVIS_BUILD_DIR}:/repo ubuntu:bionic /bin/bash -c "
+    set -e
+    export DEBIAN_FRONTEND=noninteractive
+    apt update -qq
+    apt install -qq -y gnupg
+    sh -c 'echo \"deb http://packages.ros.org/ros/ubuntu bionic main\" > /etc/apt/sources.list.d/ros-latest.list'
+    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
+    apt update -qq
+    apt-get install -qq -y python-rosdep python-catkin-tools
+    rosdep init
+    rosdep update
+    rosdep install --from-paths /repo -i -r -y --rosdistro ${CI_ROS_DISTRO}
+    source /opt/ros/${CI_ROS_DISTRO}/setup.bash
+    mkdir -p ${CATKIN_WS_SRC}
+    ln -s /repo ${CATKIN_WS_SRC}
+    # Build libcreate from source (TODO: remove once it is released)
+    cd ${CATKIN_WS_SRC}
+    apt install -qq -y git
+    git clone https://github.com/AutonomyLab/libcreate.git
+    cd ${CATKIN_WS}
+    catkin init
+    catkin config --install
+    # Build [and Install] packages
+    catkin build --limit-status-rate 0.1 --no-notify -DCMAKE_BUILD_TYPE=Release
+    # Run tests
+    catkin run_tests
+    catkin_test_results build
+    # Lint package files
+    apt install -qq -y python-catkin-lint
+    catkin lint -W2 --strict --explain src"
