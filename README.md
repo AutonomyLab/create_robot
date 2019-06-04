@@ -11,7 +11,7 @@ This package wraps the C++ library [libcreate][libcreate], which uses iRobot's [
 ## Build Status
 
 TravisCI (Ubuntu _Bionic_, ROS _Melodic_)
-![Build Status](https://api.travis-ci.org/jacobperron/create_robot.svg?branch=melodic)
+[![Build Status](https://travis-ci.com/jacobperron/create_robot.svg?branch=melodic)](https://travis-ci.com/jacobperron/create_robot)
 
 ## Supported Robots
 
