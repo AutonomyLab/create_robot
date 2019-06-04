@@ -10,7 +10,7 @@ This package wraps the C++ library [libcreate][libcreate], which uses iRobot's [
 
 ## Build Status
 
-TravisCI (Ubuntu _Trusty_, ROS _Indigo_ and _Jade_)  
+TravisCI (Ubuntu _Bionic_, ROS _Melodic_)
 ![Build Status](https://api.travis-ci.org/jacobperron/create_robot.svg?branch=melodic)
 
 ## Supported Robots
