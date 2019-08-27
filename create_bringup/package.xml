@@ -4,13 +4,13 @@
   <version>1.3.0</version>
   <description>Launch and configuration files for common accessories when working with Create/Roomba platforms.</description>
 
-  <maintainer email="jperron@sfu.ca">Jacob Perron</maintainer>
+  <maintainer email="jacob@openrobotics.org">Jacob Perron</maintainer>
 
   <license>BSD</license>
 
   <url type="website">http://wiki.ros.org/create_bringup</url>
 
-  <author email="jperron@sfu.ca">Jacob Perron</author>
+  <author email="jacob@openrobotics.org">Jacob Perron</author>
 
   <buildtool_depend>catkin</buildtool_depend>
 
