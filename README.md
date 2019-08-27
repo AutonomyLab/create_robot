@@ -124,28 +124,28 @@ $ sudo apt-get install python-rosdep python-catkin-tools
 
 For Create 2 (Roomba 600/700 series):
 ``` bash
-$ roslaunch create_driver create_2.launch
+$ roslaunch create_bringup create_2.launch
 ```
 
 For Create 1 (Roomba 500 series):
 ``` bash
-$ roslaunch create_driver create_1.launch
+$ roslaunch create_bringup create_1.launch
 ```
 
 For Roomba 400 series:
 ``` bash
-$ roslaunch create_driver roomba_400.launch
+$ roslaunch create_bringup roomba_400.launch
 ```
 
 #### Launch file arguments
 
-* **config** - Absolute path to a configuration file (YAML). Default: `create_driver/config/default.yaml`
+* **config** - Absolute path to a configuration file (YAML). Default: `create_bringup/config/default.yaml`
 * **desc** - Enable robot description (URDF/mesh). Default: `true`
 
 For example, if you would like to disable the robot description and provide a custom configuration file:
 
 ```bash
-$ roslaunch create_driver create_2.launch config:=/abs/path/to/config.yaml desc:=false
+$ roslaunch create_bringup create_2.launch config:=/abs/path/to/config.yaml desc:=false
 ```
 
 ### Parameters

@@ -27,8 +27,6 @@
   <depend>std_msgs</depend>
   <depend>tf</depend>
 
-  <exec_depend>create_description</exec_depend>
-
   <export>
   </export>
 </package>
