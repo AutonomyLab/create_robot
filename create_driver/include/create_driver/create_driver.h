@@ -63,8 +63,46 @@ class CreateDriver
 private:
   create::Create* robot_;
   create::RobotModel model_;
+
+  ros::NodeHandle nh_;
+  ros::NodeHandle priv_nh_;
+
+  ros::Subscriber cmd_vel_sub_;
+  ros::Subscriber debris_led_sub_;
+  ros::Subscriber spot_led_sub_;
+  ros::Subscriber dock_led_sub_;
+  ros::Subscriber check_led_sub_;
+  ros::Subscriber power_led_sub_;
+  ros::Subscriber set_ascii_sub_;
+  ros::Subscriber dock_sub_;
+  ros::Subscriber undock_sub_;
+  ros::Subscriber define_song_sub_;
+  ros::Subscriber play_song_sub_;
+
+  ros::Publisher odom_pub_;
+  ros::Publisher clean_btn_pub_;
+  ros::Publisher day_btn_pub_;
+  ros::Publisher hour_btn_pub_;
+  ros::Publisher min_btn_pub_;
+  ros::Publisher dock_btn_pub_;
+  ros::Publisher spot_btn_pub_;
+  ros::Publisher voltage_pub_;
+  ros::Publisher current_pub_;
+  ros::Publisher charge_pub_;
+  ros::Publisher charge_ratio_pub_;
+  ros::Publisher capacity_pub_;
+  ros::Publisher temperature_pub_;
+  ros::Publisher charging_state_pub_;
+  ros::Publisher omni_char_pub_;
+  ros::Publisher mode_pub_;
+  ros::Publisher bumper_pub_;
+  ros::Publisher wheeldrop_pub_;
+  ros::Publisher wheel_joint_pub_;
+
   tf2_ros::TransformBroadcaster tf_broadcaster_;
+
   diagnostic_updater::Updater diagnostics_;
+
   create_msgs::Mode mode_msg_;
   create_msgs::ChargingState charging_state_msg_;
   create_msgs::Bumper bumper_msg_;
@@ -113,41 +151,6 @@ private:
   void publishMode();
   void publishBumperInfo();
   void publishWheeldrop();
-
-protected:
-  ros::NodeHandle nh_;
-  ros::NodeHandle priv_nh_;
-  ros::Subscriber cmd_vel_sub_;
-  ros::Subscriber debris_led_sub_;
-  ros::Subscriber spot_led_sub_;
-  ros::Subscriber dock_led_sub_;
-  ros::Subscriber check_led_sub_;
-  ros::Subscriber power_led_sub_;
-  ros::Subscriber set_ascii_sub_;
-  ros::Subscriber dock_sub_;
-  ros::Subscriber undock_sub_;
-  ros::Subscriber define_song_sub_;
-  ros::Subscriber play_song_sub_;
-
-  ros::Publisher odom_pub_;
-  ros::Publisher clean_btn_pub_;
-  ros::Publisher day_btn_pub_;
-  ros::Publisher hour_btn_pub_;
-  ros::Publisher min_btn_pub_;
-  ros::Publisher dock_btn_pub_;
-  ros::Publisher spot_btn_pub_;
-  ros::Publisher voltage_pub_;
-  ros::Publisher current_pub_;
-  ros::Publisher charge_pub_;
-  ros::Publisher charge_ratio_pub_;
-  ros::Publisher capacity_pub_;
-  ros::Publisher temperature_pub_;
-  ros::Publisher charging_state_pub_;
-  ros::Publisher omni_char_pub_;
-  ros::Publisher mode_pub_;
-  ros::Publisher bumper_pub_;
-  ros::Publisher wheeldrop_pub_;
-  ros::Publisher wheel_joint_pub_;
 
 public:
   explicit CreateDriver(ros::NodeHandle& nh);
