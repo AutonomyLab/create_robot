@@ -32,13 +32,12 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 
 CreateDriver::CreateDriver(ros::NodeHandle& nh)
-  : nh_(nh),
+  : model_(create::RobotModel::CREATE_2),
+    nh_(nh),
     priv_nh_("~"),
     diagnostics_(),
-    model_(create::RobotModel::CREATE_2),
     is_running_slowly_(false)
 {
-  bool create_one;
   std::string robot_model_name;
   priv_nh_.param<std::string>("dev", dev_, "/dev/ttyUSB0");
   priv_nh_.param<std::string>("robot_model", robot_model_name, "CREATE_2");
@@ -239,6 +238,8 @@ void CreateDriver::setASCIICallback(const std_msgs::UInt8MultiArrayConstPtr& msg
 
 void CreateDriver::dockCallback(const std_msgs::EmptyConstPtr& msg)
 {
+  (void) msg;
+
   robot_->setMode(create::MODE_PASSIVE);
 
   if (model_.getVersion() <= create::V_2)
@@ -250,6 +251,8 @@ void CreateDriver::dockCallback(const std_msgs::EmptyConstPtr& msg)
 
 void CreateDriver::undockCallback(const std_msgs::EmptyConstPtr& msg)
 {
+  (void) msg;
+
   // Switch robot back to FULL mode
   robot_->setMode(create::MODE_FULL);
 }
