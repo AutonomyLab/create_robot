@@ -49,16 +49,14 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <std_msgs/UInt8MultiArray.h>
 #include <tf/transform_broadcaster.h>
 
-#include <limits>
 #include <string>
 
-static const double MAX_DBL = std::numeric_limits<double>::max();
-static const double COVARIANCE[36] = {1e-5, 1e-5, 0.0,     0.0,     0.0,     1e-5,  // NOLINT(whitespace/braces)
-                                      1e-5, 1e-5, 0.0,     0.0,     0.0,     1e-5,
-                                      0.0,  0.0,  MAX_DBL, 0.0,     0.0,     0.0,
-                                      0.0,  0.0,  0.0,     MAX_DBL, 0.0,     0.0,
-                                      0.0,  0.0,  0.0,     0.0,     MAX_DBL, 0.0,
-                                      1e-5, 1e-5, 0.0,     0.0,     0.0,     1e-5};
+static const double COVARIANCE[36] = {1e-5, 1e-5, 0.0,  0.0,  0.0,  1e-5,  // NOLINT(whitespace/braces)
+                                      1e-5, 1e-5, 0.0,  0.0,  0.0,  1e-5,
+                                      0.0,  0.0,  1e-5, 0.0,  0.0,  0.0,
+                                      0.0,  0.0,  0.0,  1e-5, 0.0,  0.0,
+                                      0.0,  0.0,  0.0,  0.0,  1e-5, 0.0,
+                                      1e-5, 1e-5, 0.0,  0.0,  0.0,  1e-5};
 
 class CreateDriver
 {
