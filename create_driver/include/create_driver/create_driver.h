@@ -47,7 +47,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <std_msgs/Int16.h>
 #include <std_msgs/UInt16.h>
 #include <std_msgs/UInt8MultiArray.h>
-#include <tf/transform_broadcaster.h>
+#include <tf2_ros/transform_broadcaster.h>
 
 #include <string>
 
@@ -63,7 +63,7 @@ class CreateDriver
 private:
   create::Create* robot_;
   create::RobotModel model_;
-  tf::TransformBroadcaster tf_broadcaster_;
+  tf2_ros::TransformBroadcaster tf_broadcaster_;
   diagnostic_updater::Updater diagnostics_;
   create_msgs::Mode mode_msg_;
   create_msgs::ChargingState charging_state_msg_;

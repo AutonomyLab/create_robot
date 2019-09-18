@@ -13,7 +13,8 @@ find_package(catkin REQUIRED COMPONENTS
   roslint
   sensor_msgs
   std_msgs
-  tf
+  tf2_geometry_msgs
+  tf2_ros
 )
 
 catkin_package(
@@ -27,7 +28,8 @@ catkin_package(
     roscpp
     sensor_msgs
     std_msgs
-    tf
+    tf2_geometry_msgs
+    tf2_ros
   DEPENDS libcreate
 )
 

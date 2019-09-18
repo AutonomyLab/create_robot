@@ -27,7 +27,7 @@ POSSIBILITY OF SUCH DAMAGE.
 */
 #include "create_driver/create_driver.h"
 
-#include <tf/transform_datatypes.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 #include <string>
 
@@ -429,7 +429,9 @@ void CreateDriver::publishOdom()
   create::Vel vel = robot_->getVel();
 
   // Populate position info
-  geometry_msgs::Quaternion quat = tf::createQuaternionMsgFromRollPitchYaw(0, 0, pose.yaw);
+  tf2::Quaternion tf_quat;
+  tf_quat.setRPY(0.0, 0.0, pose.yaw);
+  geometry_msgs::Quaternion quat = tf2::toMsg(tf_quat);
   odom_msg_.header.stamp = ros::Time::now();
   odom_msg_.pose.pose.position.x = pose.x;
   odom_msg_.pose.pose.position.y = pose.y;
