@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-  <param name="robot_description" command="$(find xacro)/xacro '$(find create_description)/urdf/create_2.urdf.xacro'" />
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" exec="robot_state_publisher" output="screen">
+    <param name="robot_description" type="str" value="$(command '$(find-pkg-prefix xacro)/bin/xacro $(find-pkg-share create_description)/urdf/create_2.urdf.xacro')" />
+  </node>
 </launch>

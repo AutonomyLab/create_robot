@@ -1,32 +1,33 @@
 # Logitech F710 wireless controller
 # Deadman (enable) button: Right Trigger
 # D<>X button (located on the back panel) must be set to D
-teleop:
-  piloting:
-    type: topic
-    message_type: "geometry_msgs/Twist"
-    topic_name: cmd_vel
-    deadman_buttons: [7]
-    axis_mappings:
-      -
-        axis: 3  # Right thumb stick (up/down)
-        target: linear.x
-        scale: 0.4
-        offset: 0.0
-      -
-        axis: 2  # Right thumb stick (left/right)
-        target: angular.z
-        scale: 2.5
-        offset: 0.0
-  dock:
-    type: topic
-    message_type: "std_msgs/Empty"
-    topic_name: dock
-    deadman_buttons: [3, 7]  # RT + Y
-    axis_mappings: []
-  undock:
-    type: topic
-    message_type: "std_msgs/Empty"
-    topic_name: undock
-    deadman_buttons: [1, 7]  # RT + A
-    axis_mappings: []
+joy_teleop:
+  ros__parameters:
+    piloting:
+      type: topic
+      message_type: "geometry_msgs/msg/Twist"
+      topic_name: cmd_vel
+      deadman_buttons: [7]
+      axis_mappings:
+        -
+          axis: 3  # Right thumb stick (up/down)
+          target: linear.x
+          scale: 0.4
+          offset: 0.0
+        -
+          axis: 2  # Right thumb stick (left/right)
+          target: angular.z
+          scale: 2.5
+          offset: 0.0
+    dock:
+      type: topic
+      message_type: "std_msgs/msg/Empty"
+      topic_name: dock
+      deadman_buttons: [3, 7]  # RT + Y
+      axis_mappings: []
+    undock:
+      type: topic
+      message_type: "std_msgs/msg/Empty"
+      topic_name: undock
+      deadman_buttons: [1, 7]  # RT + A
+      axis_mappings: []

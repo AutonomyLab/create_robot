@@ -2,16 +2,15 @@
 <launch>
   <arg name="joy_dev" default="/dev/input/js0" />
   <arg name="joy_config" default="xbox360" />
-  <arg name="teleop_config" default="$(find create_bringup)/config/$(arg joy_config).yaml" />
+  <arg name="teleop_config" default="$(find-pkg-share create_bringup)/config/$(var joy_config).yaml" />
 
-  <rosparam file="$(arg teleop_config)" command="load" />
-
-  <node pkg="joy" type="joy_node" name="joy_node">
-    <param name="dev" value="$(arg joy_dev)" />
+  <node pkg="joy" exec="joy_node" name="joy_node">
+    <param name="dev" value="$(var joy_dev)" />
     <param name="deadzone" value="0.2" />
-    <param name="autorepeat_rate" value="20" />
+    <param name="autorepeat_rate" value="20.0" />
   </node>
 
-  <node pkg="joy_teleop" type="joy_teleop.py" name="joy_teleop">
+  <node pkg="joy_teleop" exec="joy_teleop" name="joy_teleop">
+    <param from="$(var teleop_config)" />
   </node>
 </launch>

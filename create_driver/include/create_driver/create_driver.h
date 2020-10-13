@@ -27,26 +27,26 @@ POSSIBILITY OF SUCH DAMAGE.
 */
 #ifndef CREATE_DRIVER_CREATE_DRIVER_H
 #define CREATE_DRIVER_CREATE_DRIVER_H
-#include "create_msgs/ChargingState.h"
-#include "create_msgs/Mode.h"
-#include "create_msgs/Bumper.h"
-#include "create_msgs/DefineSong.h"
-#include "create_msgs/PlaySong.h"
+#include "create_msgs/msg/charging_state.hpp"
+#include "create_msgs/msg/mode.hpp"
+#include "create_msgs/msg/bumper.hpp"
+#include "create_msgs/msg/define_song.hpp"
+#include "create_msgs/msg/play_song.hpp"
 
 #include "create/create.h"
 
-#include <diagnostic_updater/diagnostic_updater.h>
-#include <geometry_msgs/TransformStamped.h>
-#include <geometry_msgs/Twist.h>
-#include <nav_msgs/Odometry.h>
-#include <ros/ros.h>
-#include <sensor_msgs/JointState.h>
-#include <std_msgs/Bool.h>
-#include <std_msgs/Empty.h>
-#include <std_msgs/Float32.h>
-#include <std_msgs/Int16.h>
-#include <std_msgs/UInt16.h>
-#include <std_msgs/UInt8MultiArray.h>
+#include <diagnostic_updater/diagnostic_updater.hpp>
+#include <geometry_msgs/msg/transform_stamped.hpp>
+#include <geometry_msgs/msg/twist.hpp>
+#include <nav_msgs/msg/odometry.hpp>
+#include <rclcpp/rclcpp.hpp>
+#include <sensor_msgs/msg/joint_state.hpp>
+#include <std_msgs/msg/bool.hpp>
+#include <std_msgs/msg/empty.hpp>
+#include <std_msgs/msg/float32.hpp>
+#include <std_msgs/msg/int16.hpp>
+#include <std_msgs/msg/u_int16.hpp>
+#include <std_msgs/msg/u_int8_multi_array.hpp>
 #include <tf2_ros/transform_broadcaster.h>
 
 #include <string>
@@ -64,56 +64,55 @@ private:
   create::Create* robot_;
   create::RobotModel model_;
 
-  ros::NodeHandle nh_;
-  ros::NodeHandle priv_nh_;
+  std::shared_ptr<rclcpp::Node> nh_;
 
-  ros::Subscriber cmd_vel_sub_;
-  ros::Subscriber debris_led_sub_;
-  ros::Subscriber spot_led_sub_;
-  ros::Subscriber dock_led_sub_;
-  ros::Subscriber check_led_sub_;
-  ros::Subscriber power_led_sub_;
-  ros::Subscriber set_ascii_sub_;
-  ros::Subscriber dock_sub_;
-  ros::Subscriber undock_sub_;
-  ros::Subscriber define_song_sub_;
-  ros::Subscriber play_song_sub_;
+  rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_sub_;
+  rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr debris_led_sub_;
+  rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr spot_led_sub_;
+  rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr dock_led_sub_;
+  rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr check_led_sub_;
+  rclcpp::Subscription<std_msgs::msg::UInt8MultiArray>::SharedPtr power_led_sub_;
+  rclcpp::Subscription<std_msgs::msg::UInt8MultiArray>::SharedPtr set_ascii_sub_;
+  rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr dock_sub_;
+  rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr undock_sub_;
+  rclcpp::Subscription<create_msgs::msg::DefineSong>::SharedPtr define_song_sub_;
+  rclcpp::Subscription<create_msgs::msg::PlaySong>::SharedPtr play_song_sub_;
 
-  ros::Publisher odom_pub_;
-  ros::Publisher clean_btn_pub_;
-  ros::Publisher day_btn_pub_;
-  ros::Publisher hour_btn_pub_;
-  ros::Publisher min_btn_pub_;
-  ros::Publisher dock_btn_pub_;
-  ros::Publisher spot_btn_pub_;
-  ros::Publisher voltage_pub_;
-  ros::Publisher current_pub_;
-  ros::Publisher charge_pub_;
-  ros::Publisher charge_ratio_pub_;
-  ros::Publisher capacity_pub_;
-  ros::Publisher temperature_pub_;
-  ros::Publisher charging_state_pub_;
-  ros::Publisher omni_char_pub_;
-  ros::Publisher mode_pub_;
-  ros::Publisher bumper_pub_;
-  ros::Publisher wheeldrop_pub_;
-  ros::Publisher wheel_joint_pub_;
+  rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_pub_;
+  rclcpp::Publisher<std_msgs::msg::Empty>::SharedPtr clean_btn_pub_;
+  rclcpp::Publisher<std_msgs::msg::Empty>::SharedPtr day_btn_pub_;
+  rclcpp::Publisher<std_msgs::msg::Empty>::SharedPtr hour_btn_pub_;
+  rclcpp::Publisher<std_msgs::msg::Empty>::SharedPtr min_btn_pub_;
+  rclcpp::Publisher<std_msgs::msg::Empty>::SharedPtr dock_btn_pub_;
+  rclcpp::Publisher<std_msgs::msg::Empty>::SharedPtr spot_btn_pub_;
+  rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr voltage_pub_;
+  rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr current_pub_;
+  rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr charge_pub_;
+  rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr charge_ratio_pub_;
+  rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr capacity_pub_;
+  rclcpp::Publisher<std_msgs::msg::Int16>::SharedPtr temperature_pub_;
+  rclcpp::Publisher<create_msgs::msg::ChargingState>::SharedPtr charging_state_pub_;
+  rclcpp::Publisher<std_msgs::msg::UInt16>::SharedPtr omni_char_pub_;
+  rclcpp::Publisher<create_msgs::msg::Mode>::SharedPtr mode_pub_;
+  rclcpp::Publisher<create_msgs::msg::Bumper>::SharedPtr bumper_pub_;
+  rclcpp::Publisher<std_msgs::msg::Empty>::SharedPtr wheeldrop_pub_;
+  rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr wheel_joint_pub_;
 
   tf2_ros::TransformBroadcaster tf_broadcaster_;
 
   diagnostic_updater::Updater diagnostics_;
 
-  create_msgs::Mode mode_msg_;
-  create_msgs::ChargingState charging_state_msg_;
-  create_msgs::Bumper bumper_msg_;
-  nav_msgs::Odometry odom_msg_;
-  geometry_msgs::TransformStamped tf_odom_;
-  ros::Time last_cmd_vel_time_;
-  std_msgs::Empty empty_msg_;
-  std_msgs::Float32 float32_msg_;
-  std_msgs::UInt16 uint16_msg_;
-  std_msgs::Int16 int16_msg_;
-  sensor_msgs::JointState joint_state_msg_;
+  create_msgs::msg::Mode mode_msg_;
+  create_msgs::msg::ChargingState charging_state_msg_;
+  create_msgs::msg::Bumper bumper_msg_;
+  nav_msgs::msg::Odometry odom_msg_;
+  geometry_msgs::msg::TransformStamped tf_odom_;
+  rclcpp::Time last_cmd_vel_time_;
+  std_msgs::msg::Empty empty_msg_;
+  std_msgs::msg::Float32 float32_msg_;
+  std_msgs::msg::UInt16 uint16_msg_;
+  std_msgs::msg::Int16 int16_msg_;
+  sensor_msgs::msg::JointState joint_state_msg_;
   bool is_running_slowly_;
 
   // ROS params
@@ -125,17 +124,17 @@ private:
   bool publish_tf_;
   int baud_;
 
-  void cmdVelCallback(const geometry_msgs::TwistConstPtr& msg);
-  void debrisLEDCallback(const std_msgs::BoolConstPtr& msg);
-  void spotLEDCallback(const std_msgs::BoolConstPtr& msg);
-  void dockLEDCallback(const std_msgs::BoolConstPtr& msg);
-  void checkLEDCallback(const std_msgs::BoolConstPtr& msg);
-  void powerLEDCallback(const std_msgs::UInt8MultiArrayConstPtr& msg);
-  void setASCIICallback(const std_msgs::UInt8MultiArrayConstPtr& msg);
-  void dockCallback(const std_msgs::EmptyConstPtr& msg);
-  void undockCallback(const std_msgs::EmptyConstPtr& msg);
-  void defineSongCallback(const create_msgs::DefineSongConstPtr& msg);
-  void playSongCallback(const create_msgs::PlaySongConstPtr& msg);
+  void cmdVelCallback(geometry_msgs::msg::Twist::UniquePtr msg);
+  void debrisLEDCallback(std_msgs::msg::Bool::UniquePtr msg);
+  void spotLEDCallback(std_msgs::msg::Bool::UniquePtr msg);
+  void dockLEDCallback(std_msgs::msg::Bool::UniquePtr msg);
+  void checkLEDCallback(std_msgs::msg::Bool::UniquePtr msg);
+  void powerLEDCallback(std_msgs::msg::UInt8MultiArray::UniquePtr msg);
+  void setASCIICallback(std_msgs::msg::UInt8MultiArray::UniquePtr msg);
+  void dockCallback(std_msgs::msg::Empty::UniquePtr msg);
+  void undockCallback(std_msgs::msg::Empty::UniquePtr msg);
+  void defineSongCallback(create_msgs::msg::DefineSong::UniquePtr msg);
+  void playSongCallback(create_msgs::msg::PlaySong::UniquePtr msg);
 
   bool update();
   void updateBatteryDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat);
@@ -153,7 +152,7 @@ private:
   void publishWheeldrop();
 
 public:
-  explicit CreateDriver(ros::NodeHandle& nh);
+  explicit CreateDriver(std::shared_ptr<rclcpp::Node> nh);
   ~CreateDriver();
   virtual void spin();
   virtual void spinOnce();

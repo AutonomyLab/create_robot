@@ -12,9 +12,7 @@
 
   <author email="jacob@openrobotics.org">Jacob Perron</author>
 
-  <buildtool_depend>catkin</buildtool_depend>
-
-  <build_depend>roslint</build_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>create_msgs</depend>
   <depend>diagnostic_msgs</depend>
@@ -22,12 +20,16 @@
   <depend>geometry_msgs</depend>
   <depend>libcreate</depend>
   <depend>nav_msgs</depend>
-  <depend>roscpp</depend>
+  <depend>rclcpp</depend>
   <depend>sensor_msgs</depend>
   <depend>std_msgs</depend>
   <depend>tf2_geometry_msgs</depend>
   <depend>tf2_ros</depend>
 
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
   <export>
+    <build_type>ament_cmake</build_type>
   </export>
 </package>

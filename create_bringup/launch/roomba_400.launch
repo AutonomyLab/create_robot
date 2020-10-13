@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="config" default="$(find create_bringup)/config/default.yaml" />
+  <arg name="config" default="$(find-pkg-share create_bringup)/config/default.yaml" />
   <arg name="desc" default="true" />
 
-  <node name="create_driver" pkg="create_driver" type="create_driver" output="screen">
-    <rosparam command="load" file="$(arg config)" />
+  <node name="create_driver" pkg="create_driver" exec="create_driver" output="screen">
+    <param from="$(var config)" />
     <param name="robot_model" value="ROOMBA_400" />
   </node>
 
   <!-- Robot description -->
-  <include if="$(arg desc)" file="$(find create_description)/launch/roomba_400.launch" />
+  <include if="$(var desc)" file="$(find-pkg-share create_description)/launch/roomba_400.xml" />
 </launch>

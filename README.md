@@ -63,21 +63,20 @@ _* Not verified. Anyone who is able to verify that this driver works or not is e
 #### Prerequisites
 
 * Internet connection
-* [ROS](http://wiki.ros.org/ROS/Installation) _Indigo_ or _Jade_
-* Ubuntu packages: `python-rosdep`, `python-catkin-tools`
+* [ROS](https://index.ros.org/doc/ros2/Installation) _Foxy_
+* Ubuntu packages: `python3-rosdep`, `python3-colcon-common-extensions`
 
 ``` bash
-$ sudo apt-get install python-rosdep python-catkin-tools
+$ sudo apt install python3-rosdep python3-colcon-common-extensions
 ```
 
 #### Compiling
 
-1. Create a catkin workspace  
+1. Create a colcon workspace
     ``` bash
     $ cd ~
     $ mkdir -p create_ws/src  
-    $ cd create_ws  
-    $ catkin init  
+    $ cd create_ws
     ```
 
 2. Clone this repo  
@@ -96,7 +95,7 @@ $ sudo apt-get install python-rosdep python-catkin-tools
 4. Build  
     ``` bash
     $ cd ~/create_ws
-    $ catkin build
+    $ colcon build
     ```
 #### USB Permissions
 5. In order to connect to Create over USB, ensure your user is in the dialout group
@@ -112,7 +111,7 @@ $ sudo apt-get install python-rosdep python-catkin-tools
 
 1. After compiling from source, don't forget to source your workspace:  
     ``` bash
-    $ source ~/create_ws/devel/setup.bash
+    $ source ~/create_ws/install/setup.bash
     ```
 
 2. Connect computer to Create's 7-pin serial port
@@ -124,17 +123,17 @@ $ sudo apt-get install python-rosdep python-catkin-tools
 
 For Create 2 (Roomba 600/700 series):
 ``` bash
-$ roslaunch create_bringup create_2.launch
+$ ros2 launch create_bringup create_2.launch
 ```
 
 For Create 1 (Roomba 500 series):
 ``` bash
-$ roslaunch create_bringup create_1.launch
+$ ros2 launch create_bringup create_1.launch
 ```
 
 For Roomba 400 series:
 ``` bash
-$ roslaunch create_bringup roomba_400.launch
+$ ros2 launch create_bringup roomba_400.launch
 ```
 
 #### Launch file arguments
@@ -145,7 +144,7 @@ $ roslaunch create_bringup roomba_400.launch
 For example, if you would like to disable the robot description and provide a custom configuration file:
 
 ```bash
-$ roslaunch create_bringup create_2.launch config:=/abs/path/to/config.yaml desc:=false
+$ ros2 launch create_bringup create_2.launch config:=/abs/path/to/config.yaml desc:=false
 ```
 
 ### Parameters
@@ -222,7 +221,7 @@ angular.z (+)     Rotate counter-clockwise (rad/s)
 `create_bringup` comes with a launch file for teleoperating Create with a joystick.
 
 ``` bash
-$ roslaunch create_bringup joy_teleop.launch [joy_config:=xbox360]
+$ ros2 launch create_bringup joy_teleop.launch [joy_config:=xbox360]
 ```
 
 There exists configuration files for the [Xbox 360 wired controller](https://www.amazon.ca/Microsoft-Xbox-360-Wired-Controller/dp/B003ZSN600) and the [Logitech F710 controller](http://gaming.logitech.com/en-ca/product/f710-wireless-gamepad). You can adapt these files for your preferred joystick configuration.

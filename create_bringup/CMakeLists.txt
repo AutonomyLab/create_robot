@@ -1,11 +1,11 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(create_bringup)
 
-find_package(catkin REQUIRED)
-
-catkin_package()
+find_package(ament_cmake REQUIRED)
 
 install(DIRECTORY config launch
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+  DESTINATION share/${PROJECT_NAME}
   PATTERN ".svn" EXCLUDE
 )
+
+ament_package()
