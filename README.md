@@ -11,7 +11,7 @@ This package wraps the C++ library [libcreate][libcreate], which uses iRobot's [
 ## Build Status
 
 TravisCI (Ubuntu _Bionic_, ROS _Melodic_)
-[![Build Status](https://travis-ci.com/jacobperron/create_robot.svg?branch=melodic)](https://travis-ci.com/jacobperron/create_robot)
+[![Build Status](https://travis-ci.com/autonomylab/create_robot.svg?branch=melodic)](https://travis-ci.com/autonomylab/create_robot)
 
 ## Supported Robots
 
@@ -83,7 +83,7 @@ $ sudo apt-get install python-rosdep python-catkin-tools
 2. Clone this repo  
     ``` bash
     $ cd ~/create_ws/src
-    $ git clone https://github.com/jacoberron/create_robot.git
+    $ git clone https://github.com/autonomylab/create_robot.git
     ```
   
 3. Install dependencies  
@@ -229,7 +229,7 @@ There exists configuration files for the [Xbox 360 wired controller](https://www
 
 ## Contributions
 
-Contributing to the development and maintenance of _create\_autonomy_ is encouraged. Feel free to open issues or create pull requests on [GitHub](https://github.com/jacobperron/create_robot).
+Contributing to the development and maintenance of _create\_autonomy_ is encouraged. Feel free to open issues or create pull requests on [GitHub](https://github.com/autonomylab/create_robot).
 
 ### Contributors
 
@@ -251,11 +251,11 @@ Contributing to the development and maintenance of _create\_autonomy_ is encoura
 [bool]:  http://docs.ros.org/api/std_msgs/html/msg/Bool.html
 [uint8multiarray]:  http://docs.ros.org/api/std_msgs/html/msg/UInt8MultiArray.html
 [float32]:  http://docs.ros.org/api/std_msgs/html/msg/Float32.html
-[create_msgs]:  http://github.com/jacobperron/create_robot/tree/melodic
-[bumper_msg]:  https://github.com/jacobperron/create_robot/blob/melodic/create_msgs/msg/Bumper.msg
-[mode_msg]:  https://github.com/jacobperron/create_robot/blob/melodic/create_msgs/msg/Mode.msg
-[chargingstate_msg]:  https://github.com/jacobperron/create_robot/blob/melodic/create_msgs/msg/ChargingState.msg
+[create_msgs]:  http://github.com/autonomylab/create_robot/tree/melodic
+[bumper_msg]:  https://github.com/autonomylab/create_robot/blob/melodic/create_msgs/msg/Bumper.msg
+[mode_msg]:  https://github.com/autonomylab/create_robot/blob/melodic/create_msgs/msg/Mode.msg
+[chargingstate_msg]:  https://github.com/autonomylab/create_robot/blob/melodic/create_msgs/msg/ChargingState.msg
 [jointstate_msg]:  http://docs.ros.org/api/sensor_msgs/html/msg/JointState.html
-[definesong_msg]:  https://github.com/jacobperron/create_robot/blob/melodic/create_msgs/msg/DefineSong.msg
-[playsong_msg]:  https://github.com/jacobperron/create_robot/blob/melodic/create_msgs/msg/PlaySong.msg
+[definesong_msg]:  https://github.com/autonomylab/create_robot/blob/melodic/create_msgs/msg/DefineSong.msg
+[playsong_msg]:  https://github.com/autonomylab/create_robot/blob/melodic/create_msgs/msg/PlaySong.msg
 

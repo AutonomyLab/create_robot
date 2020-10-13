@@ -9,7 +9,7 @@
   <license>BSD</license>
 
   <url type="website">http://wiki.ros.org/create_robot</url>
-  <url type="repository">http://github.com/jacobperron/create_robot</url>
+  <url type="repository">http://github.com/autonomylab/create_robot</url>
 
   <author email="jacob@openrobotics.org">Jacob Perron</author>
 
