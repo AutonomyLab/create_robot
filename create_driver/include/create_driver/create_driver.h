@@ -96,6 +96,8 @@ private:
   rclcpp::Publisher<std_msgs::msg::Empty>::SharedPtr wheeldrop_pub_;
   rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr wheel_joint_pub_;
 
+  rclcpp::TimerBase::SharedPtr loop_timer_;
+
   tf2_ros::TransformBroadcaster tf_broadcaster_;
 
   diagnostic_updater::Updater diagnostics_;
@@ -152,7 +154,6 @@ private:
 public:
   explicit CreateDriver();
   ~CreateDriver();
-  virtual void spin();
   virtual void spinOnce();
 };  // class CreateDriver
 
