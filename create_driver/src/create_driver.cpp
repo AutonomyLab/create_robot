@@ -32,21 +32,21 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 
 
-CreateDriver::CreateDriver(std::shared_ptr<rclcpp::Node> nh)
-  : model_(create::RobotModel::CREATE_2),
-    nh_(nh),
-    tf_broadcaster_(nh),
-    diagnostics_(nh),
+CreateDriver::CreateDriver()
+  : Node("create_driver"),
+    model_(create::RobotModel::CREATE_2),
+    tf_broadcaster_(this),
+    diagnostics_(this),
     is_running_slowly_(false)
 {
-  dev_ = nh_->declare_parameter<std::string>("dev", "/dev/ttyUSB0");
-  base_frame_ = nh_->declare_parameter<std::string>("base_frame", "base_footprint");
-  odom_frame_ = nh_->declare_parameter<std::string>("odom_frame", "odom");
-  latch_duration_ = nh_->declare_parameter<double>("latch_cmd_duration", 0.2);
-  loop_hz_ = nh_->declare_parameter<double>("loop_hz", 10.0);
-  publish_tf_ = nh_->declare_parameter<bool>("publish_tf", true);
+  dev_ = declare_parameter<std::string>("dev", "/dev/ttyUSB0");
+  base_frame_ = declare_parameter<std::string>("base_frame", "base_footprint");
+  odom_frame_ = declare_parameter<std::string>("odom_frame", "odom");
+  latch_duration_ = declare_parameter<double>("latch_cmd_duration", 0.2);
+  loop_hz_ = declare_parameter<double>("loop_hz", 10.0);
+  publish_tf_ = declare_parameter<bool>("publish_tf", true);
 
-  auto robot_model_name = nh_->declare_parameter<std::string>("robot_model", "CREATE_2");
+  auto robot_model_name = declare_parameter<std::string>("robot_model", "CREATE_2");
   if (robot_model_name == "ROOMBA_400")
   {
     model_ = create::RobotModel::ROOMBA_400;
@@ -61,30 +61,30 @@ CreateDriver::CreateDriver(std::shared_ptr<rclcpp::Node> nh)
   }
   else
   {
-    RCLCPP_FATAL_STREAM(nh_->get_logger(), "[CREATE] Robot model \"" + robot_model_name + "\" is not known.");
+    RCLCPP_FATAL_STREAM(get_logger(), "[CREATE] Robot model \"" + robot_model_name + "\" is not known.");
     rclcpp::shutdown();
     return;
   }
 
-  RCLCPP_INFO_STREAM(nh_->get_logger(), "[CREATE] \"" << robot_model_name << "\" selected");
+  RCLCPP_INFO_STREAM(get_logger(), "[CREATE] \"" << robot_model_name << "\" selected");
 
-  baud_ = nh_->declare_parameter<int>("baud", model_.getBaud());
+  baud_ = declare_parameter<int>("baud", model_.getBaud());
 
   robot_ = new create::Create(model_);
 
   if (!robot_->connect(dev_, baud_))
   {
-    RCLCPP_FATAL(nh_->get_logger(), "[CREATE] Failed to establish serial connection with Create.");
+    RCLCPP_FATAL(get_logger(), "[CREATE] Failed to establish serial connection with Create.");
     rclcpp::shutdown();
   }
 
-  RCLCPP_INFO(this->nh_->get_logger(), "[CREATE] Connection established.");
+  RCLCPP_INFO(this->get_logger(), "[CREATE] Connection established.");
 
   // Start in full control mode
   robot_->setMode(create::MODE_FULL);
 
   // Show robot's battery level
-  RCLCPP_INFO(nh_->get_logger(), "[CREATE] Battery level %.2f %%", (robot_->getBatteryCharge() / robot_->getBatteryCapacity()) * 100.0);
+  RCLCPP_INFO(get_logger(), "[CREATE] Battery level %.2f %%", (robot_->getBatteryCharge() / robot_->getBatteryCapacity()) * 100.0);
 
   // Set frame_id's
   mode_msg_.header.frame_id = base_frame_;
@@ -109,38 +109,38 @@ CreateDriver::CreateDriver(std::shared_ptr<rclcpp::Node> nh)
   }
 
   // Setup subscribers
-  cmd_vel_sub_ = nh->create_subscription<geometry_msgs::msg::Twist>("cmd_vel", 1, std::bind(&CreateDriver::cmdVelCallback, this, std::placeholders::_1));
-  debris_led_sub_ = nh->create_subscription<std_msgs::msg::Bool>("debris_led", 10, std::bind(&CreateDriver::debrisLEDCallback, this, std::placeholders::_1));
-  spot_led_sub_ = nh->create_subscription<std_msgs::msg::Bool>("spot_led", 10, std::bind(&CreateDriver::spotLEDCallback, this, std::placeholders::_1));
-  dock_led_sub_ = nh->create_subscription<std_msgs::msg::Bool>("dock_led", 10, std::bind(&CreateDriver::dockLEDCallback, this, std::placeholders::_1));
-  check_led_sub_ = nh->create_subscription<std_msgs::msg::Bool>("check_led", 10, std::bind(&CreateDriver::checkLEDCallback, this, std::placeholders::_1));
-  power_led_sub_ = nh->create_subscription<std_msgs::msg::UInt8MultiArray>("power_led", 10, std::bind(&CreateDriver::powerLEDCallback, this, std::placeholders::_1));
-  set_ascii_sub_ = nh->create_subscription<std_msgs::msg::UInt8MultiArray>("set_ascii", 10, std::bind(&CreateDriver::setASCIICallback, this, std::placeholders::_1));
-  dock_sub_ = nh->create_subscription<std_msgs::msg::Empty>("dock", 10, std::bind(&CreateDriver::dockCallback, this, std::placeholders::_1));
-  undock_sub_ = nh->create_subscription<std_msgs::msg::Empty>("undock", 10, std::bind(&CreateDriver::undockCallback, this, std::placeholders::_1));
-  define_song_sub_ = nh->create_subscription<create_msgs::msg::DefineSong>("define_song", 10, std::bind(&CreateDriver::defineSongCallback, this, std::placeholders::_1));
-  play_song_sub_ = nh->create_subscription<create_msgs::msg::PlaySong>("play_song", 10, std::bind(&CreateDriver::playSongCallback, this, std::placeholders::_1));
+  cmd_vel_sub_ = create_subscription<geometry_msgs::msg::Twist>("cmd_vel", 1, std::bind(&CreateDriver::cmdVelCallback, this, std::placeholders::_1));
+  debris_led_sub_ = create_subscription<std_msgs::msg::Bool>("debris_led", 10, std::bind(&CreateDriver::debrisLEDCallback, this, std::placeholders::_1));
+  spot_led_sub_ = create_subscription<std_msgs::msg::Bool>("spot_led", 10, std::bind(&CreateDriver::spotLEDCallback, this, std::placeholders::_1));
+  dock_led_sub_ = create_subscription<std_msgs::msg::Bool>("dock_led", 10, std::bind(&CreateDriver::dockLEDCallback, this, std::placeholders::_1));
+  check_led_sub_ = create_subscription<std_msgs::msg::Bool>("check_led", 10, std::bind(&CreateDriver::checkLEDCallback, this, std::placeholders::_1));
+  power_led_sub_ = create_subscription<std_msgs::msg::UInt8MultiArray>("power_led", 10, std::bind(&CreateDriver::powerLEDCallback, this, std::placeholders::_1));
+  set_ascii_sub_ = create_subscription<std_msgs::msg::UInt8MultiArray>("set_ascii", 10, std::bind(&CreateDriver::setASCIICallback, this, std::placeholders::_1));
+  dock_sub_ = create_subscription<std_msgs::msg::Empty>("dock", 10, std::bind(&CreateDriver::dockCallback, this, std::placeholders::_1));
+  undock_sub_ = create_subscription<std_msgs::msg::Empty>("undock", 10, std::bind(&CreateDriver::undockCallback, this, std::placeholders::_1));
+  define_song_sub_ = create_subscription<create_msgs::msg::DefineSong>("define_song", 10, std::bind(&CreateDriver::defineSongCallback, this, std::placeholders::_1));
+  play_song_sub_ = create_subscription<create_msgs::msg::PlaySong>("play_song", 10, std::bind(&CreateDriver::playSongCallback, this, std::placeholders::_1));
 
   // Setup publishers
-  odom_pub_ = nh->create_publisher<nav_msgs::msg::Odometry>("odom", 30);
-  clean_btn_pub_ = nh->create_publisher<std_msgs::msg::Empty>("clean_button", 30);
-  day_btn_pub_ = nh->create_publisher<std_msgs::msg::Empty>("day_button", 30);
-  hour_btn_pub_ = nh->create_publisher<std_msgs::msg::Empty>("hour_button", 30);
-  min_btn_pub_ = nh->create_publisher<std_msgs::msg::Empty>("minute_button", 30);
-  dock_btn_pub_ = nh->create_publisher<std_msgs::msg::Empty>("dock_button", 30);
-  spot_btn_pub_ = nh->create_publisher<std_msgs::msg::Empty>("spot_button", 30);
-  voltage_pub_ = nh->create_publisher<std_msgs::msg::Float32>("battery/voltage", 30);
-  current_pub_ = nh->create_publisher<std_msgs::msg::Float32>("battery/current", 30);
-  charge_pub_ = nh->create_publisher<std_msgs::msg::Float32>("battery/charge", 30);
-  charge_ratio_pub_ = nh->create_publisher<std_msgs::msg::Float32>("battery/charge_ratio", 30);
-  capacity_pub_ = nh->create_publisher<std_msgs::msg::Float32>("battery/capacity", 30);
-  temperature_pub_ = nh->create_publisher<std_msgs::msg::Int16>("battery/temperature", 30);
-  charging_state_pub_ = nh->create_publisher<create_msgs::msg::ChargingState>("battery/charging_state", 30);
-  omni_char_pub_ = nh->create_publisher<std_msgs::msg::UInt16>("ir_omni", 30);
-  mode_pub_ = nh->create_publisher<create_msgs::msg::Mode>("mode", 30);
-  bumper_pub_ = nh->create_publisher<create_msgs::msg::Bumper>("bumper", 30);
-  wheeldrop_pub_ = nh->create_publisher<std_msgs::msg::Empty>("wheeldrop", 30);
-  wheel_joint_pub_ = nh->create_publisher<sensor_msgs::msg::JointState>("joint_states", 10);
+  odom_pub_ = create_publisher<nav_msgs::msg::Odometry>("odom", 30);
+  clean_btn_pub_ = create_publisher<std_msgs::msg::Empty>("clean_button", 30);
+  day_btn_pub_ = create_publisher<std_msgs::msg::Empty>("day_button", 30);
+  hour_btn_pub_ = create_publisher<std_msgs::msg::Empty>("hour_button", 30);
+  min_btn_pub_ = create_publisher<std_msgs::msg::Empty>("minute_button", 30);
+  dock_btn_pub_ = create_publisher<std_msgs::msg::Empty>("dock_button", 30);
+  spot_btn_pub_ = create_publisher<std_msgs::msg::Empty>("spot_button", 30);
+  voltage_pub_ = create_publisher<std_msgs::msg::Float32>("battery/voltage", 30);
+  current_pub_ = create_publisher<std_msgs::msg::Float32>("battery/current", 30);
+  charge_pub_ = create_publisher<std_msgs::msg::Float32>("battery/charge", 30);
+  charge_ratio_pub_ = create_publisher<std_msgs::msg::Float32>("battery/charge_ratio", 30);
+  capacity_pub_ = create_publisher<std_msgs::msg::Float32>("battery/capacity", 30);
+  temperature_pub_ = create_publisher<std_msgs::msg::Int16>("battery/temperature", 30);
+  charging_state_pub_ = create_publisher<create_msgs::msg::ChargingState>("battery/charging_state", 30);
+  omni_char_pub_ = create_publisher<std_msgs::msg::UInt16>("ir_omni", 30);
+  mode_pub_ = create_publisher<create_msgs::msg::Mode>("mode", 30);
+  bumper_pub_ = create_publisher<create_msgs::msg::Bumper>("bumper", 30);
+  wheeldrop_pub_ = create_publisher<std_msgs::msg::Empty>("wheeldrop", 30);
+  wheel_joint_pub_ = create_publisher<sensor_msgs::msg::JointState>("joint_states", 10);
 
   // Setup diagnostics
   diagnostics_.add("Battery Status", this, &CreateDriver::updateBatteryDiagnostics);
@@ -151,12 +151,12 @@ CreateDriver::CreateDriver(std::shared_ptr<rclcpp::Node> nh)
 
   diagnostics_.setHardwareID(robot_model_name);
 
-  RCLCPP_INFO(nh_->get_logger(), "[CREATE] Ready.");
+  RCLCPP_INFO(get_logger(), "[CREATE] Ready.");
 }
 
 CreateDriver::~CreateDriver()
 {
-  RCLCPP_INFO(nh_->get_logger(), "[CREATE] Destruct sequence initiated.");
+  RCLCPP_INFO(get_logger(), "[CREATE] Destruct sequence initiated.");
   robot_->disconnect();
   delete robot_;
 }
@@ -191,7 +191,7 @@ void CreateDriver::powerLEDCallback(std_msgs::msg::UInt8MultiArray::UniquePtr ms
 {
   if (msg->data.size() < 1)
   {
-    RCLCPP_ERROR(nh_->get_logger(), "[CREATE] No values provided to set power LED");
+    RCLCPP_ERROR(get_logger(), "[CREATE] No values provided to set power LED");
   }
   else
   {
@@ -211,7 +211,7 @@ void CreateDriver::setASCIICallback(std_msgs::msg::UInt8MultiArray::UniquePtr ms
   bool result;
   if (msg->data.size() < 1)
   {
-    RCLCPP_ERROR(nh_->get_logger(), "[CREATE] No ASCII digits provided");
+    RCLCPP_ERROR(get_logger(), "[CREATE] No ASCII digits provided");
   }
   else if (msg->data.size() < 2)
   {
@@ -232,7 +232,7 @@ void CreateDriver::setASCIICallback(std_msgs::msg::UInt8MultiArray::UniquePtr ms
 
   if (!result)
   {
-    RCLCPP_ERROR(nh_->get_logger(), "[CREATE] ASCII character out of range [32, 126]");
+    RCLCPP_ERROR(get_logger(), "[CREATE] ASCII character out of range [32, 126]");
   }
 }
 
@@ -261,7 +261,7 @@ void CreateDriver::defineSongCallback(create_msgs::msg::DefineSong::UniquePtr ms
 {
   if (!robot_->defineSong(msg->song, msg->length, &(msg->notes.front()), &(msg->durations.front())))
   {
-    RCLCPP_ERROR_STREAM(nh_->get_logger(), "[CREATE] Failed to define song " << msg->song << " of length " << msg->length);
+    RCLCPP_ERROR_STREAM(get_logger(), "[CREATE] Failed to define song " << msg->song << " of length " << msg->length);
   }
 }
 
@@ -269,7 +269,7 @@ void CreateDriver::playSongCallback(create_msgs::msg::PlaySong::UniquePtr msg)
 {
   if (!robot_->playSong(msg->song))
   {
-    RCLCPP_ERROR_STREAM(nh_->get_logger(), "[CREATE] Failed to play song " << msg->song);
+    RCLCPP_ERROR_STREAM(get_logger(), "[CREATE] Failed to play song " << msg->song);
   }
 }
 
@@ -590,7 +590,7 @@ void CreateDriver::publishMode()
       mode_msg_.mode = mode_msg_.MODE_FULL;
       break;
     default:
-      RCLCPP_ERROR(nh_->get_logger(), "[CREATE] Unknown mode detected");
+      RCLCPP_ERROR(get_logger(), "[CREATE] Unknown mode detected");
       break;
   }
   mode_pub_->publish(mode_msg_);
@@ -632,7 +632,7 @@ void CreateDriver::spinOnce()
 {
   update();
   diagnostics_.force_update();
-  rclcpp::spin_some(nh_);
+  rclcpp::spin_some(this->shared_from_this());
 }
 
 void CreateDriver::spin()
@@ -645,7 +645,7 @@ void CreateDriver::spin()
     is_running_slowly_ = !rate.sleep();
     if (is_running_slowly_)
     {
-      RCLCPP_WARN(nh_->get_logger(), "[CREATE] Loop running slowly.");
+      RCLCPP_WARN(get_logger(), "[CREATE] Loop running slowly.");
     }
   }
 }
@@ -653,17 +653,15 @@ void CreateDriver::spin()
 int main(int argc, char** argv)
 {
   rclcpp::init(argc, argv);
-  auto nh = rclcpp::Node::make_shared("create_driver");
-
-  CreateDriver create_driver(nh);
+  auto create_driver = std::make_shared<CreateDriver>();
 
   try
   {
-    create_driver.spin();
+    create_driver->spin();
   }
   catch (std::runtime_error& ex)
   {
-    RCLCPP_FATAL_STREAM(nh->get_logger(), "[CREATE] Runtime error: " << ex.what());
+    RCLCPP_FATAL_STREAM(create_driver->get_logger(), "[CREATE] Runtime error: " << ex.what());
     return 1;
   }
   return 0;

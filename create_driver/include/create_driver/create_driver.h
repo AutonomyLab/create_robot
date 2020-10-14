@@ -58,13 +58,11 @@ static const double COVARIANCE[36] = {1e-5, 1e-5, 0.0,  0.0,  0.0,  1e-5,  // NO
                                       0.0,  0.0,  0.0,  0.0,  1e-5, 0.0,
                                       1e-5, 1e-5, 0.0,  0.0,  0.0,  1e-5};
 
-class CreateDriver
+class CreateDriver : public rclcpp::Node
 {
 private:
   create::Create* robot_;
   create::RobotModel model_;
-
-  std::shared_ptr<rclcpp::Node> nh_;
 
   rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_sub_;
   rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr debris_led_sub_;
@@ -152,7 +150,7 @@ private:
   void publishWheeldrop();
 
 public:
-  explicit CreateDriver(std::shared_ptr<rclcpp::Node> nh);
+  explicit CreateDriver();
   ~CreateDriver();
   virtual void spin();
   virtual void spinOnce();
