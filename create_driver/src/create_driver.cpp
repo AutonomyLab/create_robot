@@ -29,6 +29,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
+#include <chrono>
 #include <string>
 
 
@@ -151,6 +152,10 @@ CreateDriver::CreateDriver()
   diagnostics_.add("Driver Status", this, &CreateDriver::updateDriverDiagnostics);
 
   diagnostics_.setHardwareID(robot_model_name);
+
+  // Setup update loop.
+  const auto loop_period = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double>(1.0 / loop_hz_));
+  loop_timer_ = create_wall_timer(loop_period, std::bind(&CreateDriver::spinOnce, this));
 
   RCLCPP_INFO(get_logger(), "[CREATE] Ready.");
 }
@@ -631,23 +636,20 @@ void CreateDriver::publishWheeldrop()
 
 void CreateDriver::spinOnce()
 {
+  const auto spin_start = now();
+
   update();
   diagnostics_.force_update();
-  rclcpp::spin_some(this->shared_from_this());
-}
 
-void CreateDriver::spin()
-{
-  rclcpp::Rate rate(loop_hz_);
-  while (rclcpp::ok())
+  // Check if the spin took longer than the target loop period.
+  const auto spin_end = now();
+  const auto elapsed = spin_end - spin_start;
+  const double target_period = 1. / loop_hz_;
+  is_running_slowly_ = elapsed.seconds() > target_period;
+
+  if (is_running_slowly_)
   {
-    spinOnce();
-
-    is_running_slowly_ = !rate.sleep();
-    if (is_running_slowly_)
-    {
-      RCLCPP_WARN(get_logger(), "[CREATE] Loop running slowly.");
-    }
+    RCLCPP_WARN(get_logger(), "[CREATE] Loop running slowly.");
   }
 }
 
@@ -658,12 +660,14 @@ int main(int argc, char** argv)
 
   try
   {
-    create_driver->spin();
+    rclcpp::spin(create_driver);
   }
   catch (std::runtime_error& ex)
   {
     RCLCPP_FATAL_STREAM(create_driver->get_logger(), "[CREATE] Runtime error: " << ex.what());
     return 1;
   }
+
+  rclcpp::shutdown();
   return 0;
 }
