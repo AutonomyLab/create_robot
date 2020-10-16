@@ -285,7 +285,7 @@ bool CreateDriver::update()
   publishWheeldrop();
 
   // If last velocity command was sent longer than latch duration, stop robot
-  if (rclcpp::Clock().now() - last_cmd_vel_time_ >= rclcpp::Duration(latch_duration_))
+  if (rclcpp::Clock().now() - last_cmd_vel_time_ >= rclcpp::Duration::from_seconds(latch_duration_))
   {
     robot_->drive(0, 0);
   }
