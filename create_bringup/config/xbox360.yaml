@@ -3,17 +3,15 @@ joy_teleop:
   ros__parameters:
     piloting:
       type: topic
-      message_type: "geometry_msgs/msg/Twist"
+      interface_type: "geometry_msgs/msg/Twist"
       topic_name: cmd_vel
       deadman_buttons: []  # No deadman buttons
       axis_mappings:
-        -
+        linear-x:
           axis: 4  # Right thumb (up/down)
-          target: linear.x
           scale: 0.4
           offset: 0.0
-        -
+        angular-z:
           axis: 3  # Right thumb stick (left/right)
-          target: angular.z
           scale: 2.5
           offset: 0.0
