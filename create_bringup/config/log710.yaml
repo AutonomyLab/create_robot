@@ -5,29 +5,27 @@ joy_teleop:
   ros__parameters:
     piloting:
       type: topic
-      message_type: "geometry_msgs/msg/Twist"
+      interface_type: "geometry_msgs/msg/Twist"
       topic_name: cmd_vel
       deadman_buttons: [7]
       axis_mappings:
-        -
+        linear-x:
           axis: 3  # Right thumb stick (up/down)
-          target: linear.x
           scale: 0.4
           offset: 0.0
-        -
+        angular-z:
           axis: 2  # Right thumb stick (left/right)
-          target: angular.z
           scale: 2.5
           offset: 0.0
     dock:
       type: topic
-      message_type: "std_msgs/msg/Empty"
+      interface_type: "std_msgs/msg/Empty"
       topic_name: dock
       deadman_buttons: [3, 7]  # RT + Y
       axis_mappings: []
     undock:
       type: topic
-      message_type: "std_msgs/msg/Empty"
+      interface_type: "std_msgs/msg/Empty"
       topic_name: undock
       deadman_buttons: [1, 7]  # RT + A
       axis_mappings: []
