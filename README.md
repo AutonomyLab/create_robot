@@ -239,6 +239,8 @@ Contributing to the development and maintenance of _create\_autonomy_ is encoura
 * [Ben Wolsieffer](https://github.com/lopsided98) 
     - Added JointState publisher for wheels ([#26](https://github.com/AutonomyLab/create_autonomy/pull/26)).
     - Added Create 1 description ([#27](https://github.com/AutonomyLab/create_autonomy/pull/27)).
+* [Pedro Grojsgold](https://github.com/pgold)
+    - Ported to ROS2 (foxy) ([commit](https://github.com/AutonomyLab/create_robot/commit/198345071aa8a9df154d8490feabf5784b78da16)).
 
 [libcreate]:  https://github.com/AutonomyLab/libcreate
 [oi_spec]:  https://www.adafruit.com/datasheets/create_2_Open_Interface_Spec.pdf
