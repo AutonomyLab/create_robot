@@ -9,5 +9,5 @@
   </node>
 
   <!-- Robot description -->
-  <include if="$(var desc)" file="$(find-pkg-share create_description)/launch/roomba_400.xml" />
+  <include if="$(var desc)" file="$(find-pkg-share create_description)/launch/roomba_400.launch" />
 </launch>
