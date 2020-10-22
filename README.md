@@ -239,6 +239,8 @@ Contributing to the development and maintenance of _create\_autonomy_ is encoura
 * [Ben Wolsieffer](https://github.com/lopsided98) 
     - Added JointState publisher for wheels ([#26](https://github.com/AutonomyLab/create_autonomy/pull/26)).
     - Added Create 1 description ([#27](https://github.com/AutonomyLab/create_autonomy/pull/27)).
+* [Pedro Grojsgold](https://github.com/pgold)
+    - Ported to ROS 2 ([commit](https://github.com/AutonomyLab/create_robot/commit/198345071aa8a9df154d8490feabf5784b78da16)).
 
 [libcreate]:  https://github.com/AutonomyLab/libcreate
 [oi_spec]:  https://www.adafruit.com/datasheets/create_2_Open_Interface_Spec.pdf
@@ -257,4 +259,3 @@ Contributing to the development and maintenance of _create\_autonomy_ is encoura
 [jointstate_msg]:  http://docs.ros.org/api/sensor_msgs/html/msg/JointState.html
 [definesong_msg]:  https://github.com/autonomylab/create_robot/blob/melodic/create_msgs/msg/DefineSong.msg
 [playsong_msg]:  https://github.com/autonomylab/create_robot/blob/melodic/create_msgs/msg/PlaySong.msg
-
