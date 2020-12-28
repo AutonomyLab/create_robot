@@ -1,0 +1,29 @@
+name: Continuous Integration
+
+on:
+  # Run for any commit in origin repository
+  push:
+  # And pull requests from forks
+  pull_request:
+    branches:
+      # This avoids running the job twice for PRs from origin repository
+    - '**:**'
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-16.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Upgrade pip
+      run: |
+        sudo apt update -qq
+        sudo apt install -y python3-pip
+        pip3 install -U pip
+    - uses: ros-tooling/setup-ros@0.1.0
+      with:
+        required-ros-distributions: kinetic
+    - uses: ros-tooling/action-ros-ci@0.1.0
+      with:
+        package-name: ca_description ca_driver ca_msgs ca_tools create_autonomy
+        target-ros1-distro: kinetic
+        vcs-repo-file-url: ""
