@@ -1,4 +1,4 @@
-create_node:
+create_driver:
   ros__parameters:
     # The device path for the robot
     dev: "/dev/ttyUSB0"
