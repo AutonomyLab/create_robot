@@ -1,4 +1,4 @@
-create_node:
+create_driver:
   ros__parameters:
     # The device path for the robot
     dev: "/dev/ttyUSB0"
@@ -7,7 +7,7 @@ create_node:
     # baud: 115200
 
     # Base frame ID
-    base_frame: "base_footprint"
+    base_frame: "base_link"
 
     # Odometry frame ID
     odom_frame: "odom"
