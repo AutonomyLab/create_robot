@@ -1,0 +1,24 @@
+name: Continuous Integration
+
+on:
+  # Run for any commit in origin repository
+  push:
+  # And pull requests from forks
+  pull_request:
+    branches:
+      # This avoids running the job twice for PRs from origin repository
+    - '**:**'
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ros-tooling/setup-ros@0.1.0
+      with:
+        required-ros-distributions: melodic
+    - uses: ros-tooling/action-ros-ci@0.1.0
+      with:
+        package-name: create_bringup create_description create_driver create_msgs create_robot
+        target-ros1-distro: melodic
+        vcs-repo-file-url: ""
