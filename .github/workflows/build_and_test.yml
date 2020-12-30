@@ -14,15 +14,10 @@ jobs:
     runs-on: ubuntu-16.04
     steps:
     - uses: actions/checkout@v2
-    - name: Upgrade pip
-      run: |
-        sudo apt update -qq
-        sudo apt install -y python3-pip
-        pip3 install -U pip
-    - uses: ros-tooling/setup-ros@0.1.0
+    - uses: ros-tooling/setup-ros@v0.1
       with:
         required-ros-distributions: kinetic
-    - uses: ros-tooling/action-ros-ci@0.1.0
+    - uses: ros-tooling/action-ros-ci@v0.1
       with:
         package-name: ca_description ca_driver ca_msgs ca_tools create_autonomy
         target-ros1-distro: kinetic
