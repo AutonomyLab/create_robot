@@ -14,10 +14,10 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v2
-    - uses: ros-tooling/setup-ros@0.1.0
+    - uses: ros-tooling/setup-ros@v0.1
       with:
         required-ros-distributions: melodic
-    - uses: ros-tooling/action-ros-ci@0.1.0
+    - uses: ros-tooling/action-ros-ci@v0.1
       with:
         package-name: create_bringup create_description create_driver create_msgs create_robot
         target-ros1-distro: melodic
