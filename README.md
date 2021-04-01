@@ -82,7 +82,8 @@ $ sudo apt install python3-rosdep python3-colcon-common-extensions
 2. Clone this repo  
     ``` bash
     $ cd ~/create_ws/src
-    $ git clone https://github.com/autonomylab/create_robot.git
+    $ git clone https://github.com/autonomylab/create_robot.git --branch foxy
+    $ git clone https://github.com/AutonomyLab/libcreate
     ```
   
 3. Install dependencies  
