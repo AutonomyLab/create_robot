@@ -72,7 +72,8 @@ CreateDriver::CreateDriver()
 
   baud_ = declare_parameter<int>("baud", model_.getBaud());
 
-  robot_ = new create::Create(model_);
+  // Disable signal handler; let rclcpp handle them
+  robot_ = new create::Create(model_, false);
 
   if (!robot_->connect(dev_, baud_))
   {
