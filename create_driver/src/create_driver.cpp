@@ -120,6 +120,9 @@ CreateDriver::CreateDriver(ros::NodeHandle& nh)
   undock_sub_ = nh.subscribe("undock", 10, &CreateDriver::undockCallback, this);
   define_song_sub_ = nh.subscribe("define_song", 10, &CreateDriver::defineSongCallback, this);
   play_song_sub_ = nh.subscribe("play_song", 10, &CreateDriver::playSongCallback, this);
+  side_brush_motor_sub_ = nh.subscribe("side_brush_motor", 10, &CreateDriver::sideBrushMotor, this);
+  main_brush_motor_sub_ = nh.subscribe("main_brush_motor", 10, &CreateDriver::mainBrushMotor, this);
+  vacuum_motor_sub_ = nh.subscribe("vacuum_motor", 10, &CreateDriver::vacuumBrushMotor, this);
 
   // Setup publishers
   odom_pub_ = nh.advertise<nav_msgs::Odometry>("odom", 30);
@@ -270,6 +273,28 @@ void CreateDriver::playSongCallback(const create_msgs::PlaySongConstPtr& msg)
   if (!robot_->playSong(msg->song))
   {
     ROS_ERROR_STREAM("[CREATE] Failed to play song " << msg->song);
+  }
+}
+
+void CreateDriver::sideBrushMotor(const create_msgs::MotorSetpointConstPtr& msg)
+{
+  if (!robot_->setSideMotor(msg->duty_cycle))
+  {
+    ROS_ERROR_STREAM("[CREATE] Failed to set duty cycle " << msg->duty_cycle << " for side brush motor");
+  }
+}
+void CreateDriver::mainBrushMotor(const create_msgs::MotorSetpointConstPtr& msg)
+{
+  if (!robot_->setMainMotor(msg->duty_cycle))
+  {
+    ROS_ERROR_STREAM("[CREATE] Failed to set duty cycle " << msg->duty_cycle << " for main motor");
+  }
+}
+void CreateDriver::vacuumBrushMotor(const create_msgs::MotorSetpointConstPtr& msg)
+{
+  if (!robot_->setVacuumMotor(msg->duty_cycle))
+  {
+    ROS_ERROR_STREAM("[CREATE] Failed to set duty cycle " << msg->duty_cycle << " for vacuum motor");
   }
 }
 

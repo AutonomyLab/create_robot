@@ -32,6 +32,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "create_msgs/Bumper.h"
 #include "create_msgs/DefineSong.h"
 #include "create_msgs/PlaySong.h"
+#include "create_msgs/MotorSetpoint.h"
 
 #include "create/create.h"
 
@@ -78,7 +79,10 @@ private:
   ros::Subscriber undock_sub_;
   ros::Subscriber define_song_sub_;
   ros::Subscriber play_song_sub_;
-
+  ros::Subscriber side_brush_motor_sub_;
+  ros::Subscriber main_brush_motor_sub_;
+  ros::Subscriber vacuum_motor_sub_;
+  
   ros::Publisher odom_pub_;
   ros::Publisher clean_btn_pub_;
   ros::Publisher day_btn_pub_;
@@ -136,6 +140,9 @@ private:
   void undockCallback(const std_msgs::EmptyConstPtr& msg);
   void defineSongCallback(const create_msgs::DefineSongConstPtr& msg);
   void playSongCallback(const create_msgs::PlaySongConstPtr& msg);
+  void sideBrushMotor(const create_msgs::MotorSetpointConstPtr& msg);
+  void mainBrushMotor(const create_msgs::MotorSetpointConstPtr& msg);
+  void vacuumBrushMotor(const create_msgs::MotorSetpointConstPtr& msg);
 
   bool update();
   void updateBatteryDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat);
