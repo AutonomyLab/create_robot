@@ -32,6 +32,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "create_msgs/msg/bumper.hpp"
 #include "create_msgs/msg/define_song.hpp"
 #include "create_msgs/msg/play_song.hpp"
+#include "create_msgs/msg/motor_setpoint.hpp"
 
 #include "create/create.h"
 
@@ -75,6 +76,9 @@ private:
   rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr undock_sub_;
   rclcpp::Subscription<create_msgs::msg::DefineSong>::SharedPtr define_song_sub_;
   rclcpp::Subscription<create_msgs::msg::PlaySong>::SharedPtr play_song_sub_;
+  rclcpp::Subscription<create_msgs::msg::MotorSetpoint>::SharedPtr side_brush_motor_sub_;
+  rclcpp::Subscription<create_msgs::msg::MotorSetpoint>::SharedPtr main_brush_motor_sub_;
+  rclcpp::Subscription<create_msgs::msg::MotorSetpoint>::SharedPtr vacuum_motor_sub_;
 
   rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_pub_;
   rclcpp::Publisher<std_msgs::msg::Empty>::SharedPtr clean_btn_pub_;
@@ -135,6 +139,9 @@ private:
   void undockCallback(std_msgs::msg::Empty::UniquePtr msg);
   void defineSongCallback(create_msgs::msg::DefineSong::UniquePtr msg);
   void playSongCallback(create_msgs::msg::PlaySong::UniquePtr msg);
+  void sideBrushMotor(create_msgs::msg::MotorSetpoint::UniquePtr msg);
+  void mainBrushMotor( create_msgs::msg::MotorSetpoint::UniquePtr msg);
+  void vacuumBrushMotor(create_msgs::msg::MotorSetpoint::UniquePtr msg);
 
   bool update();
   void updateBatteryDiagnostics(diagnostic_updater::DiagnosticStatusWrapper& stat);

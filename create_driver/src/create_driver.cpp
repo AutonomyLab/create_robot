@@ -123,6 +123,9 @@ CreateDriver::CreateDriver()
   undock_sub_ = create_subscription<std_msgs::msg::Empty>("undock", 10, std::bind(&CreateDriver::undockCallback, this, std::placeholders::_1));
   define_song_sub_ = create_subscription<create_msgs::msg::DefineSong>("define_song", 10, std::bind(&CreateDriver::defineSongCallback, this, std::placeholders::_1));
   play_song_sub_ = create_subscription<create_msgs::msg::PlaySong>("play_song", 10, std::bind(&CreateDriver::playSongCallback, this, std::placeholders::_1));
+  side_brush_motor_sub_ = create_subscription<create_msgs::msg::MotorSetpoint>("side_brush_motor", 10, std::bind(&CreateDriver::sideBrushMotor, this, std::placeholders::_1));
+  main_brush_motor_sub_ = create_subscription<create_msgs::msg::MotorSetpoint>("main_brush_motor", 10, std::bind(&CreateDriver::mainBrushMotor, this, std::placeholders::_1));
+  vacuum_motor_sub_ = create_subscription<create_msgs::msg::MotorSetpoint>("vacuum_motor", 10, std::bind(&CreateDriver::vacuumBrushMotor, this, std::placeholders::_1));
 
   // Setup publishers
   odom_pub_ = create_publisher<nav_msgs::msg::Odometry>("odom", 30);
@@ -277,6 +280,28 @@ void CreateDriver::playSongCallback(create_msgs::msg::PlaySong::UniquePtr msg)
   if (!robot_->playSong(msg->song))
   {
     RCLCPP_ERROR_STREAM(get_logger(), "[CREATE] Failed to play song " << msg->song);
+  }
+}
+
+void CreateDriver::sideBrushMotor(create_msgs::msg::MotorSetpoint::UniquePtr msg)
+{
+  if (!robot_->setSideMotor(msg->duty_cycle))
+  {
+    RCLCPP_ERROR_STREAM(get_logger(), "[CREATE] Failed to set duty cycle " << msg->duty_cycle << " for side brush motor");
+  }
+}
+void CreateDriver::mainBrushMotor(create_msgs::msg::MotorSetpoint::UniquePtr msg)
+{
+  if (!robot_->setMainMotor(msg->duty_cycle))
+  {
+    RCLCPP_ERROR_STREAM(get_logger(), "[CREATE] Failed to set duty cycle " << msg->duty_cycle << " for main motor");
+  }
+}
+void CreateDriver::vacuumBrushMotor(create_msgs::msg::MotorSetpoint::UniquePtr msg)
+{
+  if (!robot_->setVacuumMotor(msg->duty_cycle))
+  {
+    RCLCPP_ERROR_STREAM(get_logger(), "[CREATE] Failed to set duty cycle " << msg->duty_cycle << " for vacuum motor");
   }
 }
 
