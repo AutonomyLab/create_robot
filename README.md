@@ -202,6 +202,9 @@ Topic       | Description   | Type
 `undock` | Switches robot to _Full_ mode giving control back to the user | [std_msgs/Empty][empty]
 `define_song` | Define a song with up to 16 notes. Each note is described by a MIDI note number and a float32 duration in seconds. The longest duration is 255/64 seconds. You can define up to 4 songs (See [OI Spec][oi_spec]) | [create_msgs/DefineSong][definesong_msg]
 `play_song` | Play a predefined song | [create_msgs/PlaySong][playsong_msg]
+`side_brush_motor` | Set duty cycle for the side brush. Accepts -1.0 to 1.0 range | [create_msg/MotorSetpoint][motorsetpoint_msg]
+`main_brush_motor` | Set duty cycle for the main brush. Accepts -1.0 to 1.0 range | [create_msg/MotorSetpoint][motorsetpoint_msg]
+`vacuum_motor` | Set duty cycle for the vacuum. Accepts 0.0 to 1.0 range | [create_msg/MotorSetpoint][motorsetpoint_msg]
 
 ## Commanding your Create
 
@@ -260,3 +263,4 @@ Contributing to the development and maintenance of _create\_autonomy_ is encoura
 [jointstate_msg]:  http://docs.ros.org/api/sensor_msgs/html/msg/JointState.html
 [definesong_msg]:  https://github.com/autonomylab/create_robot/blob/melodic/create_msgs/msg/DefineSong.msg
 [playsong_msg]:  https://github.com/autonomylab/create_robot/blob/melodic/create_msgs/msg/PlaySong.msg
+[motorsetpoint_msg]:  https://github.com/autonomylab/create_robot/blob/melodic/create_msgs/msg/MotorSetpoint.msg
