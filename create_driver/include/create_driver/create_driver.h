@@ -82,7 +82,7 @@ private:
   ros::Subscriber side_brush_motor_sub_;
   ros::Subscriber main_brush_motor_sub_;
   ros::Subscriber vacuum_motor_sub_;
-  
+
   ros::Publisher odom_pub_;
   ros::Publisher clean_btn_pub_;
   ros::Publisher day_btn_pub_;
