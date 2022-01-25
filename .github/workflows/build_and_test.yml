@@ -1,13 +1,9 @@
 name: Continuous Integration
 
 on:
-  # Run for any commit in origin repository
   push:
-  # And pull requests from forks
+    branches: ['melodic']
   pull_request:
-    branches:
-      # This avoids running the job twice for PRs from origin repository
-    - '**:**'
 
 jobs:
   build_and_test:
