@@ -160,6 +160,7 @@ $ ros2 launch create_bringup create_2.launch config:=/abs/path/to/config.yaml de
 `publish_tf`  |  Publish the transform from `odom_frame` to `base_frame` | `true`  
 `robot_model` |  The type of robot being controlled (supported values: `ROOMBA_400`, `CREATE_1` and `CREATE_2`) | `CREATE_2`
 `baud`        |  Serial baud rate | Inferred based on robot model, but is overwritten upon providing a value
+`oi_mode_workaround` | Some Roomba models incorrectly report the current OI mode in their sensor streams. Setting this to `true` will cause `libcreate` to decrement the OI mode received in the sensor stream by `1` | `false`
 
 ### Publishers
 

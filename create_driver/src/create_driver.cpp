@@ -47,6 +47,7 @@ CreateDriver::CreateDriver()
   latch_duration_ = declare_parameter<double>("latch_cmd_duration", 0.2);
   loop_hz_ = declare_parameter<double>("loop_hz", 10.0);
   publish_tf_ = declare_parameter<bool>("publish_tf", true);
+  oi_mode_workaround_ = declare_parameter<bool>("oi_mode_workaround", false);
 
   auto robot_model_name = declare_parameter<std::string>("robot_model", "CREATE_2");
   if (robot_model_name == "ROOMBA_400")
@@ -74,6 +75,10 @@ CreateDriver::CreateDriver()
 
   // Disable signal handler; let rclcpp handle them
   robot_ = new create::Create(model_, false);
+
+  // Enable/disable the OI mode reporting workaround in libcreate.
+  // https://github.com/AutonomyLab/create_robot/issues/64
+  robot_->setModeReportWorkaround(oi_mode_workaround_);
 
   if (!robot_->connect(dev_, baud_))
   {
