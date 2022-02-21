@@ -143,6 +143,7 @@ CreateDriver::CreateDriver()
   omni_char_pub_ = create_publisher<std_msgs::msg::UInt16>("ir_omni", 30);
   mode_pub_ = create_publisher<create_msgs::msg::Mode>("mode", 30);
   bumper_pub_ = create_publisher<create_msgs::msg::Bumper>("bumper", 30);
+  cliff_pub_ = create_publisher<create_msgs::msg::Cliff>("cliff", 30);
   wheeldrop_pub_ = create_publisher<std_msgs::msg::Empty>("wheeldrop", 30);
   wheel_joint_pub_ = create_publisher<sensor_msgs::msg::JointState>("joint_states", 10);
 
