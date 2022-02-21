@@ -92,6 +92,7 @@ CreateDriver::CreateDriver()
   // Set frame_id's
   mode_msg_.header.frame_id = base_frame_;
   bumper_msg_.header.frame_id = base_frame_;
+  cliff_msg_.header.frame_id = base_frame_;
   charging_state_msg_.header.frame_id = base_frame_;
   tf_odom_.header.frame_id = odom_frame_;
   tf_odom_.child_frame_id = base_frame_;
@@ -633,6 +634,16 @@ void CreateDriver::publishWheeldrop()
 {
   if (robot_->isWheeldrop())
     wheeldrop_pub_->publish(empty_msg_);
+}
+
+void CreateDriver::publishCliff()
+{
+  cliff_msg_.header.stamp = now();
+  cliff_msg_.is_cliff_left = robot_->isCliffLeft();
+  cliff_msg_.is_cliff_front_left = robot_->isCliffFrontLeft();
+  cliff_msg_.is_cliff_right = robot_->isCliffRight();
+  cliff_msg_.is_cliff_front_right = robot_->isCliffFrontRight();
+  cliff_pub_->publish(cliff_msg_);
 }
 
 void CreateDriver::spinOnce()

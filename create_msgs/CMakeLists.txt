@@ -11,6 +11,7 @@ set(msg_files
   msg/DefineSong.msg
   msg/Mode.msg
   msg/PlaySong.msg
+  msg/Cliff.msg
 )
 
 rosidl_generate_interfaces(

@@ -30,6 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "create_msgs/msg/charging_state.hpp"
 #include "create_msgs/msg/mode.hpp"
 #include "create_msgs/msg/bumper.hpp"
+#include "create_msgs/msg/cliff.hpp"
 #include "create_msgs/msg/define_song.hpp"
 #include "create_msgs/msg/play_song.hpp"
 
@@ -95,6 +96,7 @@ private:
   rclcpp::Publisher<create_msgs::msg::Bumper>::SharedPtr bumper_pub_;
   rclcpp::Publisher<std_msgs::msg::Empty>::SharedPtr wheeldrop_pub_;
   rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr wheel_joint_pub_;
+  rclcpp::Publisher<create_msgs::msg::Cliff>::SharedPtr cliff_pub_;
 
   rclcpp::TimerBase::SharedPtr loop_timer_;
 
@@ -105,6 +107,7 @@ private:
   create_msgs::msg::Mode mode_msg_;
   create_msgs::msg::ChargingState charging_state_msg_;
   create_msgs::msg::Bumper bumper_msg_;
+  create_msgs::msg::Cliff cliff_msg_;
   nav_msgs::msg::Odometry odom_msg_;
   geometry_msgs::msg::TransformStamped tf_odom_;
   rclcpp::Time last_cmd_vel_time_;
@@ -150,6 +153,7 @@ private:
   void publishMode();
   void publishBumperInfo();
   void publishWheeldrop();
+  void publishCliff();
 
 public:
   explicit CreateDriver();
