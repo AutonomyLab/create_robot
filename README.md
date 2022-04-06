@@ -243,6 +243,8 @@ Contributing to the development and maintenance of _create\_autonomy_ is encoura
     - Added Create 1 description ([#27](https://github.com/AutonomyLab/create_autonomy/pull/27)).
 * [Pedro Grojsgold](https://github.com/pgold)
     - Ported to ROS 2 ([commit](https://github.com/AutonomyLab/create_robot/commit/198345071aa8a9df154d8490feabf5784b78da16)).
+* [Josh Gadeken](https://github.com/process1183)
+    - Added parameter for [libcreate's OI Mode reporting workaround](https://github.com/AutonomyLab/libcreate/pull/67) ([#95](https://github.com/AutonomyLab/create_robot/pull/95))
 
 [libcreate]:  https://github.com/AutonomyLab/libcreate
 [oi_spec]:  https://www.adafruit.com/datasheets/create_2_Open_Interface_Spec.pdf
