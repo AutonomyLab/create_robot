@@ -130,6 +130,7 @@ private:
   double loop_hz_;
   bool publish_tf_;
   int baud_;
+  bool oi_mode_workaround_;
 
   void cmdVelCallback(geometry_msgs::msg::Twist::UniquePtr msg);
   void debrisLEDCallback(std_msgs::msg::Bool::UniquePtr msg);

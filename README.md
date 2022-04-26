@@ -160,6 +160,7 @@ $ ros2 launch create_bringup create_2.launch config:=/abs/path/to/config.yaml de
 `publish_tf`  |  Publish the transform from `odom_frame` to `base_frame` | `true`  
 `robot_model` |  The type of robot being controlled (supported values: `ROOMBA_400`, `CREATE_1` and `CREATE_2`) | `CREATE_2`
 `baud`        |  Serial baud rate | Inferred based on robot model, but is overwritten upon providing a value
+`oi_mode_workaround` | Some Roomba models incorrectly report the current OI mode in their sensor streams. Setting this to `true` will cause `libcreate` to decrement the OI mode received in the sensor stream by `1` | `false`
 
 ### Publishers
 
@@ -243,6 +244,8 @@ Contributing to the development and maintenance of _create\_autonomy_ is encoura
     - Added Create 1 description ([#27](https://github.com/AutonomyLab/create_autonomy/pull/27)).
 * [Pedro Grojsgold](https://github.com/pgold)
     - Ported to ROS 2 ([commit](https://github.com/AutonomyLab/create_robot/commit/198345071aa8a9df154d8490feabf5784b78da16)).
+* [Josh Gadeken](https://github.com/process1183)
+    - Added parameter for [libcreate's OI Mode reporting workaround](https://github.com/AutonomyLab/libcreate/pull/67) ([#95](https://github.com/AutonomyLab/create_robot/pull/95))
 
 [libcreate]:  https://github.com/AutonomyLab/libcreate
 [oi_spec]:  https://www.adafruit.com/datasheets/create_2_Open_Interface_Spec.pdf
