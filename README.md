@@ -46,7 +46,7 @@ _* Not verified. Anyone who is able to verify that this driver works or not is e
 |  Sound            | Available     |
 |  Wheeldrop        | Available     |
 |  Bumpers          | Available     |
-|  Cliff sensor     | Planned [#22](https://github.com/AutonomyLab/create_autonomy/issues/22)      |
+|  Cliff sensor     | Available     |
 |  Dirt detect      | N/A           |
 |  Omni IR sensor   | Available     |
 |  Left IR sensor   | N/A           |
@@ -173,6 +173,7 @@ $ ros2 launch create_bringup create_2.launch config:=/abs/path/to/config.yaml de
  `battery/temperature` | The temperature of the robot's battery (degrees Celsius) | [std_msgs/Int16][int16]
  `battery/voltage` | Voltage of the robot's battery (V) | [std_msgs/Float32][float32]
  `bumper` | Bumper state message (including light sensors on bumpers) | [create_msgs/Bumper][bumper_msg]
+ `cliff` | Cliff state message | [create_msgs/Cliff][cliff_msg]
  `clean_button` | 'clean' button is pressed ('play' button for Create 1) | [std_msgs/Empty][empty]
  `day_button` |  'day' button is pressed | [std_msgs/Empty][empty]
  `hour_button` | 'hour' button is pressed | [std_msgs/Empty][empty]
@@ -255,6 +256,7 @@ Contributing to the development and maintenance of _create\_autonomy_ is encoura
 [float32]:  http://docs.ros.org/api/std_msgs/html/msg/Float32.html
 [create_msgs]:  http://github.com/autonomylab/create_robot/tree/melodic
 [bumper_msg]:  https://github.com/autonomylab/create_robot/blob/melodic/create_msgs/msg/Bumper.msg
+[cliff_msg]:  https://github.com/autonomylab/create_robot/blob/foxy/create_msgs/msg/Cliff.msg
 [mode_msg]:  https://github.com/autonomylab/create_robot/blob/melodic/create_msgs/msg/Mode.msg
 [chargingstate_msg]:  https://github.com/autonomylab/create_robot/blob/melodic/create_msgs/msg/ChargingState.msg
 [jointstate_msg]:  http://docs.ros.org/api/sensor_msgs/html/msg/JointState.html
