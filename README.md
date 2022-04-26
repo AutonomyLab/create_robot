@@ -40,7 +40,7 @@ _* Not verified. Anyone who is able to verify that this driver works or not is e
 |  Dock demo        | Available     |
 |  Drive wheels     | N/A           |
 |  Drive (v,w)      | Available     |
-|  Brush motors     | Planned [#15](https://github.com/AutonomyLab/create_autonomy/issues/15) |
+|  Brush motors     | Available     |
 |  LEDs             | Available     |
 |  Digit LEDs       | Available     |
 |  Sound            | Available     |
