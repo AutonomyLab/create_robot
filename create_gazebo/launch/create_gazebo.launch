@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<launch>
+
+    <arg name="create_version" default="1"/>
+    <arg name="gazebo_gui" default="true"/>
+
+    <arg name="debug" default="false" />
+    <arg name="headless" default="false" />
+    <arg name="paused" default="false" />
+    <arg name="use_sim_time" default="true" />
+    <arg name="gui" default="true" />
+
+    <arg name="x_pos" default="0" />
+    <arg name="y_pos" default="0" />
+
+
+    <include file="$(find create_description)/launch/create_$(arg create_version).launch" />
+
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model create_$(arg create_version) -x $(arg x_pos) -y $(arg y_pos) -z 0.05" />
+
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <!-- <arg name="world_name" value="$(arg world_name)" /> -->
+        <arg name="debug" value="$(arg debug)" />
+        <arg name="headless" value="$(arg headless)" />
+        <arg name="paused" value="$(arg paused)" />
+        <arg name="use_sim_time" value="$(arg use_sim_time)" />
+        <arg name="gui" value="$(arg gazebo_gui)" />
+    </include>
+
+    <arg name="bringup_package_path" value="$(find create_gazebo)" />
+    <arg name="config" default="default" />
+    <arg name="output" default="screen" />
+    <arg name="respawn" default="false" />
+
+    <!-- RVIZ GUI -->
+    <node respawn="$(arg respawn)" name="$(anon rviz)" pkg="rviz" type="rviz" args="-d $(arg bringup_package_path)/rviz/$(arg config).rviz" output="$(arg output)" />
+
+
+
+</launch>
