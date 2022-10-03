@@ -12,6 +12,7 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <exec_depend>create_description</exec_depend>
+  <exec_depend>turtlebot3_gazebo</exec_depend>
 
   <export>
 
