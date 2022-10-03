@@ -110,14 +110,14 @@
             <horizontal>
               <samples>10</samples>
               <resolution>1</resolution>
-              <min_angle>${-6.28319/2}</min_angle>
-              <max_angle>${6.28319/2}</max_angle>
+              <min_angle>${-0.14835*2}</min_angle>
+              <max_angle>${0.14835*2}</max_angle>
             </horizontal>
             <vertical>
               <samples>10</samples>
               <resolution>1</resolution>
-              <min_angle>-0.14835</min_angle>
-              <max_angle>0.14835</max_angle>
+              <min_angle>-0.05</min_angle>
+              <max_angle>0.05</max_angle>
             </vertical>
           </scan>
           <range>
@@ -133,7 +133,7 @@
           <topicName>omni_ir</topicName>
           <frameName>omni_ir_link</frameName>
           <radiation>INFRARED</radiation>
-          <fov>6.28319</fov>
+          <fov>${0.14835*2}</fov>
         </plugin>
       </sensor>
     </gazebo>

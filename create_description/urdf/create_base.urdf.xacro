@@ -260,6 +260,6 @@
     <xacro:sim_create_cliff_sensors/>
     <xacro:sim_imu/>
     <xacro:sim_bumper/>
-    <!-- <xacro:sim_ir/> -->
+    <xacro:sim_ir/>
   </xacro:macro>
 </robot>
