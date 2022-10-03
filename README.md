@@ -243,6 +243,23 @@ $ roslaunch create_bringup joy_teleop.launch [joy_config:=xbox360]
 
 There exists configuration files for the [Xbox 360 wired controller](https://www.amazon.ca/Microsoft-Xbox-360-Wired-Controller/dp/B003ZSN600) and the [Logitech F710 controller](http://gaming.logitech.com/en-ca/product/f710-wireless-gamepad). You can adapt these files for your preferred joystick configuration.
 
+## Simulation
+
+The package `create_gazebo` has a launch file with a minimal simulation example of the Create robots.
+
+```bash
+$ roslaunch create_gazebo create_gazebo.launch [gazebo_gui:=true] [create_version:=2] [rviz:=true]
+```
+
+#### Launch file arguments
+
+- **create_version** - Version of create robot to simulate. Default: `1`
+- **gazebo_gui** - Show gazebo simulation in gui. Default: `true`
+- **rviz** - Open rviz to visualize robot. Default: `false`
+- **x_pos** - position in x-axis to spawn robot. Default: `0`
+- **y_pos** - position in y-axis to spawn robot. Default: `0`
+- **world_name** - path to world file. Default: `$(find turtlebot3_gazebo)/worlds/turtlebot3_house.world`
+
 ## Contributions
 
 Contributing to the development and maintenance of _create_autonomy_ is encouraged. Feel free to open issues or create pull requests on [GitHub](https://github.com/autonomylab/create_robot).
