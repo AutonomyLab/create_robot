@@ -33,7 +33,7 @@
     </joint>
   </xacro:macro>
 
-  <xacro:macro name="create_base" params="diffdrive_update_rate:=40 wheel_separation wheel_radius:=0.036 wheel_width:=0.024 wheel_torque:=1.0 wheel_accel:=1.8 mass_kg:=3.5 base_diameter *mesh">
+  <xacro:macro name="create_base" params="diffdrive_update_rate:=40 wheel_separation wheel_radius:=0.036 wheel_width:=0.024 wheel_torque:=1.0 wheel_accel:=1.8 mass_kg:=3.5 base_diameter version *mesh">
     <xacro:include filename="$(find create_description)/urdf/create_base_gazebo.urdf.xacro" />
 
     <link name="base_footprint">
@@ -159,19 +159,13 @@
       <collision name="bumper_link_collision">
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
-          <box size="0.1 0.001 0.001"/>
+          <mesh filename="package://create_description/meshes/bumper_${version}.dae"/>
         </geometry>
       </collision>
-      <visual>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <geometry>
-          <box size="0.1 0.001 0.001"/>
-        </geometry>
-      </visual>
     </link>
 
     <joint name="bumper_joint" type="fixed">
-      <origin xyz="${base_diameter/2} 0 0" rpy="0 0 0" />
+      <origin xyz="-0.0025 0 0" rpy="0 0 0" />
       <parent link="base_link" />
       <child link="bumper_link" />
       <axis xyz="0 0 0" />
@@ -266,6 +260,6 @@
     <xacro:sim_create_cliff_sensors/>
     <xacro:sim_imu/>
     <xacro:sim_bumper/>
-    <xacro:sim_ir/>
+    <!-- <xacro:sim_ir/> -->
   </xacro:macro>
 </robot>

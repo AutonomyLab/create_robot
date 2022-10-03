@@ -86,7 +86,7 @@
     <gazebo reference="bumper_link">
       <sensor name="sim_bumper" type="contact">
         <alwaysOn>true</alwaysOn>
-        <updateRate>20.0</updateRate>
+        <updateRate>1000.0</updateRate>
         <material>Gazebo/Red</material>
         <contact>
           <collision>base_footprint_fixed_joint_lump__bumper_link_collision_collision_2</collision>
