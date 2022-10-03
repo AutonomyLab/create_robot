@@ -4,28 +4,28 @@
 
   <xacro:macro name="create_wheel" params="prefix y_offset wheel_radius wheel_width">
     <link name="${prefix}_wheel_link">
-    <inertial>
-      <origin xyz="0 0 0" />
-      <mass value="0.01" />
-      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001" />
-    </inertial>
+      <inertial>
+        <origin xyz="0 0 0" />
+        <mass value="0.01" />
+        <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001" />
+      </inertial>
 
-    <visual>
-      <origin xyz="0 0 0" rpy="0 ${PI/2} ${PI/2}" />
-      <geometry>
-        <cylinder radius="${wheel_radius}" length="${wheel_width}" />
-      </geometry>
-    </visual>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 ${PI/2} ${PI/2}" />
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_width}" />
+        </geometry>
+      </visual>
 
-    <collision>
-      <origin xyz="0 0 0" rpy="0 ${PI/2} ${PI/2}" />
-      <geometry>
-        <cylinder radius="${wheel_radius}" length="${wheel_width}" />
-      </geometry>
-    </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 ${PI/2} ${PI/2}" />
+        <geometry>
+          <cylinder radius="${wheel_radius}" length="${wheel_width}" />
+        </geometry>
+      </collision>
     </link>
 
-   <joint name="${prefix}_wheel_joint" type="continuous">
+    <joint name="${prefix}_wheel_joint" type="continuous">
       <origin xyz="0 ${y_offset} 0.015" rpy="0 0 0" />
       <parent link="base_link" />
       <child link="${prefix}_wheel_link" />
@@ -37,82 +37,82 @@
     <xacro:include filename="$(find create_description)/urdf/create_base_gazebo.urdf.xacro" />
 
     <link name="base_footprint">
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <geometry>
-        <box size="0.001 0.001 0.001" />
-      </geometry>
-      <material name="Green" />
-    </visual>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="0.001 0.001 0.001" />
+        </geometry>
+        <material name="Green" />
+      </visual>
 
-    <collision>
-      <origin xyz="0 0 0.017" rpy="0 0 0" />
-      <geometry>
-        <box size="0.001 0.001 0.001" />
-      </geometry>
-    </collision>
+      <collision>
+        <origin xyz="0 0 0.017" rpy="0 0 0" />
+        <geometry>
+          <box size="0.001 0.001 0.001" />
+        </geometry>
+      </collision>
     </link>
 
     <link name="base_link">
-    <inertial>
-      <mass value="2" />
-      <origin xyz="0 0 0.0" />
-      <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.5" />
-    </inertial>
+      <inertial>
+        <mass value="2" />
+        <origin xyz="0 0 0.0" />
+        <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.5" />
+      </inertial>
 
-    <visual>
-      <origin xyz=" 0 0 0.0308" rpy="0 0 0" />
-      <geometry>
-        <xacro:insert_block name="mesh" />
-      </geometry>
-    </visual>
+      <visual>
+        <origin xyz=" 0 0 0.0308" rpy="0 0 0" />
+        <geometry>
+          <xacro:insert_block name="mesh" />
+        </geometry>
+      </visual>
 
-    <collision>
-      <origin xyz="0.0 0.0 0.0308" rpy="0 0 0" />
-      <geometry>
-        <cylinder length="0.0611632" radius="0.16495" />
-      </geometry>
-    </collision>
+      <collision>
+        <origin xyz="0.0 0.0 0.0308" rpy="0 0 0" />
+        <geometry>
+          <cylinder length="0.0611632" radius="0.16495" />
+        </geometry>
+      </collision>
     </link>
 
     <link name="wall_sensor_link">
-    <inertial>
-      <mass value="0.01" />
-      <origin xyz="0 0 0" />
-      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001" />
-    </inertial>
+      <inertial>
+        <mass value="0.01" />
+        <origin xyz="0 0 0" />
+        <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001" />
+      </inertial>
     </link>
 
     <link name="left_cliff_sensor_link">
-    <inertial>
-      <mass value="0.01" />
-      <origin xyz="0 0 0" />
-      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001" />
-    </inertial>
+      <inertial>
+        <mass value="0.01" />
+        <origin xyz="0 0 0" />
+        <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001" />
+      </inertial>
     </link>
 
     <link name="right_cliff_sensor_link">
-    <inertial>
-      <mass value="0.01" />
-      <origin xyz="0 0 0" />
-      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001" />
-    </inertial>
+      <inertial>
+        <mass value="0.01" />
+        <origin xyz="0 0 0" />
+        <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001" />
+      </inertial>
     </link>
 
     <link name="leftfront_cliff_sensor_link">
-    <inertial>
-      <mass value="0.01" />
-      <origin xyz="0 0 0" />
-      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01" />
-    </inertial>
+      <inertial>
+        <mass value="0.01" />
+        <origin xyz="0 0 0" />
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01" />
+      </inertial>
     </link>
 
     <link name="rightfront_cliff_sensor_link">
-    <inertial>
-      <mass value="0.01" />
-      <origin xyz="0 0 0" />
-      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001" />
-    </inertial>
+      <inertial>
+        <mass value="0.01" />
+        <origin xyz="0 0 0" />
+        <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001" />
+      </inertial>
     </link>
 
     <joint name="base_footprint_joint" type="fixed">
@@ -154,12 +154,45 @@
     <xacro:create_wheel prefix="left" y_offset="${wheel_separation / 2}" wheel_radius="${wheel_radius}" wheel_width="${wheel_width}"/>
     <xacro:create_wheel prefix="right" y_offset="${wheel_separation / -2}" wheel_radius="${wheel_radius}" wheel_width="${wheel_width}"/>
 
+    <!-- bumper sensor link -->
+    <link name="bumper_link">
+      <collision name="bumper_link_collision">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.1 0.001 0.001"/>
+        </geometry>
+      </collision>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.1 0.001 0.001"/>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="bumper_joint" type="fixed">
+      <origin xyz="${base_diameter/2} 0 0" rpy="0 0 0" />
+      <parent link="base_link" />
+      <child link="bumper_link" />
+      <axis xyz="0 0 0" />
+    </joint>
+
+    <!-- omni_ir sensor link -->
+    <link name="omni_ir_link">
+    </link>
+
+    <joint name="omni_ir_joint" type="fixed">
+      <origin xyz="${base_diameter/2 - 0.025} 0 0.0775" rpy="0 0 0" />
+      <parent link="base_link" />
+      <child link="omni_ir_link" />
+      <axis xyz="0 0 0" />
+    </joint>
+
     <!--<link name="rear_wheel_link">
     <inertial>
       <origin xyz="0 0 0"/>
       <mass value="0.001" />
-      <inertia ixx="0.0001" ixy="0.0" ixz="0.0"
-        iyy="0.0001" iyz="0.0" izz="0.0001" />
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001" />
     </inertial>
 
     <visual>
@@ -184,25 +217,25 @@
     </joint>-->
 
     <link name="front_wheel_link">
-    <inertial>
-      <origin xyz="0 0 0" />
-      <mass value="0.01" />
-      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001" />
-    </inertial>
+      <inertial>
+        <origin xyz="0 0 0" />
+        <mass value="0.01" />
+        <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001" />
+      </inertial>
 
-    <visual>
-      <origin xyz="0 0 0" rpy="0 ${PI/2} ${PI/2}" />
-      <geometry>
-        <sphere radius="0.018" />
-      </geometry>
-    </visual>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 ${PI/2} ${PI/2}" />
+        <geometry>
+          <sphere radius="0.018" />
+        </geometry>
+      </visual>
 
-    <collision>
-      <origin xyz="0 0 0" rpy="0 ${PI/2} ${PI/2}" />
-      <geometry>
-        <sphere radius="0.018" />
-      </geometry>
-    </collision>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 ${PI/2} ${PI/2}" />
+        <geometry>
+          <sphere radius="0.018" />
+        </geometry>
+      </collision>
     </link>
 
     <!-- fixed because there's no transmission -->
@@ -220,11 +253,11 @@
       <child link="gyro_link" />
     </joint>
     <link name="gyro_link">
-    <inertial>
-      <mass value="0.001" />
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.000001" iyz="0" izz="0.0001" />
-    </inertial>
+      <inertial>
+        <mass value="0.001" />
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.000001" iyz="0" izz="0.0001" />
+      </inertial>
     </link>
 
     <!-- Simulation sensors -->
@@ -232,5 +265,7 @@
     <xacro:sim_create_wall_sensor/>
     <xacro:sim_create_cliff_sensors/>
     <xacro:sim_imu/>
+    <xacro:sim_bumper/>
+    <xacro:sim_ir/>
   </xacro:macro>
 </robot>

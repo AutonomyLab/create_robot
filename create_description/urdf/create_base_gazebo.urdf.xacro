@@ -82,6 +82,63 @@
     </gazebo>
   </xacro:macro>
 
+  <xacro:macro name="sim_bumper">
+    <gazebo reference="bumper_link">
+      <sensor name="sim_bumper" type="contact">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>20.0</updateRate>
+        <material>Gazebo/Red</material>
+        <contact>
+          <collision>base_footprint_fixed_joint_lump__bumper_link_collision_collision_2</collision>
+        </contact>
+        <plugin name="gazebo_ros_bumper_controller" filename="libgazebo_ros_bumper.so">
+          <bumperTopicName>bumper</bumperTopicName>
+          <frameName>bumper_link</frameName>
+        </plugin>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+
+  <xacro:macro name="sim_ir">
+    <gazebo reference="omni_ir_link">
+      <sensor type="ray" name="TeraRanger">
+        <pose>0 0 0 0 0 0</pose>
+        <visualize>true</visualize>
+        <update_rate>50</update_rate>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>10</samples>
+              <resolution>1</resolution>
+              <min_angle>${-6.28319/2}</min_angle>
+              <max_angle>${6.28319/2}</max_angle>
+            </horizontal>
+            <vertical>
+              <samples>10</samples>
+              <resolution>1</resolution>
+              <min_angle>-0.14835</min_angle>
+              <max_angle>0.14835</max_angle>
+            </vertical>
+          </scan>
+          <range>
+            <min>0.01</min>
+            <max>2</max>
+            <resolution>0.02</resolution>
+          </range>
+        </ray>
+        <plugin filename="libgazebo_ros_range.so" name="gazebo_ros_range">
+          <gaussianNoise>0.005</gaussianNoise>
+          <alwaysOn>true</alwaysOn>
+          <updateRate>50</updateRate>
+          <topicName>omni_ir</topicName>
+          <frameName>omni_ir_link</frameName>
+          <radiation>INFRARED</radiation>
+          <fov>6.28319</fov>
+        </plugin>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+
   <xacro:macro name="sim_create_wall_sensor">
     <gazebo reference="wall_sensor_link">
       <sensor type="ray" name="wall_sensor">

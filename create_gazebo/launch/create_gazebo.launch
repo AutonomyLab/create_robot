@@ -8,10 +8,13 @@
     <arg name="headless" default="false" />
     <arg name="paused" default="false" />
     <arg name="use_sim_time" default="true" />
-    <arg name="gui" default="true" />
+
+    <arg name="rviz" default="false"/>
 
     <arg name="x_pos" default="0" />
     <arg name="y_pos" default="0" />
+
+    <arg name="world_name" default="$(find turtlebot3_gazebo)/worlds/turtlebot3_house.world"/>
 
 
     <include file="$(find create_description)/launch/create_$(arg create_version).launch" />
@@ -19,7 +22,7 @@
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model create_$(arg create_version) -x $(arg x_pos) -y $(arg y_pos) -z 0.05" />
 
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
-        <!-- <arg name="world_name" value="$(arg world_name)" /> -->
+        <arg name="world_name" value="$(arg world_name)" />
         <arg name="debug" value="$(arg debug)" />
         <arg name="headless" value="$(arg headless)" />
         <arg name="paused" value="$(arg paused)" />
@@ -33,8 +36,8 @@
     <arg name="respawn" default="false" />
 
     <!-- RVIZ GUI -->
-    <node respawn="$(arg respawn)" name="$(anon rviz)" pkg="rviz" type="rviz" args="-d $(arg bringup_package_path)/rviz/$(arg config).rviz" output="$(arg output)" />
-
-
+    <group if="$(arg rviz)">
+        <node respawn="$(arg respawn)" name="$(anon rviz)" pkg="rviz" type="rviz" args="-d $(arg bringup_package_path)/rviz/$(arg config).rviz" output="$(arg output)" />
+    </group>
 
 </launch>
