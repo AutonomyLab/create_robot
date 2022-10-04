@@ -28,7 +28,7 @@ This package wraps the C++ library [libcreate][libcreate], which uses iRobot's [
 | Roomba 800 Series |  Yes + |
 | Roomba 900 Series |  No *  |
 
-_+ Verified by third-party. Please note [Odometry Issue #28](https://github.com//create_autonomy/issues/32)_
+_+ Verified by third-party. Please note [Odometry Issue #28](https://github.com//create_robot/issues/32)_
 _* Not verified. Anyone who is able to verify that this driver works or not is encouraged to contact [Jacob](https://jacobperron.ca) with their findings or open an issue._
 
 ## Features
@@ -36,8 +36,8 @@ _* Not verified. Anyone who is able to verify that this driver works or not is e
 |  Feature          |  Status       |
 |-------------------|---------------|
 |  Odometry         | Available     |
-|  Safe mode        | Planned [#13](https://github.com/AutonomyLab/create_autonomy/issues/13) |
-|  Clean demo       | Planned [#14](https://github.com/AutonomyLab/create_autonomy/issues/14) |
+|  Safe mode        | Planned [#13](https://github.com/AutonomyLab/create_robot/issues/13) |
+|  Clean demo       | Planned [#14](https://github.com/AutonomyLab/create_robot/issues/14) |
 |  Dock demo        | Available     |
 |  Drive wheels     | N/A           |
 |  Drive (v,w)      | Available     |
@@ -47,7 +47,7 @@ _* Not verified. Anyone who is able to verify that this driver works or not is e
 |  Sound            | Available     |
 |  Wheeldrop        | Available     |
 |  Bumpers          | Available     |
-|  Cliff sensor     | Planned [#22](https://github.com/AutonomyLab/create_autonomy/issues/22)      |
+|  Cliff sensor     | Planned [#22](https://github.com/AutonomyLab/create_robot/issues/22)      |
 |  Dirt detect      | N/A           |
 |  Omni IR sensor   | Available     |
 |  Left IR sensor   | N/A           |
@@ -233,17 +233,17 @@ There exists configuration files for the [Xbox 360 wired controller](https://www
 
 ## Contributions
 
-Contributing to the development and maintenance of _create\_autonomy_ is encouraged. Feel free to open issues or create pull requests on [GitHub](https://github.com/autonomylab/create_robot).
+Contributing to the development and maintenance of _create\_robot_ is encouraged. Feel free to open issues or create pull requests on [GitHub](https://github.com/autonomylab/create_robot).
 
 ### Contributors
 
 * [Michael Browne](http://brownem.engineer/)
     - Confirms driver works with Roomba 700 and 800 series.
 * [Clyde McQueen](https://github.com/clydemcqueen)
-    - Added support for sound ([#37](https://github.com/AutonomyLab/create_autonomy/pull/37)).
+    - Added support for sound ([#37](https://github.com/AutonomyLab/create_robot/pull/37)).
 * [Ben Wolsieffer](https://github.com/lopsided98) 
-    - Added JointState publisher for wheels ([#26](https://github.com/AutonomyLab/create_autonomy/pull/26)).
-    - Added Create 1 description ([#27](https://github.com/AutonomyLab/create_autonomy/pull/27)).
+    - Added JointState publisher for wheels ([#26](https://github.com/AutonomyLab/create_robot/pull/26)).
+    - Added Create 1 description ([#27](https://github.com/AutonomyLab/create_robot/pull/27)).
 
 [libcreate]:  https://github.com/AutonomyLab/libcreate
 [oi_spec]:  https://www.adafruit.com/datasheets/create_2_Open_Interface_Spec.pdf
