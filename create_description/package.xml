@@ -2,7 +2,7 @@
 <package format="2">
   <name>create_description</name>
   <version>1.3.0</version>
-  <description>Robot URDF descriptions for create_autonomy</description>
+  <description>Robot URDF descriptions for create_robot</description>
 
   <maintainer email="jacob@openrobotics.org">Jacob Perron</maintainer>
 
