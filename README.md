@@ -177,7 +177,7 @@ $ ros2 launch create_bringup create_2.launch config:=/abs/path/to/config.yaml de
  `cliff` | Cliff state message | [create_msgs/msg/Cliff][cliff_msg]
  `clean_button` | 'clean' button is pressed ('play' button for Create 1) | [std_msgs/msg/Empty][empty]
  `day_button` |  'day' button is pressed | [std_msgs/msg/Empty][empty]
- `hour_button` | 'hour' button is pressed | [std_msgs/msg/Empty[empty]
+ `hour_button` | 'hour' button is pressed | [std_msgs/msg/Empty][empty]
  `minute_button` | 'minute' button is pressed | [std_msgs/msg/Empty][empty]
  `dock_button` | 'dock' button is pressed ('advance' button for Create 1) | [std_msgs/msg/Empty][empty]
  `spot_button` | 'spot' button is pressed | [std_msgs/msg/Empty][empty]
