@@ -207,7 +207,7 @@ Topic       | Description   | Type
 
 ## Commanding your Create
 
-You can move the robot around by sending [geometry_msgs/Twist][twist] messages to the topic `cmd_vel`:
+You can move the robot around by sending [geometry_msgs/msg/Twist Message][twist] messages to the topic `cmd_vel`:
 
 ```
 linear.x  (+)     Move forward (m/s)
