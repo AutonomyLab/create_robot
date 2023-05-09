@@ -15,6 +15,7 @@
         <odometryTopic>odom</odometryTopic>
         <odometryFrame>odom</odometryFrame>
         <robotBaseFrame>base_footprint</robotBaseFrame>
+        <publishWheelJointState>true</publishWheelJointState>
       </plugin>
 
       <plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
@@ -78,6 +79,23 @@
         <xyzOffsets>0 0 0</xyzOffsets>
         <rpyOffsets>0 0 0</rpyOffsets>
       </plugin>
+    </gazebo>
+  </xacro:macro>
+
+  <xacro:macro name="sim_bumper">
+    <gazebo reference="bumper_link">
+      <sensor name="sim_bumper" type="contact">
+        <alwaysOn>true</alwaysOn>
+        <updateRate>1000.0</updateRate>
+        <material>Gazebo/Red</material>
+        <contact>
+          <collision>base_footprint_fixed_joint_lump__bumper_link_collision_collision_2</collision>
+        </contact>
+        <plugin name="gazebo_ros_bumper_controller" filename="libgazebo_ros_bumper.so">
+          <bumperTopicName>bumper</bumperTopicName>
+          <frameName>bumper_link</frameName>
+        </plugin>
+      </sensor>
     </gazebo>
   </xacro:macro>
 
