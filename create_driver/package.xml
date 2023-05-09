@@ -4,13 +4,13 @@
   <version>2.0.0</version>
   <description>ROS driver for iRobot's Create and Roomba platforms, based on libcreate</description>
 
-  <maintainer email="jacob@openrobotics.org">Jacob Perron</maintainer>
+  <maintainer email="jacobmperron@gmail.com">Jacob Perron</maintainer>
 
   <license>BSD</license>
 
   <url type="website">http://wiki.ros.org/create_driver</url>
 
-  <author email="jacob@openrobotics.org">Jacob Perron</author>
+  <author email="jacobmperron@gmail.com">Jacob Perron</author>
 
   <buildtool_depend>catkin</buildtool_depend>
 
