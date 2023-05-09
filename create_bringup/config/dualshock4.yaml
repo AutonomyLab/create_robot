@@ -1,0 +1,45 @@
+# DualShock 4 controller
+# Check Dualshock 4 mapping table for corresponding number for each button
+# Deadman is enable button
+/joy_teleop:
+  ros__parameters:
+    slow:
+      type: topic
+      topic_name: cmd_vel
+      interface_type: geometry_msgs/msg/Twist
+      deadman_buttons: [6] # L2 as Button
+      axis_mappings:
+        angular-z:
+          axis: 0
+          offset: 0
+          scale: 1.2
+        linear-x:
+          axis: 1
+          offset: 0
+          scale: 0.2
+    fast:
+      type: topic
+      topic_name: cmd_vel
+      interface_type: geometry_msgs/msg/Twist
+      deadman_buttons: [7] # R2 as Button
+      axis_mappings:
+        angular-z:
+          axis: 0
+          offset: 0
+          scale: 2.4
+        linear-x:
+          axis: 1
+          offset: 0
+          scale: 0.4
+    dock:
+      type: topic
+      topic_name: dock
+      interface_type: std_msgs/msg/Empty
+      deadman_buttons: [8] # Share Button
+      message_value: []
+    undock:
+      type: topic
+      topic_name: undock
+      interface_type: std_msgs/msg/Empty
+      deadman_buttons: [9] # Option Button
+      message_value: []
