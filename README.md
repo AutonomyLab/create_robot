@@ -1,6 +1,6 @@
 # create_robot
 
-[ROS2](https://docs.ros.org/en/foxy/) Foxy driver for iRobot [Create 1 and 2](http://www.irobot.com/About-iRobot/STEM/Create-2.aspx).
+[ROS 2](https://docs.ros.org/en/foxy/) driver for iRobot [Create 1 and 2](http://www.irobot.com/About-iRobot/STEM/Create-2.aspx).
 This package wraps the C++ library [libcreate][libcreate], which uses iRobot's [Open Interface Specification][oi_spec].
 
 <!--[](* Documentation: TODO)-->
