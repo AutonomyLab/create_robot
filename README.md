@@ -63,7 +63,7 @@ _* Not verified. Anyone who is able to verify that this driver works or not is e
 #### Prerequisites
 
 * Internet connection
-* [ROS2](https://index.ros.org/doc/ros2/Installation) _Foxy_
+* [ROS 2](https://index.ros.org/doc/ros2/Installation) _Foxy_
 * Ubuntu packages: `python3-rosdep`, `python3-colcon-common-extensions`
 
 ``` bash
