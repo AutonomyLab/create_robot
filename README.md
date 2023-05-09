@@ -10,8 +10,9 @@ This package wraps the C++ library [libcreate][libcreate], which uses iRobot's [
 
 ## Build Status
 
-TravisCI (Ubuntu _Bionic_, ROS _Melodic_)
-[![Build Status](https://travis-ci.com/autonomylab/create_robot.svg?branch=melodic)](https://travis-ci.com/autonomylab/create_robot)
+- ROS Melodic ![](https://github.com/autonomylab/create_robot/workflows/Continuous%20Integration/badge.svg?branch=melodic)
+- ROS Noetic ![](https://github.com/autonomylab/create_robot/workflows/Continuous%20Integration/badge.svg?branch=noetic)
+- ROS Foxy ![](https://github.com/autonomylab/create_robot/workflows/Continuous%20Integration/badge.svg?branch=foxy)
 
 ## Supported Robots
 
