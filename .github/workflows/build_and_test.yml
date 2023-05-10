@@ -7,7 +7,7 @@ on:
 
 jobs:
   build_and_test:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
     - uses: ros-tooling/setup-ros@v0.2
