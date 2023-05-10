@@ -2,18 +2,18 @@ name: Continuous Integration
 
 on:
   push:
-    branches: ['melodic']
+    branches: ['noetic']
   pull_request:
 
 jobs:
   build_and_test:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
     - uses: ros-tooling/setup-ros@v0.2
       with:
-        required-ros-distributions: melodic
+        required-ros-distributions: noetic
     - uses: ros-tooling/action-ros-ci@v0.2
       with:
         package-name: create_bringup create_description create_driver create_msgs create_robot
-        target-ros1-distro: melodic
+        target-ros1-distro: noetic
