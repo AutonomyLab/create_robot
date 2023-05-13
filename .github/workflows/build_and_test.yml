@@ -13,6 +13,7 @@ jobs:
     - uses: ros-tooling/setup-ros@v0.6
       with:
         required-ros-distributions: foxy
+        use-ros2-testing: true
     - uses: ros-tooling/action-ros-ci@v0.3
       with:
         package-name: create_bringup create_description create_driver create_msgs create_robot
