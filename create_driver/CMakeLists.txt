@@ -40,6 +40,11 @@ ament_target_dependencies(${PROJECT_NAME}
 )
 
 if(BUILD_TESTING)
+  # Skip copyright lint and uncrustify
+  set(ament_cmake_copyright_FOUND TRUE)
+  set(ament_cmake_uncrustify_FOUND TRUE)
+  # Set language to C++, otherwise cppcheck assumes header file with .h is C
+  set(ament_cmake_cppcheck_LANGUAGE c++)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
 endif()
