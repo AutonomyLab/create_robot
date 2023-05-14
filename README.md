@@ -10,9 +10,9 @@ This package wraps the C++ library [libcreate][libcreate], which uses iRobot's [
 
 ## Build Status
 
-- ROS Melodic ![](https://github.com/autonomylab/create_robot/workflows/Continuous%20Integration/badge.svg?branch=melodic)
-- ROS Noetic ![](https://github.com/autonomylab/create_robot/workflows/Continuous%20Integration/badge.svg?branch=noetic)
-- ROS Foxy ![](https://github.com/autonomylab/create_robot/workflows/Continuous%20Integration/badge.svg?branch=foxy)
+- ROS Melodic (branch: `melodic`) ![](https://github.com/autonomylab/create_robot/workflows/Continuous%20Integration/badge.svg?branch=melodic)
+- ROS Noetic (branch: `noetic`) ![](https://github.com/autonomylab/create_robot/workflows/Continuous%20Integration/badge.svg?branch=noetic)
+- ROS Foxy (branch: `foxy`) ![](https://github.com/autonomylab/create_robot/workflows/Continuous%20Integration/badge.svg?branch=foxy)
 
 ## Supported Robots
 
