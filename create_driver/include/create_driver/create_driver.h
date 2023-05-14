@@ -25,8 +25,11 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef CREATE_DRIVER_CREATE_DRIVER_H
-#define CREATE_DRIVER_CREATE_DRIVER_H
+
+#ifndef CREATE_DRIVER__CREATE_DRIVER_H_
+#define CREATE_DRIVER__CREATE_DRIVER_H_
+#include <string>
+
 #include "create_msgs/msg/charging_state.hpp"
 #include "create_msgs/msg/mode.hpp"
 #include "create_msgs/msg/bumper.hpp"
@@ -37,21 +40,19 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "create/create.h"
 
-#include <diagnostic_updater/diagnostic_updater.hpp>
-#include <geometry_msgs/msg/transform_stamped.hpp>
-#include <geometry_msgs/msg/twist.hpp>
-#include <nav_msgs/msg/odometry.hpp>
-#include <rclcpp/rclcpp.hpp>
-#include <sensor_msgs/msg/joint_state.hpp>
-#include <std_msgs/msg/bool.hpp>
-#include <std_msgs/msg/empty.hpp>
-#include <std_msgs/msg/float32.hpp>
-#include <std_msgs/msg/int16.hpp>
-#include <std_msgs/msg/u_int16.hpp>
-#include <std_msgs/msg/u_int8_multi_array.hpp>
-#include <tf2_ros/transform_broadcaster.h>
-
-#include <string>
+#include "diagnostic_updater/diagnostic_updater.hpp"
+#include "geometry_msgs/msg/transform_stamped.hpp"
+#include "geometry_msgs/msg/twist.hpp"
+#include "nav_msgs/msg/odometry.hpp"
+#include "rclcpp/rclcpp.hpp"
+#include "sensor_msgs/msg/joint_state.hpp"
+#include "std_msgs/msg/bool.hpp"
+#include "std_msgs/msg/empty.hpp"
+#include "std_msgs/msg/float32.hpp"
+#include "std_msgs/msg/int16.hpp"
+#include "std_msgs/msg/u_int16.hpp"
+#include "std_msgs/msg/u_int8_multi_array.hpp"
+#include "tf2_ros/transform_broadcaster.h"
 
 static const double COVARIANCE[36] = {1e-5, 1e-5, 0.0,  0.0,  0.0,  1e-5,  // NOLINT(whitespace/braces)
                                       1e-5, 1e-5, 0.0,  0.0,  0.0,  1e-5,
@@ -126,7 +127,7 @@ private:
   std::string dev_;
   std::string base_frame_;
   std::string odom_frame_;
-  double latch_duration_;
+  rclcpp::Duration latch_duration_;
   double loop_hz_;
   bool publish_tf_;
   int baud_;
@@ -164,9 +165,9 @@ private:
   void publishCliff();
 
 public:
-  explicit CreateDriver();
+  CreateDriver();
   ~CreateDriver();
   virtual void spinOnce();
 };  // class CreateDriver
 
-#endif  // CREATE_DRIVER_CREATE_DRIVER_H
+#endif  // CREATE_DRIVER__CREATE_DRIVER_H_
