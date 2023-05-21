@@ -1,6 +1,6 @@
 # create_robot
 
-[ROS 2](https://docs.ros.org/en/foxy/) driver for iRobot [Create 1 and 2](http://www.irobot.com/About-iRobot/STEM/Create-2.aspx).
+[ROS](https://docs.ros.org) driver for iRobot Create 1 and 2.
 This package wraps the C++ library [libcreate][libcreate], which uses iRobot's [Open Interface Specification][oi_spec].
 
 <!--[](* Documentation: TODO)-->
@@ -10,9 +10,12 @@ This package wraps the C++ library [libcreate][libcreate], which uses iRobot's [
 
 ## Build Status
 
-- ROS Melodic (branch: `melodic`) ![](https://github.com/autonomylab/create_robot/workflows/Continuous%20Integration/badge.svg?branch=melodic)
-- ROS Noetic (branch: `noetic`) ![](https://github.com/autonomylab/create_robot/workflows/Continuous%20Integration/badge.svg?branch=noetic)
+- ROS Rolling (branch: `rolling`) ![](https://github.com/autonomylab/create_robot/workflows/Continuous%20Integration/badge.svg?branch=rolling)
+- ROS Iron (branch: `iron`) ![](https://github.com/autonomylab/create_robot/workflows/Continuous%20Integration/badge.svg?branch=iron)
+- ROS Humble (branch: `humble`) ![](https://github.com/autonomylab/create_robot/workflows/Continuous%20Integration/badge.svg?branch=humble)
 - ROS Foxy (branch: `foxy`) ![](https://github.com/autonomylab/create_robot/workflows/Continuous%20Integration/badge.svg?branch=foxy)
+- ROS Noetic (branch: `noetic`) ![](https://github.com/autonomylab/create_robot/workflows/Continuous%20Integration/badge.svg?branch=noetic)
+- ROS Melodic (branch: `melodic`) ![](https://github.com/autonomylab/create_robot/workflows/Continuous%20Integration/badge.svg?branch=melodic)
 
 ## Supported Robots
 
@@ -55,16 +58,15 @@ _* Not verified. Anyone who is able to verify that this driver works or not is e
 |  Battery info     | Available     |
 |  Light sensors    | Available     |
 | **_Diagnostics_** |               |
-|  Corrupt packets  | Planned       |
-|  Physical tests   | Planned       |
-|  Overcurrent info | Planned       |
+|  Corrupt packets  | Available     |
+|  Overcurrent info | N/A           |
 
 ## Install
 
 #### Prerequisites
 
 * Internet connection
-* [ROS 2](https://index.ros.org/doc/ros2/Installation) _Foxy_
+* [ROS 2](https://index.ros.org/doc/ros2/Installation)
 * Ubuntu packages: `python3-rosdep`, `python3-colcon-common-extensions`
 
 ``` bash
@@ -76,25 +78,25 @@ $ sudo apt install python3-rosdep python3-colcon-common-extensions
 1. Create a colcon workspace
     ``` bash
     $ cd ~
-    $ mkdir -p create_ws/src  
+    $ mkdir -p create_ws/src
     $ cd create_ws
     ```
 
-2. Clone this repo  
+2. Clone this repo
     ``` bash
     $ cd ~/create_ws/src
-    $ git clone https://github.com/autonomylab/create_robot.git --branch foxy
-    $ git clone https://github.com/AutonomyLab/libcreate
-    ```
-  
-3. Install dependencies  
-    ``` bash
-    $ cd ~/create_ws
-    $ rosdep update  
-    $ rosdep install --from-paths src -i  
+    $ git clone https://github.com/autonomylab/create_robot.git
+    $ git clone https://github.com/AutonomyLab/libcreate.git
     ```
 
-4. Build  
+3. Install dependencies
+    ``` bash
+    $ cd ~/create_ws
+    $ rosdep update
+    $ rosdep install --from-paths src -i
+    ```
+
+4. Build
     ``` bash
     $ cd ~/create_ws
     $ colcon build
@@ -111,7 +113,7 @@ $ sudo apt install python3-rosdep python3-colcon-common-extensions
 
 ### Setup
 
-1. After compiling from source, don't forget to source your workspace:  
+1. After compiling from source, don't forget to source your workspace:
     ``` bash
     $ source ~/create_ws/install/setup.bash
     ```
@@ -158,7 +160,7 @@ $ ros2 launch create_bringup create_2.launch config:=/abs/path/to/config.yaml de
 `odom_frame`  |  The robot's odometry frame ID | `odom`
 `latch_cmd_duration` | If this many seconds passes without receiving a velocity command the robot stops | `0.2`
 `loop_hz`     |  Frequency of internal update loop |  `10.0`
-`publish_tf`  |  Publish the transform from `odom_frame` to `base_frame` | `true`  
+`publish_tf`  |  Publish the transform from `odom_frame` to `base_frame` | `true`
 `robot_model` |  The type of robot being controlled (supported values: `ROOMBA_400`, `CREATE_1` and `CREATE_2`) | `CREATE_2`
 `baud`        |  Serial baud rate | Inferred based on robot model, but is overwritten upon providing a value
 `oi_mode_workaround` | Some Roomba models incorrectly report the current OI mode in their sensor streams. Setting this to `true` will cause `libcreate` to decrement the OI mode received in the sensor stream by `1` | `false`
@@ -188,6 +190,7 @@ $ ros2 launch create_bringup create_2.launch config:=/abs/path/to/config.yaml de
  `odom` |  Robot odometry according to wheel encoders | [nav_msgs/msg/Odometry][odometry]
  `wheeldrop` | At least one of the drive wheels has dropped | [std_msgs/msg/Empty][empty]
  `/tf` | The transform from the `odom` frame to `base_footprint`. Only if the parameter `publish_tf` is `true` | [tf2_msgs/msg/TFMessage](https://docs.ros2.org/foxy/api/tf2_msgs/msg/TFMessage.html)
+ `diagnostics` | Info about the battery charge, wheeldrop/cliff state, robot mode, and serial connection | [diagnostic_msgs/msg/DiagnosticArray](https://docs.ros2.org/foxy/api/diagnostic_msgs/msg/DiagnosticArray.html)
 
 
 ### Subscribers
@@ -240,7 +243,7 @@ Contributing to the development and maintenance of _create\_autonomy_ is encoura
     - Confirms driver works with Roomba 700 and 800 series.
 * [Clyde McQueen](https://github.com/clydemcqueen)
     - Added support for sound ([#37](https://github.com/AutonomyLab/create_robot/pull/37)).
-* [Ben Wolsieffer](https://github.com/lopsided98) 
+* [Ben Wolsieffer](https://github.com/lopsided98)
     - Added JointState publisher for wheels ([#26](https://github.com/AutonomyLab/create_robot/pull/26)).
     - Added Create 1 description ([#27](https://github.com/AutonomyLab/create_robot/pull/27)).
 * [Pedro Grojsgold](https://github.com/pgold)
