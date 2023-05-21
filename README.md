@@ -1,6 +1,6 @@
 # create_robot
 
-[ROS](http://ros.org) driver for iRobot [Create 1 and 2](http://www.irobot.com/About-iRobot/STEM/Create-2.aspx).
+[ROS](https://docs.ros.org) driver for iRobot Create 1 and 2.
 This package wraps the C++ library [libcreate][libcreate], which uses iRobot's [Open Interface Specification][oi_spec].
 
 <!--[](* Documentation: TODO)-->
@@ -10,9 +10,12 @@ This package wraps the C++ library [libcreate][libcreate], which uses iRobot's [
 
 ## Build Status
 
-- ROS Melodic (branch: `melodic`) ![](https://github.com/autonomylab/create_robot/workflows/Continuous%20Integration/badge.svg?branch=melodic)
-- ROS Noetic (branch: `noetic`) ![](https://github.com/autonomylab/create_robot/workflows/Continuous%20Integration/badge.svg?branch=noetic)
+- ROS Rolling (branch: `rolling`) ![](https://github.com/autonomylab/create_robot/workflows/Continuous%20Integration/badge.svg?branch=rolling)
+- ROS Iron (branch: `iron`) ![](https://github.com/autonomylab/create_robot/workflows/Continuous%20Integration/badge.svg?branch=iron)
+- ROS Humble (branch: `humble`) ![](https://github.com/autonomylab/create_robot/workflows/Continuous%20Integration/badge.svg?branch=humble)
 - ROS Foxy (branch: `foxy`) ![](https://github.com/autonomylab/create_robot/workflows/Continuous%20Integration/badge.svg?branch=foxy)
+- ROS Noetic (branch: `noetic`) ![](https://github.com/autonomylab/create_robot/workflows/Continuous%20Integration/badge.svg?branch=noetic)
+- ROS Melodic (branch: `melodic`) ![](https://github.com/autonomylab/create_robot/workflows/Continuous%20Integration/badge.svg?branch=melodic)
 
 ## Supported Robots
 
@@ -55,20 +58,19 @@ _* Not verified. Anyone who is able to verify that this driver works or not is e
 |  Battery info     | Available     |
 |  Light sensors    | Available     |
 | **_Diagnostics_** |               |
-|  Corrupt packets  | Planned       |
-|  Physical tests   | Planned       |
-|  Overcurrent info | Planned       |
+|  Corrupt packets  | Available     |
+|  Overcurrent info | N/A           |
 
 ## Install
 
 #### Prerequisites
 
 * Internet connection
-* [ROS](http://wiki.ros.org/ROS/Installation) _Indigo_ or _Jade_
-* Ubuntu packages: `python-rosdep`, `python-catkin-tools`
+* [ROS](http://wiki.ros.org/ROS/Installation)
+* Ubuntu packages: `python3-rosdep`, `python3-catkin-tools`
 
 ``` bash
-$ sudo apt-get install python-rosdep python-catkin-tools
+$ sudo apt-get install python3-rosdep python3-catkin-tools
 ```
 
 #### Compiling
@@ -81,10 +83,10 @@ $ sudo apt-get install python-rosdep python-catkin-tools
     $ catkin init  
     ```
 
-2. Clone this repo  
+2. Clone this repo
     ``` bash
     $ cd ~/create_ws/src
-    $ git clone https://github.com/autonomylab/create_robot.git
+    $ git clone https://github.com/autonomylab/create_robot.git --branch noetic
     ```
   
 3. Install dependencies  
@@ -94,7 +96,14 @@ $ sudo apt-get install python-rosdep python-catkin-tools
     $ rosdep install --from-paths src -i  
     ```
 
-4. Build  
+3. Install dependencies
+    ``` bash
+    $ cd ~/create_ws
+    $ rosdep update
+    $ rosdep install --from-paths src -i
+    ```
+
+4. Build
     ``` bash
     $ cd ~/create_ws
     $ catkin build
@@ -111,7 +120,7 @@ $ sudo apt-get install python-rosdep python-catkin-tools
 
 ### Setup
 
-1. After compiling from source, don't forget to source your workspace:  
+1. After compiling from source, don't forget to source your workspace:
     ``` bash
     $ source ~/create_ws/devel/setup.bash
     ```
@@ -158,7 +167,7 @@ $ roslaunch create_bringup create_2.launch config:=/abs/path/to/config.yaml desc
 `odom_frame`  |  The robot's odometry frame ID | `odom`
 `latch_cmd_duration` | If this many seconds passes without receiving a velocity command the robot stops | `0.2`
 `loop_hz`     |  Frequency of internal update loop |  `10.0`
-`publish_tf`  |  Publish the transform from `odom_frame` to `base_frame` | `true`  
+`publish_tf`  |  Publish the transform from `odom_frame` to `base_frame` | `true`
 `robot_model` |  The type of robot being controlled (supported values: `ROOMBA_400`, `CREATE_1` and `CREATE_2`) | `CREATE_2`
 `baud`        |  Serial baud rate | Inferred based on robot model, but is overwritten upon providing a value
 
@@ -185,7 +194,8 @@ $ roslaunch create_bringup create_2.launch config:=/abs/path/to/config.yaml desc
  `mode` | The current mode of the robot (See [OI Spec][oi_spec] for details)| [create_msgs/Mode][mode_msg]
  `odom` |  Robot odometry according to wheel encoders | [nav_msgs/Odometry][odometry]
  `wheeldrop` | At least one of the drive wheels has dropped | [std_msgs/Empty][empty]
- `/tf` | The transform from the `odom` frame to `base_footprint`. Only if the parameter `publish_tf` is `true` | [tf2_msgs/TFMessage](http://docs.ros.org/jade/api/tf2_msgs/html/msg/TFMessage.html)
+ `/tf` | The transform from the `odom` frame to `base_footprint`. Only if the parameter `publish_tf` is `true` | [tf2_msgs/TFMessage](http://docs.ros.org/noetic/api/tf2_msgs/html/msg/TFMessage.html)
+ `diagnostics` | Info about the battery charge, wheeldrop/cliff state, robot mode, and serial connection | [diagnostic_msgs/DiagnosticArray](https://docs.ros.org/noetic/api/diagnostic_msgs/html/msg/DiagnosticArray.html)
 
 
 ### Subscribers
@@ -241,7 +251,7 @@ Contributing to the development and maintenance of _create\_robot_ is encouraged
     - Confirms driver works with Roomba 700 and 800 series.
 * [Clyde McQueen](https://github.com/clydemcqueen)
     - Added support for sound ([#37](https://github.com/AutonomyLab/create_robot/pull/37)).
-* [Ben Wolsieffer](https://github.com/lopsided98) 
+* [Ben Wolsieffer](https://github.com/lopsided98)
     - Added JointState publisher for wheels ([#26](https://github.com/AutonomyLab/create_robot/pull/26)).
     - Added Create 1 description ([#27](https://github.com/AutonomyLab/create_robot/pull/27)).
 
@@ -255,11 +265,11 @@ Contributing to the development and maintenance of _create\_robot_ is encouraged
 [bool]:  http://docs.ros.org/api/std_msgs/html/msg/Bool.html
 [uint8multiarray]:  http://docs.ros.org/api/std_msgs/html/msg/UInt8MultiArray.html
 [float32]:  http://docs.ros.org/api/std_msgs/html/msg/Float32.html
-[create_msgs]:  http://github.com/autonomylab/create_robot/tree/melodic
-[bumper_msg]:  https://github.com/autonomylab/create_robot/blob/melodic/create_msgs/msg/Bumper.msg
-[mode_msg]:  https://github.com/autonomylab/create_robot/blob/melodic/create_msgs/msg/Mode.msg
-[chargingstate_msg]:  https://github.com/autonomylab/create_robot/blob/melodic/create_msgs/msg/ChargingState.msg
+[create_msgs]:  http://github.com/autonomylab/create_robot/tree/noetic
+[bumper_msg]:  https://github.com/autonomylab/create_robot/blob/noetic/create_msgs/msg/Bumper.msg
+[mode_msg]:  https://github.com/autonomylab/create_robot/blob/noetic/create_msgs/msg/Mode.msg
+[chargingstate_msg]:  https://github.com/autonomylab/create_robot/blob/noetic/create_msgs/msg/ChargingState.msg
 [jointstate_msg]:  http://docs.ros.org/api/sensor_msgs/html/msg/JointState.html
-[definesong_msg]:  https://github.com/autonomylab/create_robot/blob/melodic/create_msgs/msg/DefineSong.msg
-[playsong_msg]:  https://github.com/autonomylab/create_robot/blob/melodic/create_msgs/msg/PlaySong.msg
-[motorsetpoint_msg]:  https://github.com/autonomylab/create_robot/blob/melodic/create_msgs/msg/MotorSetpoint.msg
+[definesong_msg]:  https://github.com/autonomylab/create_robot/blob/noetic/create_msgs/msg/DefineSong.msg
+[playsong_msg]:  https://github.com/autonomylab/create_robot/blob/noetic/create_msgs/msg/PlaySong.msg
+[motorsetpoint_msg]:  https://github.com/autonomylab/create_robot/blob/noetic/create_msgs/msg/MotorSetpoint.msg
