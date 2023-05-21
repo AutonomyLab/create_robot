@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>create_bringup</name>
-  <version>3.0.0</version>
+  <version>3.1.0</version>
   <description>Launch and configuration files for common accessories when working with Create/Roomba platforms.</description>
 
   <maintainer email="jacobmperron@gmail.com">Jacob Perron</maintainer>

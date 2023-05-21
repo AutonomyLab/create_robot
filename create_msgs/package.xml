@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="3">
   <name>create_msgs</name>
-  <version>3.0.0</version>
+  <version>3.1.0</version>
   <description>Common message definitions for create_robot</description>
 
   <maintainer email="jacobmperron@gmail.com">Jacob Perron</maintainer>

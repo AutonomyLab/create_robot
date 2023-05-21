@@ -2,6 +2,11 @@
 Changelog for package create_driver
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+3.1.0 (2023-05-21)
+------------------
+* Fix compilation for ROS Humble
+* Contributors: Jacob Perron
+
 3.0.0 (2023-05-13)
 ------------------
 * Replace Travis CI with GitHub workflow and lint (`#102 <https://github.com/autonomylab/create_robot/issues/102>`_)
