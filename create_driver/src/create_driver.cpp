@@ -32,7 +32,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <memory>
 #include <string>
 
-#include "tf2_geometry_msgs/tf2_geometry_msgs.h"
+#include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
 
 CreateDriver::CreateDriver()
 : Node("create_driver"),
@@ -41,7 +41,7 @@ CreateDriver::CreateDriver()
   diagnostics_(this),
   last_cmd_vel_time_(0),
   is_running_slowly_(false),
-  latch_duration_(0)
+  latch_duration_(std::chrono::nanoseconds{0})
 {
   dev_ = declare_parameter<std::string>("dev", "/dev/ttyUSB0");
   base_frame_ = declare_parameter<std::string>("base_frame", "base_footprint");
