@@ -6,7 +6,7 @@ This package wraps the C++ library [libcreate][libcreate], which uses iRobot's [
 <!--[](* Documentation: TODO)-->
 * ROS wiki page: http://wiki.ros.org/create_robot
 * Support: [ROS Answers (tag: create_robot)](http://answers.ros.org/questions/scope:all/sort:activity-desc/tags:create_robot/page:1/)
-* Author: [Jacob Perron](http://jacobperron.ca) ([Autonomy Lab](http://autonomylab.org), [Simon Fraser University](http://www.sfu.ca))
+* Author: [Jacob Perron](http://jacobperron.ca) ([Autonomy Lab](https://autonomy.cs.sfu.ca), [Simon Fraser University](http://www.sfu.ca))
 
 ## Build Status
 
