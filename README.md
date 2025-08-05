@@ -86,7 +86,7 @@ $ sudo apt-get install python3-rosdep python3-catkin-tools
 2. Clone this repo
     ``` bash
     $ cd ~/create_ws/src
-    $ git clone https://github.com/autonomylab/create_robot.git --branch noetic
+    $ git clone https://github.com/autonomylab/create_robot.git --branch melodic
     ```
   
 3. Install dependencies  
