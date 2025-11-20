@@ -143,6 +143,12 @@ CreateDriver::CreateDriver()
   vacuum_motor_sub_ = create_subscription<create_msgs::msg::MotorSetpoint>(
     "vacuum_motor", 10, std::bind(&CreateDriver::vacuumBrushMotor, this, std::placeholders::_1));
 
+
+
+  clean_mode_sub_ = create_subscription<create_msgs::msg::CleanMode>(
+    "set_clean_mode", 10, std::bind(&CreateDriver::cleanModeCallback, this, std::placeholders::_1));
+
+
   // Setup publishers
   odom_pub_ = create_publisher<nav_msgs::msg::Odometry>("odom", 30);
   clean_btn_pub_ = create_publisher<std_msgs::msg::Empty>("clean_button", 30);
@@ -307,6 +313,47 @@ void CreateDriver::vacuumBrushMotor(create_msgs::msg::MotorSetpoint::UniquePtr m
     RCLCPP_ERROR_STREAM(get_logger(), "[CREATE] Failed to set duty cycle " << msg->duty_cycle << " for vacuum motor");
   }
 }
+
+
+
+void CreateDriver::cleanModeCallback(create_msgs::msg::CleanMode::UniquePtr msg)
+{
+  switch(msg->mode){
+    case 0:
+      if (robot_->setMode(create::CreateMode::MODE_SAFE)){
+        RCLCPP_INFO(this->get_logger(), "[CREATE] Stopping Cleaning Mode");
+      } else {
+        RCLCPP_ERROR(this->get_logger(), "[CREATE] Failed to stop cleaning mode");
+      }
+      break;
+    case 1:
+      if (robot_->clean(create::CleanMode::CLEAN_DEFAULT)){
+        RCLCPP_INFO(this->get_logger(), "[CREATE] Starting Cleaning Mode");
+      } else {
+        RCLCPP_ERROR(this->get_logger(), "[CREATE] Failed to start cleaning mode");
+      }
+      break;
+    case 2:
+      if (robot_->clean(create::CleanMode::CLEAN_MAX)){
+        RCLCPP_INFO(this->get_logger(), "[CREATE] Starting Max Cleaning Mode");
+      } else {
+        RCLCPP_ERROR(this->get_logger(), "[CREATE] Failed to start max cleaning mode");
+      }
+      break;
+    case 3:
+      if (robot_->clean(create::CleanMode::CLEAN_SPOT)){
+        RCLCPP_INFO(this->get_logger(), "[CREATE] Starting Spot Cleaning Mode");
+      } else {
+        RCLCPP_ERROR(this->get_logger(), "[CREATE] Failed to start spot cleaning mode");
+      }
+      break;
+    default:
+      RCLCPP_ERROR(this->get_logger(), "[CREATE] Invalid cleaning mode: %d", msg->mode);
+  }
+}
+
+
+
 
 bool CreateDriver::update()
 {

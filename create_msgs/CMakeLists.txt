@@ -13,6 +13,7 @@ set(msg_files
   msg/PlaySong.msg
   msg/MotorSetpoint.msg
   msg/Cliff.msg
+  msg/CleanMode.msg
 )
 
 rosidl_generate_interfaces(
